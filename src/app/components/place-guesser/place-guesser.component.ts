@@ -91,8 +91,8 @@ export class PlaceGuesserComponent implements OnInit {
 
   getNewPlace(){
     this.solution = this.cities15000[(Math.floor(Math.random()*25831)+1).toString()]
-    console.log("SOLUTION: ")
-    console.log(this.solution)
+    //console.log("SOLUTION: ")
+    //console.log(this.solution)
 
     this.solutionCoords = new google.maps.LatLng(this.solution["coordinates"].split(",")[0],this.solution["coordinates"].split(",")[1] )
 
@@ -109,8 +109,8 @@ export class PlaceGuesserComponent implements OnInit {
 
     this.palcesService.findPlaceFromQuery(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        console.log("google query return: ")
-        console.log(results)
+        //console.log("google query return: ")
+        //console.log(results)
         
         // get only 1 image from basic details
         //this.imageUrl = results[0].photos[0].getUrl({maxWidth: 1000, maxHeight: 1000})
@@ -129,7 +129,7 @@ export class PlaceGuesserComponent implements OnInit {
           , (results, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
               if(results.photos == undefined){
-                console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE")
+                //console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE")
                 this.getNewPlaceAndPhotos()
                 return
               }

@@ -71,20 +71,30 @@
   
       transition: all .2s ease-in-out;
   }
+
+  .size0{
+    width:15vw;
+    height:15vh;
+  }
   
   .size1{
-    width:400px;
-    height:250px;
+    width:25vw;
+    height:25vh;
   }
   
   .size2{
-    width:650px;
-    height:400px;
+    width:40vw;
+    height:40vh;
   }
   
   .size3{
-    width:1000px;
-    height:650px;
+    width:60vw;
+    height:60vh;
+  }
+
+  .size4{
+    width:80vw;
+    height:80vh;
   }
   
   
