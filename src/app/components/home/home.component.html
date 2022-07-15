@@ -27,8 +27,8 @@
                 </button>
             </mat-card-actions>
         </mat-card>
+        <div *ngIf="!gameStarted" style="flex-grow:1"></div>
+        <app-footer class="footer" *ngIf="!gameStarted"></app-footer>
     </div>
     <app-place-guesser  *ngIf="gameStarted" (resetGameEvent)="resetGame()"></app-place-guesser>
-    <div *ngIf="!gameStarted" style="flex-grow:1"></div>
-    <app-footer *ngIf="!gameStarted"></app-footer>
 </div>
