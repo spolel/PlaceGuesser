@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  gameStarted: boolean = true
+  gameStarted: boolean = false
   helpOpen: boolean = false
 
   constructor() { }
