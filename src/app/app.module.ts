@@ -11,6 +11,7 @@ import { ImageCarouselComponent } from './components/image-carousel/image-carous
 
 import { AngularMaterialModule } from './material.module';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { HttpClientModule } from '@angular/common/http';
 
 import { FooterComponent } from './components/footer/footer.component';
 
@@ -28,7 +29,8 @@ import { FooterComponent } from './components/footer/footer.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
-    GoogleMapsModule
+    GoogleMapsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
