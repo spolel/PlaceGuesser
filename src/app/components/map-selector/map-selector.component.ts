@@ -114,6 +114,18 @@ export class MapSelectorComponent implements OnInit {
     }
   }
 
+  setMapBounds(a: google.maps.LatLng, b: google.maps.LatLng ){
+    let bounds: google.maps.LatLngBounds;
+    if(a.lng() < b.lng()){
+      bounds = new google.maps.LatLngBounds(a,b);
+    }else{
+      bounds = new google.maps.LatLngBounds(b,a);
+    }
+    
+    this.center = bounds.getCenter()
+    this.map.fitBounds(bounds)
+  }
+
   guess(){
     if(this.markerSelected){
       this.destinationCoords = this.solutionCoords
@@ -124,9 +136,7 @@ export class MapSelectorComponent implements OnInit {
       this.path = [this.guessCoords,this.destinationCoords]
       this.paths.push(this.path)
 
-      let bounds = new google.maps.LatLngBounds(this.guessCoords,this.destinationCoords);
-      this.center = bounds.getCenter()
-      this.map.fitBounds(bounds)
+      this.setMapBounds(this.guessCoords,this.destinationCoords)
   
       this.roundEnded = true
       // this.containerClasses = ['container', 'middle']
@@ -147,9 +157,7 @@ export class MapSelectorComponent implements OnInit {
     this.markerLatLng = new google.maps.LatLng(0)
     this.markerSelected = false
 
-    let bounds = new google.maps.LatLngBounds(new google.maps.LatLng(-11,-76),new google.maps.LatLng(74,80));
-    this.center = bounds.getCenter()
-    this.map.fitBounds(bounds)
+    this.setMapBounds(new google.maps.LatLng(-11,-76),new google.maps.LatLng(74,80))
 
     this.nextRoundEvent.emit()
   }
