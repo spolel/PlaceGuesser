@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 import { catchError, map, Observable, of } from 'rxjs';
 
@@ -37,6 +37,35 @@ export class PlaceGuesserComponent implements OnInit {
   gameStarted: boolean = false;
 
   @Output() resetGameEvent = new EventEmitter();
+
+  // @HostListener("window:resize", []) onWindowResize() {  
+  //   this.responsiveClasses()
+    
+  // }
+
+  // responsiveClasses(){
+  //   if (window.innerWidth >= 1000) {
+  //     this.mobile = false;
+  //     if(this.roundEnded){
+  //       this.containerClasses = ['container', 'middle']
+  //       this.mapClasses = ['map', 'size3']
+  //     }else{
+  //       this.containerClasses = ['container', 'bottom-right']
+  //       this.mapClasses = ['map', 'size1']
+  //     }
+  //   } else {
+  //     this.mobile = true;
+  //     if(this.roundEnded){
+  //       this.containerClasses = ['container', 'middle']
+  //       this.mapClasses = ['map', 'mobile-map-middle']
+  //     }else{
+  //       this.containerClasses = ['container', 'mobile']
+  //       this.mapClasses = ['map', 'mobile-map']
+  //     }
+      
+  //     this.isPinned = true
+  //   }
+  // }
 
   constructor(private httpClient: HttpClient, private ngZone: NgZone) {
    }

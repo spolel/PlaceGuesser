@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 
 
 @Component({
@@ -42,13 +42,43 @@ export class MapSelectorComponent implements OnInit {
   @Input() score: number;
   @Input() round: number;
 
-  roundEnded: boolean;
+  roundEnded: boolean = false;
+  mobile: boolean;
   
   
 
   @Output() guessEvent = new EventEmitter<google.maps.LatLng>();
   @Output() nextRoundEvent = new EventEmitter();
+  @Output() playAgainEvent = new EventEmitter();
 
+  @HostListener("window:resize", []) onWindowResize() {  
+    this.responsiveClasses()
+    
+  }
+
+  responsiveClasses(){
+    if (window.innerWidth >= 1000) {
+      this.mobile = false;
+      if(this.roundEnded){
+        this.containerClasses = ['container', 'middle']
+        this.mapClasses = ['map', 'size3']
+      }else{
+        this.containerClasses = ['container', 'bottom-right']
+        this.mapClasses = ['map', 'size1']
+      }
+    } else {
+      this.mobile = true;
+      if(this.roundEnded){
+        this.containerClasses = ['container', 'middle']
+        this.mapClasses = ['map', 'mobile-map-middle']
+      }else{
+        this.containerClasses = ['container', 'mobile']
+        this.mapClasses = ['map', 'mobile-map']
+      }
+      
+      this.isPinned = true
+    }
+  }
 
   // svgMarker: any = {
   //   path: google.maps.SymbolPath ,
@@ -69,6 +99,8 @@ export class MapSelectorComponent implements OnInit {
     this.paths = []
     this.markerLatLng = new google.maps.LatLng(0)
     this.markerSelected = false
+
+    this.responsiveClasses()
   }
 
   click(event: google.maps.MapMouseEvent) {
@@ -90,23 +122,29 @@ export class MapSelectorComponent implements OnInit {
       this.paths.push(this.path)
   
       this.roundEnded = true
-      this.containerClasses = ['container', 'middle']
-      this.mapClasses = ['map', 'size3']
+      // this.containerClasses = ['container', 'middle']
+      // this.mapClasses = ['map', 'size3']
+      this.responsiveClasses()
       this.isPinned = true
     }
   }
 
   nextRound(){
     this.roundEnded = false
-    this.containerClasses = ['container', 'bottom-right']
-    this.mapClasses = ['map', 'size1']
+    // this.containerClasses = ['container', 'bottom-right']
+    // this.mapClasses = ['map', 'size1']
     this.isPinned = false
-
+    this.responsiveClasses()
+    
     this.path = undefined
     this.markerLatLng = new google.maps.LatLng(0)
     this.markerSelected = false
 
     this.nextRoundEvent.emit()
+  }
+
+  playAgain(){
+    this.playAgainEvent.emit()
   }
 
   resize(size: string){

@@ -1,6 +1,6 @@
 <div [ngClass]="roundEnded ? 'overlay' : ''"></div>
 <div *ngIf="!gameEnded" [ngClass]="containerClasses" (mouseover)="enlarge()" (mouseout)="reduce()">
-    <div *ngIf="!roundEnded" class="top-buttons">
+    <div *ngIf="!roundEnded && !mobile" class="top-buttons">
         <button color="basic" mat-mini-fab (click)="setEnlargedSize('size3')">
             <mat-icon>north_west</mat-icon>
         </button>
@@ -39,14 +39,17 @@
             </div>
         </google-map>
     </div>
-    <button *ngIf="!roundEnded" id="button-guess" color="primary" mat-raised-button (click)="guess()">
+    <button *ngIf="!roundEnded && !mobile" id="button-guess" color="primary" mat-raised-button (click)="guess()">
         GUESS
+    </button>
+    <button *ngIf="!roundEnded && mobile" id="button-guess-mobile" color="primary" mat-fab (click)="guess()">
+        <mat-icon>check</mat-icon>
     </button>
     <button *ngIf="roundEnded" id="button-next-round" color="basic" mat-raised-button (click)="nextRound()">
         {{round == 5 ? "SUMMARY" : "NEXT ROUND"}}
     </button>
 </div> 
-<div *ngIf="gameEnded" class="endgame-map">
+<div *ngIf="gameEnded" class="endgame-map middle">
     <google-map
         width="100%"
         height="100%"
@@ -59,4 +62,7 @@
             <map-polyline [path]="path" [options]="{'strokeColor': 'red', 'strokeOpacity': 0.5}" ></map-polyline>
         </div>
     </google-map>
+    <button id="button-playagain" color="basic" mat-raised-button (click)="playAgain()">
+        PLAY AGAIN
+    </button>
 </div>
