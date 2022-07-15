@@ -23,6 +23,7 @@ export class MapSelectorComponent implements OnInit {
     keyboardShortcuts: true
   }
   markerLatLng: google.maps.LatLng;
+  markerSelected: boolean = false;
   markerOptions: google.maps.MarkerOptions = {draggable: false};
   guessCoords: google.maps.LatLng;
   path: google.maps.LatLng[];
@@ -67,28 +68,32 @@ export class MapSelectorComponent implements OnInit {
   ngOnInit(): void {
     this.paths = []
     this.markerLatLng = new google.maps.LatLng(0)
+    this.markerSelected = false
   }
 
   click(event: google.maps.MapMouseEvent) {
     //console.log(event)
     if(!this.roundEnded){
       this.markerLatLng = event.latLng
+      this.markerSelected = true
     }
   }
 
   guess(){
-    this.destinationCoords = this.solutionCoords
-    this.guessCoords = this.markerLatLng
-
-    this.guessEvent.emit(this.markerLatLng)
-
-    this.path = [this.guessCoords,this.destinationCoords]
-    this.paths.push(this.path)
-
-    this.roundEnded = true
-    this.containerClasses = ['container', 'middle']
-    this.mapClasses = ['map', 'size3']
-    this.isPinned = true
+    if(this.markerSelected){
+      this.destinationCoords = this.solutionCoords
+      this.guessCoords = this.markerLatLng
+  
+      this.guessEvent.emit(this.markerLatLng)
+  
+      this.path = [this.guessCoords,this.destinationCoords]
+      this.paths.push(this.path)
+  
+      this.roundEnded = true
+      this.containerClasses = ['container', 'middle']
+      this.mapClasses = ['map', 'size3']
+      this.isPinned = true
+    }
   }
 
   nextRound(){
@@ -99,6 +104,7 @@ export class MapSelectorComponent implements OnInit {
 
     this.path = undefined
     this.markerLatLng = new google.maps.LatLng(0)
+    this.markerSelected = false
 
     this.nextRoundEvent.emit()
   }
