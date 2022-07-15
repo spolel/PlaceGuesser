@@ -1,0 +1,83 @@
+.container{
+
+    display:flex;
+    flex-direction: column;
+  
+    position: absolute;
+  
+    transition: all .2s ease-in-out;
+  }
+  
+  .bottom-right{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .middle{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+    z-index: 20;
+  }
+  
+  .score-bar{
+    font-size:1.5em;
+    text-align: center;
+  
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  
+  .overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: rgba(0,0,0,0.5); /*dim the background*/
+  }
+  
+  
+  .endgame-map{
+    width:100%;
+    height:800px;
+  }
+    
+  .map{
+  
+      display: block; 
+  
+      transition: all .2s ease-in-out;
+  }
+  
+  .size1{
+    width:400px;
+    height:250px;
+  }
+  
+  .size2{
+    width:650px;
+    height:400px;
+  }
+  
+  .size3{
+    width:1000px;
+    height:650px;
+  }
+  
+  
+  .top-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  
+  #button-guess{
+    width: 100%;
+  }
+  

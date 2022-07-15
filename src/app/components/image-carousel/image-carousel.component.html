@@ -1,0 +1,16 @@
+
+<div class="container">
+    <button class="button-previous" [disabled]="displayIdx == 0" color="basic" mat-mini-fab (click)="previous()">
+      <mat-icon>west</mat-icon>
+    </button>
+    <div class="images-container" (wheel)="scroll($event)" #imagesContainer>
+      <div class="image-normalizer2" *ngFor="let image of images" >
+        <img class="image unselectable" [src]="image"/>
+      </div>
+      <!-- <img class="image" *ngFor="let image of images" [src]="image"/> -->
+    </div>
+      
+    <button class="button-next" [disabled]="displayIdx == imagesLength-1" color="basic" mat-mini-fab (click)="next()">
+      <mat-icon>east</mat-icon>
+    </button>
+  </div>

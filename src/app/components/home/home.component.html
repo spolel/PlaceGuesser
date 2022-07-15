@@ -1,0 +1,34 @@
+<div class="app-container">
+    <div *ngIf="!gameStarted" class="container">
+        <h1 class="title unselectable">PLACE GUESSER</h1>
+        <img class="logo unselectable" src="../../../assets/earth-logo.svg"/>
+        <button class="button-play" color="primary" mat-raised-button (click)="startGame()">
+            PLAY GAME
+        </button>
+        <button class="button-openhelp" mat-icon-button (click)="openHelp()">
+            <mat-icon>help</mat-icon>
+        </button>
+        <mat-card *ngIf="helpOpen" class="help-container">
+            <mat-card-title class="help-title">HOW TO PLAY</mat-card-title>
+            <mat-card-content>
+                <p>
+                    <br>
+                    You get images from a <b>random place on earth</b> and you have to guess <b>where it is</b>.
+                    <br><br>
+                    You have 5 rounds. Place you guess on the map.
+                    <br> The maximum points you can reach are 5000. You gan get a maximum of 1000 points per round depending on how close you were.
+                    <br><br>
+                    At the end of the game you will be shown a summary showing all your guesses on the map.
+                    </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button class="button-closehelp" color="basic" mat-raised-button (click)="closeHelp()">
+                    CLOSE
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <app-place-guesser  *ngIf="gameStarted" (resetGameEvent)="resetGame()"></app-place-guesser>
+    <div *ngIf="!gameStarted" style="flex-grow:1"></div>
+    <app-footer *ngIf="!gameStarted"></app-footer>
+</div>

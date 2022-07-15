@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Gugi&display=swap');
+
+.container{
+    width : 80%;
+    margin-left: auto;
+    margin-right: auto;
+    
+    display: flex; 
+    flex-direction: column;
+    
+    font-family: Oleo Script;
+  }
+  
+  @media only screen and (max-width: 1500px) {
+    .container{
+      width : 90%;
+    }
+  }
+  
+  @media only screen and (max-width: 1000px) {
+    .container{
+      width : 100%;
+    }
+  }
+  
+/* .container img{
+  max-width: 100%;
+  max-height: 100vh;
+} */
+
+/* .map-container{
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+} */
+
+.status-bar{
+  font-size:2em;
+  text-align: center;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.title-container{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+
+  font-family: 'Gugi', cursive;
+
+  cursor: pointer;
+}
+
+.logo{
+  margin-left: 10px;
+  width:50px;
+}
+
+
+.unselectable{
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}

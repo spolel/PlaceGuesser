@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Gugi&display=swap');
+
+.app-container{
+    min-height:100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.container{
+    width : 80%;
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+
+}
+
+.logo{
+    width: 500px;
+    margin-bottom: 50px;
+    border-radius:50%;
+    // box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+    box-shadow: rgba(0, 0, 0, 0.803) 0px 19px 38px, rgba(0, 0, 0, 0.749) 0px 15px 12px;
+}
+
+
+
+@media only screen and (max-width: 1500px) {
+    .container{
+        width : 90%;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .container{
+        width : 100%;
+    }
+
+    .logo{
+        width: 70%;
+    }
+}
+
+.title{
+    font-family: 'Gugi', cursive;
+    font-size: 4em;
+    line-height: 1 ;
+    margin:30px;
+}
+
+
+.button-play{
+    /* min-width:300px;
+    font-size: 30px; */
+    transform: scale(2);
+    margin: 30px;
+}
+
+.help-container{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+    z-index: 20;
+}
+
+.help-title{
+    text-align: center;
+    font-size: 2em;
+    line-height: 1 ;
+}
+
+.help-container mat-card-content{
+    font-size: 1.25em;
+    line-height: 1 ;
+}
+
+
+.unselectable{
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}

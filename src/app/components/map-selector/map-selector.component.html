@@ -1,0 +1,62 @@
+<div [ngClass]="roundEnded ? 'overlay' : ''"></div>
+<div *ngIf="!gameEnded" [ngClass]="containerClasses" (mouseover)="enlarge()" (mouseout)="reduce()">
+    <div *ngIf="!roundEnded" class="top-buttons">
+        <button color="basic" mat-mini-fab (click)="setEnlargedSize('size3')">
+            <mat-icon>north_west</mat-icon>
+        </button>
+        <button color="basic" mat-mini-fab (click)="setEnlargedSize('size2')">
+            <mat-icon>south_east</mat-icon>
+        </button>
+        <button color="basic" mat-mini-fab (click)="pin()">
+            <mat-icon>lock</mat-icon>
+        </button>
+    </div>
+    <div *ngIf="roundEnded">
+        <mat-card class="score-bar">
+            <div>
+                You were <b>{{distance}}</b> km away
+            </div>
+            <div>
+             You scored <b>{{score}}</b> points
+            </div>        
+        </mat-card>
+    </div>
+    <div [ngClass]="mapClasses">
+        <google-map
+            width="100%"
+            height="100%"
+            [options]="options"
+            (mapClick)="click($event)"
+        >
+            <map-marker
+                [position]="markerLatLng"
+                [options]="markerOptions">
+            </map-marker>
+            <div *ngIf="path != undefined">
+                <map-marker [position]="path[0]" [options]=""></map-marker>
+                <map-marker [position]="path[1]" [options]="{'icon' : 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'}"></map-marker>
+                <map-polyline [path]="path" [options]="{'strokeColor': 'red', 'strokeOpacity': 0.5}" ></map-polyline>
+            </div>
+        </google-map>
+    </div>
+    <button *ngIf="!roundEnded" id="button-guess" color="primary" mat-raised-button (click)="guess()">
+        GUESS
+    </button>
+    <button *ngIf="roundEnded" id="button-next-round" color="basic" mat-raised-button (click)="nextRound()">
+        {{round == 5 ? "SUMMARY" : "NEXT ROUND"}}
+    </button>
+</div> 
+<div *ngIf="gameEnded" class="endgame-map">
+    <google-map
+        width="100%"
+        height="100%"
+        [options]="options"
+        (mapClick)="click($event)"
+    >
+        <div *ngFor="let path of paths">
+            <map-marker [position]="path[0]" [options]=""></map-marker>
+            <map-marker [position]="path[1]" [options]="{'icon' : 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'}"></map-marker>
+            <map-polyline [path]="path" [options]="{'strokeColor': 'red', 'strokeOpacity': 0.5}" ></map-polyline>
+        </div>
+    </google-map>
+</div>
