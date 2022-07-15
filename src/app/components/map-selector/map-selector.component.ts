@@ -1,4 +1,5 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { GoogleMap } from '@angular/google-maps';
 
 
 @Component({
@@ -8,14 +9,13 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@a
 })
 
 export class MapSelectorComponent implements OnInit {
-  mapCenter: google.maps.LatLngLiteral
+  center: google.maps.LatLng = new google.maps.LatLng(40, -3)
+  zoom: number = 2
   options: google.maps.MapOptions = {
     zoomControl: true,
     scrollwheel: true,
     disableDoubleClickZoom: true,
-    zoom: 2,
-    minZoom: 1,
-    center: new google.maps.LatLng(40, -3),
+    minZoom: 2,
     fullscreenControl : false,
     streetViewControl: false,
     mapTypeControl: false,
@@ -32,6 +32,7 @@ export class MapSelectorComponent implements OnInit {
   mapClasses: string[] = ['map','size1'];
   containerClasses: string[] = ['container','bottom-right'];
   enlargedSize: string = "size2";
+  sizeIndex: number = 2;
   isPinned: boolean = false;
 
   @Input() solutionCoords: google.maps.LatLng;
@@ -50,6 +51,8 @@ export class MapSelectorComponent implements OnInit {
   @Output() guessEvent = new EventEmitter<google.maps.LatLng>();
   @Output() nextRoundEvent = new EventEmitter();
   @Output() playAgainEvent = new EventEmitter();
+
+  @ViewChild('map') map: GoogleMap;
 
   @HostListener("window:resize", []) onWindowResize() {  
     this.responsiveClasses()
@@ -104,7 +107,7 @@ export class MapSelectorComponent implements OnInit {
   }
 
   click(event: google.maps.MapMouseEvent) {
-    //console.log(event)
+    //console.log(event.latLng.lat(),event.latLng.lng())
     if(!this.roundEnded){
       this.markerLatLng = event.latLng
       this.markerSelected = true
@@ -120,6 +123,10 @@ export class MapSelectorComponent implements OnInit {
   
       this.path = [this.guessCoords,this.destinationCoords]
       this.paths.push(this.path)
+
+      let bounds = new google.maps.LatLngBounds(this.guessCoords,this.destinationCoords);
+      this.center = bounds.getCenter()
+      this.map.fitBounds(bounds)
   
       this.roundEnded = true
       // this.containerClasses = ['container', 'middle']
@@ -140,6 +147,10 @@ export class MapSelectorComponent implements OnInit {
     this.markerLatLng = new google.maps.LatLng(0)
     this.markerSelected = false
 
+    let bounds = new google.maps.LatLngBounds(new google.maps.LatLng(-11,-76),new google.maps.LatLng(74,80));
+    this.center = bounds.getCenter()
+    this.map.fitBounds(bounds)
+
     this.nextRoundEvent.emit()
   }
 
@@ -148,20 +159,28 @@ export class MapSelectorComponent implements OnInit {
   }
 
   resize(size: string){
-    this.mapClasses = ['map', size]
+      this.mapClasses = ['map', size]
+  }
+
+  resizeHover(size: string){
+    if(!this.isPinned){
+      this.mapClasses = ['map', size]
+    }
   }
 
   enlarge(){
     //console.log(this.isPinned)
-    if(!this.isPinned){
-    this.resize(this.enlargedSize)
-    }
+      if(this.sizeIndex < 4){
+        this.sizeIndex += 1
+        this.resize("size" + this.sizeIndex)
+      }
   }
 
   reduce(){
-    if(!this.isPinned){
-    this.resize("size1")
-    }
+    if(this.sizeIndex > 1){
+        this.sizeIndex -= 1
+        this.resize("size" + this.sizeIndex)
+      }
   }
 
   setEnlargedSize(size: string){

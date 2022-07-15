@@ -1,13 +1,13 @@
 <div [ngClass]="roundEnded ? 'overlay' : ''"></div>
-<div *ngIf="!gameEnded" [ngClass]="containerClasses" (mouseover)="enlarge()" (mouseout)="reduce()">
+<div *ngIf="!gameEnded" [ngClass]="containerClasses" (mouseover)="resizeHover('size'+sizeIndex)" (mouseout)="resizeHover('size1')">
     <div *ngIf="!roundEnded && !mobile" class="top-buttons">
-        <button color="basic" mat-mini-fab (click)="setEnlargedSize('size3')">
+        <button color="basic" [disabled]="sizeIndex == 4" mat-mini-fab (click)="enlarge()">
             <mat-icon>north_west</mat-icon>
         </button>
-        <button color="basic" mat-mini-fab (click)="setEnlargedSize('size2')">
+        <button color="basic" [disabled]="sizeIndex == 1" mat-mini-fab (click)="reduce()">
             <mat-icon>south_east</mat-icon>
         </button>
-        <button color="basic" mat-mini-fab (click)="pin()">
+        <button mat-mini-fab [color]="isPinned ? 'warn' : 'basic'" (click)="pin()">
             <mat-icon>lock</mat-icon>
         </button>
     </div>
@@ -23,8 +23,11 @@
     </div>
     <div [ngClass]="mapClasses">
         <google-map
+            #map
             width="100%"
             height="100%"
+            [zoom]="zoom"
+            [center]="center"
             [options]="options"
             (mapClick)="click($event)"
         >
@@ -53,6 +56,8 @@
     <google-map
         width="100%"
         height="100%"
+        [zoom]="zoom"
+        [center]="center"
         [options]="options"
         (mapClick)="click($event)"
     >
