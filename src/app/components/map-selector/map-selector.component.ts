@@ -61,7 +61,7 @@ export class MapSelectorComponent implements OnInit {
       this.mobile = false;
       if(this.roundEnded){
         this.containerClasses = ['container', 'middle']
-        this.mapClasses = ['map', 'size3']
+        this.mapClasses = ['map', 'size-middle']
       }else{
         this.containerClasses = ['container', 'bottom-right']
         this.mapClasses = ['map', 'size1']
@@ -70,7 +70,7 @@ export class MapSelectorComponent implements OnInit {
       this.mobile = true;
       if(this.roundEnded){
         this.containerClasses = ['container', 'middle']
-        this.mapClasses = ['map', 'mobile-map-middle']
+        this.mapClasses = ['map', 'size-middle']
       }else{
         this.containerClasses = ['container', 'mobile']
         this.mapClasses = ['map', 'mobile-map']
