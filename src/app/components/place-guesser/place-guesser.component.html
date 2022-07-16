@@ -1,13 +1,16 @@
 <div #placecontainer ></div>
 <div class="container">
-    <mat-card class="status-bar">
+    <div class="status-bar">
         <div class="title-container" (click)="resetGame()">
-            <div class="title unselectable">PLACE GUESSER</div>
             <img class="logo unselectable" src="../../../assets/earth-logo.svg"/>
+            <div *ngIf="!mobile" class="title unselectable">PLACE GUESSER</div>   
         </div>
         <div *ngIf="!gameEnded">{{round}}/5 </div>
         <div>{{gameEnded ? "Total Score : " + totalScore : totalScore }} </div>
-    </mat-card>
+    </div>
+    <div *ngIf="!imageLoaded && !gameEnded" class="loading-container">
+        <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
+    </div>
     <div *ngIf="imageLoaded && !gameEnded" class="carousel-container">
         <app-image-carousel [images]="images"></app-image-carousel>
     </div>
