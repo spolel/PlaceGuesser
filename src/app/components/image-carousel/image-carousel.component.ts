@@ -61,7 +61,7 @@ export class ImageCarouselComponent implements OnInit {
     if(dataIndex != null){
       this.displayIdx = parseInt(dataIndex)
     }
-    console.log(dataIndex)
+    //console.log(dataIndex)
   }
 
 }

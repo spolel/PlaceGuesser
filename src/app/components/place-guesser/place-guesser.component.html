@@ -6,7 +6,7 @@
             <img class="logo unselectable" src="../../../assets/earth-logo.svg"/>
         </div>
         <div *ngIf="!gameEnded">{{round}}/5 </div>
-        <div>{{totalScore}} </div>
+        <div>{{gameEnded ? "Total Score : " + totalScore : totalScore }} </div>
     </mat-card>
     <div *ngIf="imageLoaded && !gameEnded" class="carousel-container">
         <app-image-carousel [images]="images"></app-image-carousel>

@@ -38,6 +38,8 @@ export class PlaceGuesserComponent implements OnInit {
 
   gameStarted: boolean = false;
 
+  solutionLogging: boolean = false;
+
   @Output() resetGameEvent = new EventEmitter();
 
   constructor(private httpClient: HttpClient, private ngZone: NgZone) {
@@ -64,8 +66,11 @@ export class PlaceGuesserComponent implements OnInit {
 
   getNewPlace(){
     this.solution = this.cities15000[(Math.floor(Math.random()*25831)+1).toString()]
-    //console.log("SOLUTION: ")
-    //console.log(this.solution)
+    if(this.solutionLogging){
+      console.log("SOLUTION: ")
+      console.log(this.solution)
+    }
+    
 
     this.solutionCoords = new google.maps.LatLng(this.solution["coordinates"].split(",")[0],this.solution["coordinates"].split(",")[1] )
 
@@ -76,15 +81,17 @@ export class PlaceGuesserComponent implements OnInit {
     var request = {
       query: this.solution["ascii_name"]+","+this.solution["country_name"],
       fields: ['name', 'place_id', 'photo'],
+      locationBias: this.solutionCoords
     };
 
     this.images=[]
 
     this.palcesService.findPlaceFromQuery(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        //console.log("google query return: ")
-        //console.log(results)
-        
+        if(this.solutionLogging){
+          console.log("google query return: ")
+          console.log(results)
+        }
         // get only 1 image from basic details
         //this.imageUrl = results[0].photos[0].getUrl({maxWidth: 1000, maxHeight: 1000})
         //console.log(this.imageUrl)
@@ -102,7 +109,9 @@ export class PlaceGuesserComponent implements OnInit {
           , (results, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
               if(results.photos == undefined){
-                //console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE")
+                if(this.solutionLogging){
+                  console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE")
+                }
                 this.getNewPlaceAndPhotos()
                 return
               }
@@ -141,7 +150,7 @@ export class PlaceGuesserComponent implements OnInit {
       this.roundEnded = false
       this.getNewPlace()
       this.getPlacePhotos()
-      this.map.ngOnInit()
+      this.map.resetMarker()
       this.carousel.ngOnInit()
     }
   }
