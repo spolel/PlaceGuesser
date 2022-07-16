@@ -53,6 +53,10 @@ export class PlaceGuesserComponent implements OnInit {
   ngOnInit(): void {
     this.getNewPlace()
     this.isMobile()
+
+    if(this.mobile){
+      document.documentElement.requestFullscreen();
+    }
   }
 
   ngAfterViewInit(): void{
@@ -158,7 +162,6 @@ export class PlaceGuesserComponent implements OnInit {
       this.getNewPlace()
       this.getPlacePhotos()
       this.map.resetMarker()
-      this.carousel.ngOnInit()
     }
   }
 
@@ -175,20 +178,19 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   playAgain(){
-    this.map.ngOnInit()
-
+    this.gameEnded = false
+    this.imageLoaded = false
     this.getNewPlace()
     this.getPlacePhotos()
-
-    this.round = 1
-    this.gameEnded = false
+    this.map.ngOnInit()
+    this.round = 1    
     this.totalScore = 0
   }
 
   generateScore(distance){
     if(distance > 5000){
       return 0
-    }else if (distance < 50){
+    }else if (distance <= 50){
       return 1000
     }else{
       return Math.floor(1000*(1-(distance/4950)))

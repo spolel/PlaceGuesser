@@ -11,14 +11,17 @@ export class ImageCarouselComponent implements OnInit {
   @ViewChild('imagesContainer') imagesContainer: ElementRef;
 
   imagesLength: number;
-  displayIdx: number;
+  displayIdx: number = 0;
 
   constructor() { }
 
   ngOnInit(): void {
     this.imagesLength = this.images.length
-    if (this.imagesLength > 0)
+    if (this.imagesLength > 0){
       this.displayIdx = 0
+    }
+    console.log(this.imagesLength)
+    console.log(this.displayIdx)
   }
 
   ngAfterViewInit(){

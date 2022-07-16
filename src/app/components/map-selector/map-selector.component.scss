@@ -7,6 +7,15 @@
   
     transition: all .2s ease-in-out;
   }
+
+  .container-mobile{
+
+    display:flex;
+    flex-direction: column;
+  
+    position: absolute;
+  
+  }
   
   .bottom-right{
     position: absolute;
@@ -48,10 +57,16 @@
     background-color: rgba(0,0,0,0.5); /*dim the background*/
   }
   
-  
-  .endgame-map{
+  .container-endgame{
+    display:flex;
+    flex-direction: column;
+
     width:100%;
-    height: 80%;
+    height: 100%;
+  }
+
+  .endgame-map{
+    height:100%;
   }
 
   .mobile-map{
