@@ -69,11 +69,13 @@ export class MapSelectorComponent implements OnInit {
         this.containerClasses = ['container', 'bottom-right']
         this.mapClasses = ['map', 'size1']
       }
+
+      this.isPinned = false
     } else {
       this.mobile = true;
       if(this.roundEnded){
         this.containerClasses = ['container', 'middle']
-        this.mapClasses = ['map', 'size-middle']
+        this.mapClasses = ['map', 'size-middle-mobile']
       }else{
         this.containerClasses = ['container', 'mobile']
         this.mapClasses = ['map', 'mobile-map']
@@ -99,10 +101,6 @@ export class MapSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.paths = []
-    this.markerLatLng = new google.maps.LatLng(0)
-    this.markerSelected = false
-
     this.responsiveClasses()
   }
 
@@ -136,6 +134,8 @@ export class MapSelectorComponent implements OnInit {
       this.path = [this.guessCoords,this.destinationCoords]
       this.paths.push(this.path)
 
+      //console.log(this.paths)
+
       this.setMapBounds(this.guessCoords,this.destinationCoords)
   
       this.roundEnded = true
@@ -144,6 +144,11 @@ export class MapSelectorComponent implements OnInit {
       this.responsiveClasses()
       this.isPinned = true
     }
+  }
+
+  resetMarker(){
+    this.markerLatLng = new google.maps.LatLng(0)
+    this.markerSelected = false
   }
 
   nextRound(){

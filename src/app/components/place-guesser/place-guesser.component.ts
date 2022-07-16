@@ -4,6 +4,7 @@ import { GoogleMap } from '@angular/google-maps';
 import { catchError, map, Observable, of } from 'rxjs';
 
 import {cities15000} from '../../../assets/cities15000'
+import { ImageCarouselComponent } from '../image-carousel/image-carousel.component';
 import { MapSelectorComponent } from '../map-selector/map-selector.component';
 
 @Component({
@@ -14,6 +15,7 @@ import { MapSelectorComponent } from '../map-selector/map-selector.component';
 export class PlaceGuesserComponent implements OnInit {
   @ViewChild('placecontainer') placecontainer: ElementRef;
   @ViewChild(MapSelectorComponent) map: MapSelectorComponent;
+  @ViewChild(ImageCarouselComponent) carousel: ImageCarouselComponent;
   
   guessCoords: google.maps.LatLng;
   solutionCoords: google.maps.LatLng;
@@ -36,36 +38,9 @@ export class PlaceGuesserComponent implements OnInit {
 
   gameStarted: boolean = false;
 
+  solutionLogging: boolean = false;
+
   @Output() resetGameEvent = new EventEmitter();
-
-  // @HostListener("window:resize", []) onWindowResize() {  
-  //   this.responsiveClasses()
-    
-  // }
-
-  // responsiveClasses(){
-  //   if (window.innerWidth >= 1000) {
-  //     this.mobile = false;
-  //     if(this.roundEnded){
-  //       this.containerClasses = ['container', 'middle']
-  //       this.mapClasses = ['map', 'size3']
-  //     }else{
-  //       this.containerClasses = ['container', 'bottom-right']
-  //       this.mapClasses = ['map', 'size1']
-  //     }
-  //   } else {
-  //     this.mobile = true;
-  //     if(this.roundEnded){
-  //       this.containerClasses = ['container', 'middle']
-  //       this.mapClasses = ['map', 'mobile-map-middle']
-  //     }else{
-  //       this.containerClasses = ['container', 'mobile']
-  //       this.mapClasses = ['map', 'mobile-map']
-  //     }
-      
-  //     this.isPinned = true
-  //   }
-  // }
 
   constructor(private httpClient: HttpClient, private ngZone: NgZone) {
    }
@@ -91,8 +66,11 @@ export class PlaceGuesserComponent implements OnInit {
 
   getNewPlace(){
     this.solution = this.cities15000[(Math.floor(Math.random()*25831)+1).toString()]
-    //console.log("SOLUTION: ")
-    //console.log(this.solution)
+    if(this.solutionLogging){
+      console.log("SOLUTION: ")
+      console.log(this.solution)
+    }
+    
 
     this.solutionCoords = new google.maps.LatLng(this.solution["coordinates"].split(",")[0],this.solution["coordinates"].split(",")[1] )
 
@@ -103,15 +81,17 @@ export class PlaceGuesserComponent implements OnInit {
     var request = {
       query: this.solution["ascii_name"]+","+this.solution["country_name"],
       fields: ['name', 'place_id', 'photo'],
+      locationBias: this.solutionCoords
     };
 
     this.images=[]
 
     this.palcesService.findPlaceFromQuery(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        //console.log("google query return: ")
-        //console.log(results)
-        
+        if(this.solutionLogging){
+          console.log("google query return: ")
+          console.log(results)
+        }
         // get only 1 image from basic details
         //this.imageUrl = results[0].photos[0].getUrl({maxWidth: 1000, maxHeight: 1000})
         //console.log(this.imageUrl)
@@ -129,7 +109,9 @@ export class PlaceGuesserComponent implements OnInit {
           , (results, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
               if(results.photos == undefined){
-                //console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE")
+                if(this.solutionLogging){
+                  console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE")
+                }
                 this.getNewPlaceAndPhotos()
                 return
               }
@@ -154,7 +136,8 @@ export class PlaceGuesserComponent implements OnInit {
     this.distance = this.getDistanceFromLatLonInKm(this.solutionCoords.lat(),this.solutionCoords.lng(),coordinates.lat(),coordinates.lng())
     //console.log(this.distance)
 
-    this.score = Math.floor(this.getProgress(this.distance) * 1000)
+    //this.score = Math.floor(this.getProgress(this.distance) * 1000)
+    this.score = this.generateScore(this.distance)
     this.totalScore += this.score
     
     this.roundOverview()
@@ -168,6 +151,8 @@ export class PlaceGuesserComponent implements OnInit {
       this.roundEnded = false
       this.getNewPlace()
       this.getPlacePhotos()
+      this.map.resetMarker()
+      this.carousel.ngOnInit()
     }
   }
 
@@ -176,8 +161,6 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   gameOver(){
-    //TODO make map big showing all guesses score etc
-    //TODO hide / disable guess button
     this.gameEnded = true
   }
 
@@ -194,6 +177,17 @@ export class PlaceGuesserComponent implements OnInit {
     this.round = 1
     this.gameEnded = false
     this.totalScore = 0
+  }
+
+  generateScore(distance){
+    if(distance > 5000){
+      return 0
+    }else if (distance < 50){
+      return 1000
+    }else{
+      return Math.floor(1000*(1-(distance/4500)))
+    }
+
   }
 
 
