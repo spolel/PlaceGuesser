@@ -69,6 +69,8 @@ export class MapSelectorComponent implements OnInit {
         this.containerClasses = ['container', 'bottom-right']
         this.mapClasses = ['map', 'size1']
       }
+
+      this.isPinned = false
     } else {
       this.mobile = true;
       if(this.roundEnded){

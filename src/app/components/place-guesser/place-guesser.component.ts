@@ -136,7 +136,8 @@ export class PlaceGuesserComponent implements OnInit {
     this.distance = this.getDistanceFromLatLonInKm(this.solutionCoords.lat(),this.solutionCoords.lng(),coordinates.lat(),coordinates.lng())
     //console.log(this.distance)
 
-    this.score = Math.floor(this.getProgress(this.distance) * 1000)
+    //this.score = Math.floor(this.getProgress(this.distance) * 1000)
+    this.score = this.generateScore(this.distance)
     this.totalScore += this.score
     
     this.roundOverview()
@@ -176,6 +177,17 @@ export class PlaceGuesserComponent implements OnInit {
     this.round = 1
     this.gameEnded = false
     this.totalScore = 0
+  }
+
+  generateScore(distance){
+    if(distance > 5000){
+      return 0
+    }else if (distance < 50){
+      return 1000
+    }else{
+      return Math.floor(1000*(1-(distance/4500)))
+    }
+
   }
 
 
