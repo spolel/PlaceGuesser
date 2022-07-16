@@ -191,7 +191,7 @@ export class PlaceGuesserComponent implements OnInit {
     }else if (distance < 50){
       return 1000
     }else{
-      return Math.floor(1000*(1-(distance/4500)))
+      return Math.floor(1000*(1-(distance/4950)))
     }
 
   }
