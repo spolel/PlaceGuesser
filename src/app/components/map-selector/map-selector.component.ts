@@ -84,6 +84,7 @@ export class MapSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this.responsiveClasses()
+    this.paths = []
   }
 
   
@@ -102,10 +103,10 @@ export class MapSelectorComponent implements OnInit {
     } else {
       this.mobile = true;
       if(this.roundEnded){
-        this.containerClasses = ['container', 'middle']
+        this.containerClasses = ['container-mobile', 'middle']
         this.mapClasses = ['map', 'size-middle-mobile']
       }else{
-        this.containerClasses = ['container', 'mobile']
+        this.containerClasses = ['container-mobile', 'mobile']
         this.mapClasses = ['map', 'mobile-map']
       }
       

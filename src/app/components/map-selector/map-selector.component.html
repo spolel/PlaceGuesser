@@ -48,26 +48,28 @@
     <button *ngIf="!roundEnded && mobile" id="button-guess-mobile" color="primary" mat-fab (click)="guess()">
         <mat-icon>check</mat-icon>
     </button>
-    <button *ngIf="roundEnded" id="button-next-round" color="basic" mat-raised-button (click)="nextRound()">
+    <button *ngIf="roundEnded" id="button-next-round" color="primary" mat-raised-button (click)="nextRound()">
         {{round == 5 ? "SUMMARY" : "NEXT ROUND"}}
     </button>
 </div> 
-<div *ngIf="gameEnded" class="endgame-map middle">
-    <google-map
+<div *ngIf="gameEnded" class="container-endgame">
+    <div class="endgame-map">
+        <google-map
         width="100%"
         height="100%"
         [zoom]="zoom"
         [center]="center"
         [options]="options"
         (mapClick)="click($event)"
-    >
-        <div *ngFor="let path of paths">
-            <map-marker [position]="path[0]" [options]=""></map-marker>
-            <map-marker [position]="path[1]" [options]="{'icon' : markerFlag}"></map-marker>
-            <map-polyline [path]="path" [options]="{'strokeColor': 'red', 'strokeOpacity': 0.5}" ></map-polyline>
-        </div>
-    </google-map>
-    <button id="button-playagain" color="basic" mat-raised-button (click)="playAgain()">
+        >
+            <div *ngFor="let path of paths">
+                <map-marker [position]="path[0]" [options]=""></map-marker>
+                <map-marker [position]="path[1]" [options]="{'icon' : markerFlag}"></map-marker>
+                <map-polyline [path]="path" [options]="{'strokeColor': 'red', 'strokeOpacity': 0.5}" ></map-polyline>
+            </div>
+        </google-map>
+    </div>
+    <button id="button-playagain" color="primary" mat-raised-button (click)="playAgain()">
         PLAY AGAIN
     </button>
 </div>
