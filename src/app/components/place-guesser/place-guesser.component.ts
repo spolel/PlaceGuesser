@@ -4,6 +4,7 @@ import { GoogleMap } from '@angular/google-maps';
 import { catchError, map, Observable, of } from 'rxjs';
 
 import {cities15000} from '../../../assets/cities15000'
+import { ImageCarouselComponent } from '../image-carousel/image-carousel.component';
 import { MapSelectorComponent } from '../map-selector/map-selector.component';
 
 @Component({
@@ -14,6 +15,7 @@ import { MapSelectorComponent } from '../map-selector/map-selector.component';
 export class PlaceGuesserComponent implements OnInit {
   @ViewChild('placecontainer') placecontainer: ElementRef;
   @ViewChild(MapSelectorComponent) map: MapSelectorComponent;
+  @ViewChild(ImageCarouselComponent) carousel: ImageCarouselComponent;
   
   guessCoords: google.maps.LatLng;
   solutionCoords: google.maps.LatLng;
@@ -37,35 +39,6 @@ export class PlaceGuesserComponent implements OnInit {
   gameStarted: boolean = false;
 
   @Output() resetGameEvent = new EventEmitter();
-
-  // @HostListener("window:resize", []) onWindowResize() {  
-  //   this.responsiveClasses()
-    
-  // }
-
-  // responsiveClasses(){
-  //   if (window.innerWidth >= 1000) {
-  //     this.mobile = false;
-  //     if(this.roundEnded){
-  //       this.containerClasses = ['container', 'middle']
-  //       this.mapClasses = ['map', 'size3']
-  //     }else{
-  //       this.containerClasses = ['container', 'bottom-right']
-  //       this.mapClasses = ['map', 'size1']
-  //     }
-  //   } else {
-  //     this.mobile = true;
-  //     if(this.roundEnded){
-  //       this.containerClasses = ['container', 'middle']
-  //       this.mapClasses = ['map', 'mobile-map-middle']
-  //     }else{
-  //       this.containerClasses = ['container', 'mobile']
-  //       this.mapClasses = ['map', 'mobile-map']
-  //     }
-      
-  //     this.isPinned = true
-  //   }
-  // }
 
   constructor(private httpClient: HttpClient, private ngZone: NgZone) {
    }
@@ -168,6 +141,8 @@ export class PlaceGuesserComponent implements OnInit {
       this.roundEnded = false
       this.getNewPlace()
       this.getPlacePhotos()
+      this.map.ngOnInit()
+      this.carousel.ngOnInit()
     }
   }
 
@@ -176,8 +151,6 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   gameOver(){
-    //TODO make map big showing all guesses score etc
-    //TODO hide / disable guess button
     this.gameEnded = true
   }
 
