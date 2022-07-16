@@ -37,7 +37,7 @@
             </map-marker>
             <div *ngIf="path != undefined">
                 <map-marker [position]="path[0]" [options]=""></map-marker>
-                <map-marker [position]="path[1]" [options]="{'icon' : 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'}"></map-marker>
+                <map-marker [position]="path[1]" [options]="{'icon' : markerFlag}"></map-marker>
                 <map-polyline [path]="path" [options]="{'strokeColor': 'red', 'strokeOpacity': 0.5}" ></map-polyline>
             </div>
         </google-map>
@@ -63,7 +63,7 @@
     >
         <div *ngFor="let path of paths">
             <map-marker [position]="path[0]" [options]=""></map-marker>
-            <map-marker [position]="path[1]" [options]="{'icon' : 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'}"></map-marker>
+            <map-marker [position]="path[1]" [options]="{'icon' : markerFlag}"></map-marker>
             <map-polyline [path]="path" [options]="{'strokeColor': 'red', 'strokeOpacity': 0.5}" ></map-polyline>
         </div>
     </google-map>

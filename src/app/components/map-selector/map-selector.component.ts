@@ -46,6 +46,25 @@ export class MapSelectorComponent implements OnInit {
   roundEnded: boolean = false;
   mobile: boolean;
   
+  // svgMarker: any = {
+  //   path: google.maps.SymbolPath ,
+  //   fillColor: "blue",
+  //   fillOpacity: 0.6,
+  //   strokeWeight: 0,
+  //   rotation: 0,
+  //   scale: 2,
+  //   anchor: new google.maps.Point(15, 30),
+  // };
+
+  markerFlag: any = {
+    url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+    // This marker is 20 pixels wide by 32 pixels high.
+    size: new google.maps.Size(20, 32),
+    // The origin for this image is (0, 0).
+    origin: new google.maps.Point(0, 0),
+    // The anchor for this image is the base of the flagpole at (0, 32).
+    anchor: new google.maps.Point(0, 32),
+  };
   
 
   @Output() guessEvent = new EventEmitter<google.maps.LatLng>();
@@ -59,6 +78,15 @@ export class MapSelectorComponent implements OnInit {
     
   }
 
+  constructor() {
+
+  }
+
+  ngOnInit(): void {
+    this.responsiveClasses()
+  }
+
+  
   responsiveClasses(){
     if (window.innerWidth >= 1000) {
       this.mobile = false;
@@ -85,24 +113,6 @@ export class MapSelectorComponent implements OnInit {
     }
   }
 
-  // svgMarker: any = {
-  //   path: google.maps.SymbolPath ,
-  //   fillColor: "blue",
-  //   fillOpacity: 0.6,
-  //   strokeWeight: 0,
-  //   rotation: 0,
-  //   scale: 2,
-  //   anchor: new google.maps.Point(15, 30),
-  // };
-
-
-  constructor() {
-
-  }
-
-  ngOnInit(): void {
-    this.responsiveClasses()
-  }
 
   click(event: google.maps.MapMouseEvent) {
     //console.log(event.latLng.lat(),event.latLng.lng())

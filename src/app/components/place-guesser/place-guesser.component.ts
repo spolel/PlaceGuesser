@@ -42,12 +42,17 @@ export class PlaceGuesserComponent implements OnInit {
 
   @Output() resetGameEvent = new EventEmitter();
 
+  mobile: boolean = false
+  @HostListener("window:resize", []) onWindowResize() {  
+    this.isMobile()
+  }
+
   constructor(private httpClient: HttpClient, private ngZone: NgZone) {
    }
 
   ngOnInit(): void {
     this.getNewPlace()
-
+    this.isMobile()
   }
 
   ngAfterViewInit(): void{
@@ -149,6 +154,7 @@ export class PlaceGuesserComponent implements OnInit {
       this.gameOver()
     }else{
       this.roundEnded = false
+      this.imageLoaded = false
       this.getNewPlace()
       this.getPlacePhotos()
       this.map.resetMarker()
@@ -214,8 +220,12 @@ export class PlaceGuesserComponent implements OnInit {
     return deg * (Math.PI/180)
   }
 
-  openHelp(){
-
+  isMobile(){
+    if (window.innerWidth >= 1000) {
+      this.mobile = false;
+    }else{
+      this.mobile = true;
+    }
   }
 
   
