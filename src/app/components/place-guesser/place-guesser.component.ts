@@ -88,8 +88,8 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   getRandomPlace(pop: number, zone: string): Observable<Object> {
-    console.log('http://192.168.1.121:5000/get_random_place?pop='+pop+'&zone='+zone)
-    return this.httpClient.get('http://192.168.1.121:5000/get_random_place?pop='+pop+'&zone='+zone, {responseType: "json"});
+    //console.log('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_random_place?pop='+pop+'&zone='+zone)
+    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_random_place?pop='+pop+'&zone='+zone, {responseType: "json"});
   }
 
   getPlacePhotos(){
