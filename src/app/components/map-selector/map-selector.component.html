@@ -52,8 +52,8 @@
         {{round == 5 ? "SUMMARY" : "NEXT ROUND"}}
     </button>
 </div> 
-<div *ngIf="gameEnded" class="container-endgame">
-    <div class="endgame-map">
+<div *ngIf="gameEnded" class="container-full">
+    <div class="mapfull">
         <google-map
         width="100%"
         height="100%"
@@ -71,5 +71,8 @@
     </div>
     <button id="button-playagain" color="primary" mat-raised-button (click)="playAgain()">
         PLAY AGAIN
+    </button>
+    <button id="button-resetgame" color="basic" mat-raised-button (click)="resetGame()">
+        HOME
     </button>
 </div>

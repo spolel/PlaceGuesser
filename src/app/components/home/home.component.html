@@ -1,11 +1,12 @@
 <div class="app-container">
+    <div [ngClass]="settingsOpen || helpOpen ? 'overlay' : ''"></div>
     <div *ngIf="!gameStarted" class="container">
         <h1 class="title unselectable">PLACE GUESSER</h1>
         <img class="logo unselectable" src="../../../assets/earth-logo.svg"/>
         <div class="button-container">
             <div class="spacer">
             </div>
-            <button class="button-play" color="primary" mat-raised-button (click)="startGame()">
+            <button class="button-play" color="primary" mat-raised-button (click)="openSettings()">
                 PLAY
             </button>
             <div class="spacer">
@@ -13,8 +14,36 @@
                     <mat-icon>help</mat-icon>
                 </button>
             </div>
-            
         </div>
+        <mat-card *ngIf="settingsOpen" class="settings-container middle">
+            <mat-card-title class="help-title">Game settings</mat-card-title>
+            <mat-card-content>
+                <mat-button-toggle-group class="settings-buttons" [formControl]="gameModeControl">
+                    <mat-button-toggle value="worldwide">Worldwide</mat-button-toggle>
+                    <mat-button-toggle value="europe">Europe</mat-button-toggle>
+                    <mat-button-toggle value="africa">Africa</mat-button-toggle>
+                    <mat-button-toggle value="americas">Americas</mat-button-toggle>
+                    <mat-button-toggle value="asia/oceania">Asia/Oceania</mat-button-toggle>
+                </mat-button-toggle-group>
+            </mat-card-content>
+            <mat-card-content>
+                <mat-button-toggle-group class="" [formControl]="populationControl">
+                    <mat-button-toggle value="500">500+</mat-button-toggle>
+                    <mat-button-toggle value="10000">10k+</mat-button-toggle>
+                    <mat-button-toggle value="50000">50k+</mat-button-toggle>
+                    <mat-button-toggle value="100000">100k+</mat-button-toggle>
+                    <mat-button-toggle value="500000">500k+</mat-button-toggle>
+                </mat-button-toggle-group>
+            </mat-card-content>
+            <mat-card-actions>
+                <button class="button-close-settings" color="basic" mat-raised-button (click)="closeSettings()">
+                    CANCEL
+                </button>
+                <button class="" color="primary" mat-raised-button (click)="startGame()">
+                    NEXT
+                </button>
+            </mat-card-actions>
+        </mat-card>
         <mat-card *ngIf="helpOpen" class="help-container">
             <mat-card-title class="help-title">HOW TO PLAY</mat-card-title>
             <mat-card-content>
@@ -22,8 +51,10 @@
                     <br>
                     You get images from a <b>random place on earth</b> and you have to guess <b>where it is</b>.
                     <br><br>
-                    You have 5 rounds. Place you guess on the map.
-                    <br> The maximum points you can reach are 5000. You gan get a maximum of 1000 points per round depending on how close you were.
+                    Place you guess on the <b>map</b> .
+                    <br><br>
+                    There are <b>5 rounds</b> in total. 
+                    <br> The maximum points you can reach are 5000. You can get a maximum of 1000 points per round depending on how close you were.
                     <br><br>
                     At the end of the game you will be shown a summary showing all your guesses on the map.
                     </p>
@@ -37,5 +68,5 @@
         <div style="flex-grow:1"></div>
         <app-footer class="footer" ></app-footer>
     </div>
-    <app-place-guesser  *ngIf="gameStarted" (resetGameEvent)="resetGame()"></app-place-guesser>
+    <app-place-guesser  *ngIf="gameStarted" [gameMode]="gameMode" [populationMode]="populationMode" (resetGameEvent)="resetGame()"></app-place-guesser>
 </div>

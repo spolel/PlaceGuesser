@@ -31,15 +31,34 @@
     box-shadow: rgba(0, 0, 0, 0.803) 0px 19px 38px, rgba(0, 0, 0, 0.749) 0px 15px 12px;
 }
 
-@media only screen and (max-width: 1500px) {
-    .container{
-        width : 90%;
-    }
+.settings-container{
+    display: flex;
 
-    .logo{
-        height: 50%;
-    }
+    flex-direction: column;
+    align-items: center;
 }
+
+.middle{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    
+  
+    z-index: 20;
+  }
+
+
+// @media only screen and (max-width: 1500px) {
+//     .container{
+//         width : 90%;
+//     }
+
+//     .logo{
+//         height: 50%;
+//     }
+// }
 
 @media only screen and (max-width: 1000px) {
     .container{
@@ -47,8 +66,20 @@
     }
 
     .logo{
-        height: auto;
-        max-height: 50vh;
+        max-height: 40vh;
+        max-width:90%;
+    }
+
+    .middle{
+        width: 90%;
+    }
+
+    .help-container{
+        width:90%;
+    }
+
+    .settings-buttons{
+        transform: scale(0.8);
     }
 
 }
@@ -97,6 +128,17 @@
     font-size: 1.25em;
     line-height: 1 ;
 }
+
+
+.overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: rgba(0,0,0,0.5); /*dim the background*/
+  }
 
 
 .unselectable{
