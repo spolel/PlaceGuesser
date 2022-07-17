@@ -20,8 +20,8 @@ export class ImageCarouselComponent implements OnInit {
     if (this.imagesLength > 0){
       this.displayIdx = 0
     }
-    console.log(this.imagesLength)
-    console.log(this.displayIdx)
+    //console.log(this.imagesLength)
+    //console.log(this.displayIdx)
   }
 
   ngAfterViewInit(){

@@ -70,6 +70,7 @@ export class MapSelectorComponent implements OnInit {
   @Output() guessEvent = new EventEmitter<google.maps.LatLng>();
   @Output() nextRoundEvent = new EventEmitter();
   @Output() playAgainEvent = new EventEmitter();
+  @Output() resetGameEvent = new EventEmitter();
 
   @ViewChild('map') map: GoogleMap;
 
@@ -103,11 +104,11 @@ export class MapSelectorComponent implements OnInit {
     } else {
       this.mobile = true;
       if(this.roundEnded){
-        this.containerClasses = ['container-mobile', 'middle']
-        this.mapClasses = ['map', 'size-middle-mobile']
+        this.containerClasses = ['container-full', 'middle']
+        this.mapClasses = ['map','mapfull']
       }else{
-        this.containerClasses = ['container-mobile', 'mobile']
-        this.mapClasses = ['map', 'mobile-map']
+        this.containerClasses = ['container-mobile']
+        this.mapClasses = ['map', 'mapfull']
       }
       
       this.isPinned = true
@@ -180,6 +181,10 @@ export class MapSelectorComponent implements OnInit {
 
   playAgain(){
     this.playAgainEvent.emit()
+  }
+
+  resetGame(){
+    this.resetGameEvent.emit()
   }
 
   resize(size: string){
