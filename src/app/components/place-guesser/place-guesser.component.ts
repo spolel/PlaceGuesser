@@ -6,7 +6,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { ImageCarouselComponent } from '../image-carousel/image-carousel.component';
 import { MapSelectorComponent } from '../map-selector/map-selector.component';
 
-import {codeToCountry} from '../../../assets/codeToCountry'
+import { codeToCountry } from '../../../assets/codeToCountry'
 
 
 @Component({
@@ -21,7 +21,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   @Input() gameMode: string;
   @Input() populationMode: string;
-  
+
   guessCoords: google.maps.LatLng;
   solutionCoords: google.maps.LatLng;
   solution: Object;
@@ -37,6 +37,8 @@ export class PlaceGuesserComponent implements OnInit {
   score: number;
   totalScore: number = 0;
 
+  roundGeoids: number[] = [];
+
   gameEnded: boolean = false;
   roundEnded: boolean = false;
 
@@ -47,57 +49,111 @@ export class PlaceGuesserComponent implements OnInit {
   @Output() resetGameEvent = new EventEmitter();
 
   mobile: boolean = false
-  @HostListener("window:resize", []) onWindowResize() {  
+  @HostListener("window:resize", []) onWindowResize() {
     this.isMobile()
   }
 
   constructor(private httpClient: HttpClient, private ngZone: NgZone) {
-   }
+  }
 
   ngOnInit(): void {
     this.isMobile()
 
-    if(this.mobile){
+    if (this.mobile) {
       document.documentElement.requestFullscreen();
     }
 
   }
 
-  ngAfterViewInit(): void{
+  ngAfterViewInit(): void {
 
     //initialize google place service
     this.palcesService = new google.maps.places.PlacesService(this.placecontainer.nativeElement);
-    
+
     this.getNewPlace()
 
   }
 
-  getNewPlace(){
-    this.getRandomPlace(parseInt(this.populationMode),this.gameMode).subscribe(data => {
-      this.solution = data[0]
+  getNewPlace() {
 
-      this.solutionCoords = new google.maps.LatLng(this.solution["latitude"],this.solution["longitude"] )
+    //TODO make it so you cant get same place in a row twice
+
+    this.getRandomPlace(parseInt(this.populationMode), this.gameMode).subscribe(data => {
+
+      if (this.roundGeoids.includes(data[0]["geonameid"])){
+        if(this.solutionLogging){
+          console.log('place already seen this round ... getting new one')
+        }
+        
+        this.getNewPlace()
+
+      }else{
+        this.solution = data[0]
+        this.solutionCoords = new google.maps.LatLng(this.solution["latitude"], this.solution["longitude"])
+
+        this.roundGeoids.push(this.solution["geonameid"])
+  
+  
+        if (this.solutionLogging) {
+          console.log("SOLUTION: ")
+          console.log(this.solution)
+        }
+        
+        this.getCachedPhotos(parseInt(this.solution["geonameid"])).subscribe({
+          next: data => {
+            if(data == null){
+              if(this.solutionLogging){
+                console.log("Location not cached, ... getting new photos")
+              }
+              
+              this.getPlacePhotos()
+            }else{
+              if(this.solutionLogging){
+                console.log("Photos from cash: ")
+              console.log(data)
+              }
+              
+              this.images = []
+              data["photos"].forEach(item => {
+                this.images.push(item)
+              })
       
-      if(this.solutionLogging){
-        console.log("SOLUTION: ")
-        console.log(this.solution)
+              this.ngZone.run(() => {
+                this.imageLoaded = true
+              });
+            }
+            
+          },
+          error: error => {
+            console.log(error)
+          }
+        })
       }
 
-      this.getPlacePhotos()
     })
   }
 
   getRandomPlace(pop: number, zone: string): Observable<Object> {
     //console.log('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_random_place?pop='+pop+'&zone='+zone)
-    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_random_place?pop='+pop+'&zone='+zone, {responseType: "json"});
+    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_random_place?pop=' + pop + '&zone=' + zone, { responseType: "json" });
   }
 
-  getPlacePhotos(){
+  getCachedPhotos(goenameid: number): Observable<Object> {
+    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_place_photos?geonameid=' + goenameid, { responseType: "json" });
+  }
+
+  savePlacePhotos(body: Object): Observable<any> {
+    const headers = { 'content-type': 'application/json'}  
+    
+    return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_place_photos', body, { 'headers': headers });
+  }
+
+  getPlacePhotos() {
 
     //let queryString = this.solution["name"]+", "+codeToCountry[this.solution["country code"]]+", "+this.solution["admin1 code"]
-    let queryString = this.solution["name"]+", "+codeToCountry[this.solution["country code"]]
+    let queryString = this.solution["name"] + ", " + codeToCountry[this.solution["country code"]]
 
-    if(this.solutionLogging){
+    if (this.solutionLogging) {
       console.log(queryString)
     }
 
@@ -107,11 +163,11 @@ export class PlaceGuesserComponent implements OnInit {
       locationBias: this.solutionCoords
     };
 
-    this.images=[]
+    this.images = []
 
     this.palcesService.findPlaceFromQuery(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        if(this.solutionLogging){
+        if (this.solutionLogging) {
           console.log("google query return: ")
           console.log(results)
         }
@@ -131,8 +187,8 @@ export class PlaceGuesserComponent implements OnInit {
           }
           , (results, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-              if(results.photos == undefined){
-                if(this.solutionLogging){
+              if (results.photos == undefined) {
+                if (this.solutionLogging) {
                   console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE")
                 }
                 this.getNewPlace()
@@ -141,36 +197,44 @@ export class PlaceGuesserComponent implements OnInit {
               results.photos.forEach(item => {
                 this.images.push(item.getUrl())
               })
+
+              this.savePlacePhotos(
+                {
+                  geonameid: this.solution["geonameid"],
+                  photos: this.images
+                }
+              ).subscribe({error: e => { console.log(e)}})
+
               //console.log(this.images)
               this.ngZone.run(() => {
                 this.imageLoaded = true
               });
             }
-        });
+          });
 
       }
     });
   }
 
-  checkGuess(coordinates: google.maps.LatLng){
+  checkGuess(coordinates: google.maps.LatLng) {
     //console.log(coordinates)
     this.guessCoords = coordinates
 
-    this.distance = this.getDistanceFromLatLonInKm(this.solutionCoords.lat(),this.solutionCoords.lng(),coordinates.lat(),coordinates.lng())
+    this.distance = this.getDistanceFromLatLonInKm(this.solutionCoords.lat(), this.solutionCoords.lng(), coordinates.lat(), coordinates.lng())
     //console.log(this.distance)
 
     //this.score = Math.floor(this.getProgress(this.distance) * 1000)
     this.score = this.generateScore(this.distance)
     this.totalScore += this.score
-    
+
     this.roundOverview()
   }
 
-  nextRound(){
+  nextRound() {
     this.round += 1
-    if(this.round > 5){
+    if (this.round > 5) {
       this.gameOver()
-    }else{
+    } else {
       this.roundEnded = false
       this.imageLoaded = false
       this.getNewPlace()
@@ -178,103 +242,104 @@ export class PlaceGuesserComponent implements OnInit {
     }
   }
 
-  roundOverview(){
+  roundOverview() {
     this.roundEnded = true;
   }
 
-  gameOver(){
+  gameOver() {
     this.gameEnded = true
   }
 
-  resetGame(){
+  resetGame() {
     this.resetGameEvent.emit()
   }
 
-  playAgain(){
+  playAgain() {
     this.gameEnded = false
     this.imageLoaded = false
     this.getNewPlace()
+    this.roundGeoids = []
     this.map.ngOnInit()
-    this.round = 1    
+    this.round = 1
     this.totalScore = 0
   }
 
-  generateScore(distance){
-    if(this.gameMode == 'europe'){
-      if(distance > 1000){
+  generateScore(distance) {
+    if (this.gameMode == 'europe') {
+      if (distance > 1000) {
         return 0
-      }else if (distance <= 50){
+      } else if (distance <= 50) {
         return 1000
-      }else{
-        return Math.floor(1000*(1-(distance/950)))
+      } else {
+        return Math.floor(1000 * (1 - (distance / 950)))
       }
-    }else if(this.gameMode == 'americas'){
-        if(distance > 4000){
-          return 0
-        }else if (distance <= 50){
-          return 1000
-        }else{
-          return Math.floor(1000*(1-(distance/3950)))
-        }
-    }else if(this.gameMode == 'africa'){
-      if(distance > 3000){
+    } else if (this.gameMode == 'americas') {
+      if (distance > 4000) {
         return 0
-      }else if (distance <= 50){
+      } else if (distance <= 50) {
         return 1000
-      }else{
-        return Math.floor(1000*(1-(distance/2950)))
+      } else {
+        return Math.floor(1000 * (1 - (distance / 3950)))
       }
-    }else if(this.gameMode == 'asia/oceania'){
-      if(distance > 4000){
+    } else if (this.gameMode == 'africa') {
+      if (distance > 3000) {
         return 0
-      }else if (distance <= 50){
+      } else if (distance <= 50) {
         return 1000
-      }else{
-        return Math.floor(1000*(1-(distance/3950)))
+      } else {
+        return Math.floor(1000 * (1 - (distance / 2950)))
       }
-    }else{
-      if(distance > 6000){
+    } else if (this.gameMode == 'asia/oceania') {
+      if (distance > 4000) {
         return 0
-      }else if (distance <= 50){
+      } else if (distance <= 50) {
         return 1000
-      }else{
-        return Math.floor(1000*(1-(distance/5950)))
+      } else {
+        return Math.floor(1000 * (1 - (distance / 3950)))
+      }
+    } else {
+      if (distance > 5000) {
+        return 0
+      } else if (distance <= 50) {
+        return 1000
+      } else {
+        return Math.floor(1000 * (1 - (distance / 4950)))
       }
     }
   }
 
 
-  getProgress(distance){
-    return (1-(distance/20037.5))
+  getProgress(distance) {
+    return (1 - (distance / 20037.5))
   }
 
-  getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
-    var dLat = this.deg2rad(lat2-lat1);  // deg2rad below
-    var dLon = this.deg2rad(lon2-lon1); 
-    var a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2)
-      ; 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
+    var dLon = this.deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+      ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c; // Distance in km
 
     return Math.floor(d);
   }
 
   deg2rad(deg) {
-    return deg * (Math.PI/180)
+    return deg * (Math.PI / 180)
   }
 
-  isMobile(){
+  isMobile() {
     if (window.innerWidth >= 1000) {
       this.mobile = false;
-    }else{
+    } else {
       this.mobile = true;
     }
   }
 
-  
+
 
 }
