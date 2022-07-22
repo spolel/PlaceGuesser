@@ -48,7 +48,7 @@
     <button *ngIf="!roundEnded && mobile" id="button-guess-mobile" color="primary" mat-fab (click)="guess()">
         <mat-icon>check</mat-icon>
     </button>
-    <button *ngIf="roundEnded" id="button-next-round" color="primary" mat-raised-button (click)="nextRound()">
+    <button *ngIf="roundEnded" class="button-next-round" color="primary" mat-raised-button (click)="nextRound()">
         {{round == 5 ? "SUMMARY" : "NEXT ROUND"}}
     </button>
 </div> 
@@ -69,10 +69,10 @@
             </div>
         </google-map>
     </div>
-    <button id="button-playagain" color="primary" mat-raised-button (click)="playAgain()">
+    <button class="button-playagain" color="primary" mat-raised-button (click)="playAgain()">
         PLAY AGAIN
     </button>
-    <button id="button-resetgame" color="basic" mat-raised-button (click)="resetGame()">
+    <button class="button-resetgame" color="basic" mat-raised-button (click)="resetGame()">
         HOME
     </button>
 </div>

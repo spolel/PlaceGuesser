@@ -79,7 +79,7 @@
     }
 
     .settings-buttons{
-        transform: scale(0.8);
+        transform: scale(0.85);
     }
 
 }
@@ -122,6 +122,11 @@
     text-align: center;
     font-size: 2em;
     line-height: 1 ;
+    margin-bottom: 25px;
+}
+
+.buttons-settings-container{
+    margin-bottom: 10px ;
 }
 
 .help-container mat-card-content{
