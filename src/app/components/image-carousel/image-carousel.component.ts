@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-image-carousel',
@@ -7,6 +7,8 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 })
 export class ImageCarouselComponent implements OnInit {
   @Input() images: string[] = [];
+
+  @Output() refreshImageUrlsEvent = new EventEmitter();
 
   @ViewChild('imagesContainer') imagesContainer: ElementRef;
 
@@ -65,6 +67,11 @@ export class ImageCarouselComponent implements OnInit {
       this.displayIdx = parseInt(dataIndex)
     }
     //console.log(dataIndex)
+  }
+
+  refreshImageUrls(){
+    console.log("ERROOOOOOOOOOOR on imageload")
+    this.refreshImageUrlsEvent.emit()
   }
 
 }
