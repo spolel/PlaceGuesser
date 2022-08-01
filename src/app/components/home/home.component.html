@@ -1,16 +1,19 @@
-<div class="app-container">
-    <div [ngClass]="settingsOpen || helpOpen ? 'overlay' : ''"></div>
+<div [style.background]="gameStarted ? 'none' : backgroundStyle " [style.background-size]="gameStarted ? 'none' : 'cover'" class="app-container">
+    <div [ngClass]="settingsOpen || helpOpen || statsOpen ? 'overlay' : ''"></div>
     <div *ngIf="!gameStarted" class="container">
         <h1 class="title unselectable">PLACE GUESSER</h1>
         <img class="logo unselectable" src="../../../assets/earth-logo.svg" />
         <div class="button-container">
             <div class="spacer">
+                <button class="button-iconopen" mat-icon-button (click)="openStats()">
+                    <mat-icon>equalizer</mat-icon>
+                </button>
             </div>
             <button class="button-play" color="primary" mat-raised-button (click)="openSettings()">
                 PLAY
             </button>
             <div class="spacer">
-                <button class="button-openhelp" mat-icon-button (click)="openHelp()">
+                <button class="button-iconopen" mat-icon-button (click)="openHelp()">
                     <mat-icon>help</mat-icon>
                 </button>
             </div>
@@ -79,6 +82,21 @@
             </mat-card-content>
             <mat-card-actions>
                 <button class="button-closehelp" color="basic" mat-raised-button (click)="closeHelp()">
+                    CLOSE
+                </button>
+            </mat-card-actions>
+        </mat-card>
+        <mat-card *ngIf="statsOpen" class="stats-container">
+            <mat-card-title class="stats-title">STATS</mat-card-title>
+            <mat-card-content>
+                <div class="stats-content">
+                    <div class="stat"> <div>Played</div>  <div class="stat-number">{{stats["played"]}}</div> </div>
+                    <div class="stat"> <div>Highscore</div>  <div class="stat-number">{{stats["highscore"]}}</div> </div>
+                </div>
+                <app-barchart [barChartData]="barChartData" class="histo"></app-barchart>
+            </mat-card-content>
+            <mat-card-actions>
+                <button class="button-closehelp" color="basic" mat-raised-button (click)="closeStats()">
                     CLOSE
                 </button>
             </mat-card-actions>

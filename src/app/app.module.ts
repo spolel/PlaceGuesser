@@ -16,6 +16,8 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { HttpClientModule } from '@angular/common/http';
 
 import { FooterComponent } from './components/footer/footer.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BarchartComponent } from './components/barchart/barchart.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { FooterComponent } from './components/footer/footer.component';
     PlaceGuesserComponent,
     MapSelectorComponent,
     ImageCarouselComponent,
-    FooterComponent
+    FooterComponent,
+    BarchartComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +37,8 @@ import { FooterComponent } from './components/footer/footer.component';
     GoogleMapsModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

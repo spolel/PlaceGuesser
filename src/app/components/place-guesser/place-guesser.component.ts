@@ -101,7 +101,9 @@ export class PlaceGuesserComponent implements OnInit {
         
         this.getCachedPhotos(parseInt(this.solution["geonameid"])).subscribe({
           next: data => {
-            if(data == null){
+            // caching images disabled
+            // data == null replaced with true 
+            if(true){
               if(this.solutionLogging){
                 console.log("Location not cached, ... getting new photos")
               }
@@ -248,6 +250,28 @@ export class PlaceGuesserComponent implements OnInit {
 
   gameOver() {
     this.gameEnded = true
+
+    this.saveHistory()
+
+  }
+
+  saveHistory(){
+    let history = {}
+    if (localStorage.getItem('history') != null){
+      history = JSON.parse(localStorage.getItem('history'))
+    }else{
+      history = {played : 0, highscore: 0, distribution: [] }
+    }
+
+    history["played"] = history["played"] + 1
+
+    if (history["highscore"] < this.totalScore){
+      history["highscore"] = this.totalScore
+    }
+
+    history["distribution"].push(this.totalScore)
+
+    localStorage.setItem('history', JSON.stringify(history))
   }
 
   resetGame() {
