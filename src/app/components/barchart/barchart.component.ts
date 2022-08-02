@@ -34,8 +34,8 @@ export class BarchartComponent implements OnInit {
 
   scheme = undefined
 
-  customColors = [{name:"0",value: '#12cde9'},{name:"500",value: '#00c4f5'},{name:"1000",value: '#00bafd'},{name:"1500",value: '#34aeff'},{name:"2000",value: '#649fff'},
-  {name:"2500",value: '#8b8ef6'},{name:"3000",value: '#ad7be5'},{name:"3500",value: '#c865cc'},{name:"4000",value: '#db4dad'},{name:"4500",value: '#e53489'},{name:"5000",value: '#e61e62'}]
+  customColors = [{name:"0",value: '#12cde9'},{name:"5k",value: '#00c4f5'},{name:"10k",value: '#00bafd'},{name:"15k",value: '#34aeff'},{name:"20k",value: '#649fff'},
+  {name:"25k",value: '#8b8ef6'},{name:"30k",value: '#ad7be5'},{name:"35k",value: '#c865cc'},{name:"40k",value: '#db4dad'},{name:"45k",value: '#e53489'},{name:"50k",value: '#e61e62'}]
 
 
   constructor() { 
@@ -51,16 +51,16 @@ export class BarchartComponent implements OnInit {
   generateBarChartData(history: any[]) {
     let data = [
       { "name": "0", "value": 0 },
-      { "name": "500", "value": 0 },
-      { "name": "1000", "value": 0 },
-      { "name": "1500", "value": 0 },
-      { "name": "2000", "value": 0 },
-      { "name": "2500", "value": 0 },
-      { "name": "3000", "value": 0 },
-      { "name": "3500", "value": 0 },
-      { "name": "4000", "value": 0 },
-      { "name": "4500", "value": 0 },
-      { "name": "5000", "value": 0 }
+      { "name": "5k", "value": 0 },
+      { "name": "10k", "value": 0 },
+      { "name": "15k", "value": 0 },
+      { "name": "20k", "value": 0 },
+      { "name": "25k", "value": 0 },
+      { "name": "30k", "value": 0 },
+      { "name": "35k", "value": 0 },
+      { "name": "40k", "value": 0 },
+      { "name": "45k", "value": 0 },
+      { "name": "50k", "value": 0 }
     ];
 
     history.forEach(item => {
@@ -71,6 +71,33 @@ export class BarchartComponent implements OnInit {
   }
 
   getScoreCategory(score: number) {
+    switch (true) {
+      case (score >= 50000):
+        return 10
+      case (score > 45000):
+        return 9
+      case (score > 40000):
+        return 8
+      case (score > 35000):
+        return 7
+      case (score > 30000):
+        return 6
+      case (score > 25000):
+        return 5
+      case (score > 20000):
+        return 4
+      case (score > 15000):
+        return 3
+      case (score > 10000):
+        return 2
+      case (score > 5000):
+        return 1
+      default:
+        return 0
+    }
+  }
+
+  getScoreCategoryBase(score: number) {
     switch (true) {
       case (score >= 5000):
         return 10

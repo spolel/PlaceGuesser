@@ -222,6 +222,36 @@ export class HomeComponent implements OnInit {
   //   return this.usernameControl.hasError('maxlength') ? 'Maximum length 25' : '';
   // }
 
+  getGameMulti(zone: string, population: string) {
+    let zoneMultis = {
+      "worldwide": 4,
+      "europe": 0,
+      "africa": 0,
+      "americas": 1,
+      "asia/oceania": 2.5
+    }
+    let popMultis = {
+      "500": 5,
+      "10000": 3,
+      "50000": 2,
+      "100000": 1,
+      "500000": 0
+    }
+    return 1 + zoneMultis[zone] + popMultis[population]
+  }
+
+  getDifficulty(multi: number){
+    if(multi >= 10){
+      return "HARDCORE"
+    }else if(multi >= 7){
+      return "Hard"
+    }else if(multi >= 3){
+      return "Medium"
+    }else {
+      return "Easy"
+    }
+  }
+
   openSettings() {
     this.settingsOpen = true
   }

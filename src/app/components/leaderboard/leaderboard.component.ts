@@ -11,7 +11,7 @@ import { merge, startWith, switchMap, catchError,map, Observable, of } from 'rxj
   styleUrls: ['./leaderboard.component.scss']
 })
 export class LeaderboardComponent implements OnInit  {
-  displayedColumns: string[] = ['rank', 'username', 'score','gamemode','population'];
+  displayedColumns: string[] = ['rank', 'username', 'score', 'multi', 'basescore'];
   data: any[];
   dataSource;
 

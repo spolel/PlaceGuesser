@@ -37,6 +37,8 @@ export class PlaceGuesserComponent implements OnInit {
   round: number = 1;
   score: number;
   totalScore: number = 0;
+  totalScoreMulti: number = 0;
+  multi: number = 0;
   rank: number;
   gameRank: number;
 
@@ -53,7 +55,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   paths: any = []
 
-  solutionLogging: boolean = false;
+  solutionLogging: boolean = true;
 
   @Output() resetGameEvent = new EventEmitter();
 
@@ -72,12 +74,12 @@ export class PlaceGuesserComponent implements OnInit {
       document.documentElement.requestFullscreen();
     }
 
-    if(this.solutionLogging){
-      console.log("Username: " , this.username)
+    if (this.solutionLogging) {
+      console.log("Username: ", this.username)
     }
 
     this.getStats()
-    
+
   }
 
   ngAfterViewInit(): void {
@@ -95,51 +97,51 @@ export class PlaceGuesserComponent implements OnInit {
 
     this.getRandomPlace(parseInt(this.populationMode), this.gameMode).subscribe(data => {
 
-      if (this.roundGeoids.includes(data[0]["geonameid"])){
-        if(this.solutionLogging){
+      if (this.roundGeoids.includes(data[0]["geonameid"])) {
+        if (this.solutionLogging) {
           console.log('place already seen this round ... getting new one')
         }
-        
+
         this.getNewPlace()
 
-      }else{
+      } else {
         this.solution = data[0]
         this.solutionCoords = new google.maps.LatLng(this.solution["latitude"], this.solution["longitude"])
 
         this.roundGeoids.push(this.solution["geonameid"])
-  
-  
+
+
         if (this.solutionLogging) {
           console.log("SOLUTION: ")
           console.log(this.solution)
         }
-        
+
         this.getCachedPhotos(parseInt(this.solution["geonameid"])).subscribe({
           next: data => {
             // caching images disabled
             // data == null replaced with true 
-            if(true){
-              if(this.solutionLogging){
+            if (true) {
+              if (this.solutionLogging) {
                 console.log("Location not cached, ... getting new photos")
               }
-              
+
               this.getPlacePhotos()
-            }else{
-              if(this.solutionLogging){
+            } else {
+              if (this.solutionLogging) {
                 console.log("Photos from cash: ")
-              console.log(data)
+                console.log(data)
               }
-              
+
               this.images = []
               data["photos"].forEach(item => {
                 this.images.push(item)
               })
-      
+
               this.ngZone.run(() => {
                 this.imageLoaded = true
               });
             }
-            
+
           },
           error: error => {
             console.log(error)
@@ -160,24 +162,24 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   savePlacePhotos(body: Object): Observable<any> {
-    const headers = { 'content-type': 'application/json'}  
-    
+    const headers = { 'content-type': 'application/json' }
+
     return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_place_photos', body, { 'headers': headers });
   }
 
   saveScoreToLeaderboard(body: Object): Observable<any> {
-    const headers = { 'content-type': 'application/json'}  
-    
+    const headers = { 'content-type': 'application/json' }
+
     return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_score_to_leaderboard', body, { 'headers': headers });
   }
 
   saveHistoryToDb(username: string, body: Object): Observable<any> {
-    const headers = { 'content-type': 'application/json'}  
-    
-    return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_history?username='+username, body, { 'headers': headers });
+    const headers = { 'content-type': 'application/json' }
+
+    return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_history?username=' + username, body, { 'headers': headers });
   }
 
-  
+
 
 
   getPlacePhotos() {
@@ -235,7 +237,7 @@ export class PlaceGuesserComponent implements OnInit {
                   geonameid: this.solution["geonameid"],
                   photos: this.images
                 }
-              ).subscribe({error: e => { console.log(e)}})
+              ).subscribe({ error: e => { console.log(e) } })
 
               //console.log(this.images)
               this.ngZone.run(() => {
@@ -281,48 +283,52 @@ export class PlaceGuesserComponent implements OnInit {
   gameOver() {
     this.gameEnded = true
 
+    this.multiplyScore(this.totalScore)
+
     this.getGameRank()
     this.saveHistory()
-  
+
     //saving score to leaderboard
-    if(this.totalScore > 0 && this.username != null && this.username != undefined && this.username != "")
-    this.saveScoreToLeaderboard(
-      {
-        username: this.username,
-        score: this.totalScore,
-        gamemode: this.gameMode,
-        population: this.populationMode,
-        paths: this.paths
-      }
-    ).subscribe({error: e => { console.log(e)}})
+    if (this.totalScore > 0 && this.username != null && this.username != undefined && this.username != "")
+      this.saveScoreToLeaderboard(
+        {
+          username: this.username,
+          score: this.totalScoreMulti,
+          multi: this.multi,
+          basescore: this.totalScore,
+          gamemode: this.gameMode,
+          population: this.populationMode,
+          paths: this.paths
+        }
+      ).subscribe({ error: e => { console.log(e) } })
 
     this.getStats()
   }
 
-  completePaths(paths: any){
+  completePaths(paths: any) {
     this.paths = paths
   }
 
-  saveHistory(){
+  saveHistory() {
     let history = {}
-    if (localStorage.getItem('history') != null){
+    if (localStorage.getItem('history') != null) {
       history = JSON.parse(localStorage.getItem('history'))
-    }else{
-      history = {played : 0, highscore: 0, distribution: [] }
+    } else {
+      history = { played: 0, highscore: 0, distribution: [] }
     }
 
     history["played"] = history["played"] + 1
 
-    if (history["highscore"] < this.totalScore){
-      history["highscore"] = this.totalScore
+    if (history["highscore"] < this.totalScoreMulti) {
+      history["highscore"] = this.totalScoreMulti
     }
 
-    history["distribution"].push(this.totalScore)
+    history["distribution"].push(this.totalScoreMulti)
 
     localStorage.setItem('history', JSON.stringify(history))
 
-    this.saveHistoryToDb(this.username, history).subscribe({error: e => { console.log(e)}})
-    
+    this.saveHistoryToDb(this.username, history).subscribe({ error: e => { console.log(e) } })
+
   }
 
   resetGame() {
@@ -341,30 +347,38 @@ export class PlaceGuesserComponent implements OnInit {
 
   generateScore(distance) {
     if (this.gameMode == 'europe') {
-      if (distance > 1000) {
+      if (distance > 600) {
         return 0
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000 * (1 - (distance / 950)))
+        return Math.floor(1000 * (1 - (distance / 550)))
       }
     } else if (this.gameMode == 'americas') {
-      if (distance > 4000) {
+      if (distance > 2000) {
         return 0
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000 * (1 - (distance / 3950)))
+        return Math.floor(1000 * (1 - (distance / 1950)))
       }
     } else if (this.gameMode == 'africa') {
-      if (distance > 3000) {
+      if (distance > 1500) {
         return 0
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000 * (1 - (distance / 2950)))
+        return Math.floor(1000 * (1 - (distance / 1450)))
       }
     } else if (this.gameMode == 'asia/oceania') {
+      if (distance > 2000) {
+        return 0
+      } else if (distance <= 50) {
+        return 1000
+      } else {
+        return Math.floor(1000 * (1 - (distance / 1950)))
+      }
+    } else {
       if (distance > 4000) {
         return 0
       } else if (distance <= 50) {
@@ -372,15 +386,51 @@ export class PlaceGuesserComponent implements OnInit {
       } else {
         return Math.floor(1000 * (1 - (distance / 3950)))
       }
-    } else {
-      if (distance > 5000) {
-        return 0
-      } else if (distance <= 50) {
-        return 1000
-      } else {
-        return Math.floor(1000 * (1 - (distance / 4950)))
-      }
     }
+  }
+
+  //   Zone
+  // worldwide multiplier x4
+  // europe multiplier x1
+  // africa multiplier x1.5
+  // americas multiplier x2
+  // Asia/Oceania X2.5
+
+  // Population
+  // 500000 multiplier x1
+  // 100000 multiplier x1.5
+  // 50000 multiplier x2
+  // 10000 multiplier x3
+  // 500 multiplier x6
+
+  getGameMulti(zone: string, population: string) {
+    let zoneMultis = {
+      "worldwide": 4,
+      "europe": 0,
+      "africa": 0,
+      "americas": 1,
+      "asia/oceania": 2.5
+    }
+    let popMultis = {
+      "500": 5,
+      "10000": 3,
+      "50000": 2,
+      "100000": 1,
+      "500000": 0
+    }
+    return 1 + zoneMultis[zone] + popMultis[population]
+  }
+
+  multiplyScore(score: number) {
+
+    let multi = this.getGameMulti(this.gameMode,this.populationMode)
+
+    if (this.solutionLogging) {
+      console.log("Sore: ", score, " Multi: ", multi, " = ", score * multi)
+    }
+
+    this.totalScoreMulti = score * multi
+    this.multi = multi
   }
 
 
@@ -440,7 +490,7 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   getGameRank() {
-    this.getRankFromLeaderboard(this.totalScore).subscribe({
+    this.getRankFromLeaderboard(this.totalScoreMulti).subscribe({
       next: data => {
         this.gameRank = data.length + 1
       },
@@ -456,11 +506,11 @@ export class PlaceGuesserComponent implements OnInit {
     return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_rank?highscore=' + highscore, { responseType: "json" });
   }
 
-  openStats(){
+  openStats() {
     this.statsOpen = true;
   }
 
-  closeStats(){
+  closeStats() {
     this.statsOpen = false;
   }
 
