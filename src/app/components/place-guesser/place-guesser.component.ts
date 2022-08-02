@@ -51,6 +51,8 @@ export class PlaceGuesserComponent implements OnInit {
   statsOpen: boolean = false;
   barChartData: any[] = []
 
+  paths: any = []
+
   solutionLogging: boolean = false;
 
   @Output() resetGameEvent = new EventEmitter();
@@ -281,10 +283,15 @@ export class PlaceGuesserComponent implements OnInit {
         username: this.username,
         score: this.totalScore,
         gamemode: this.gameMode,
-        population: this.populationMode
+        population: this.populationMode,
+        paths: this.paths
       }
     ).subscribe({error: e => { console.log(e)}})
 
+  }
+
+  completePaths(paths: any){
+    this.paths = paths
   }
 
   saveHistory(){
