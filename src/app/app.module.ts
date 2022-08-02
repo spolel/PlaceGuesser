@@ -19,6 +19,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BarchartComponent } from './components/barchart/barchart.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
+import { StatsPanelComponent } from './components/stats-panel/stats-panel.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
     ImageCarouselComponent,
     FooterComponent,
     BarchartComponent,
-    LeaderboardComponent
+    LeaderboardComponent,
+    StatsPanelComponent
   ],
   imports: [
     BrowserModule,

@@ -49,7 +49,8 @@
                 <mat-form-field class="" appearance="fill">
                     <mat-label>Username (OPTIONAL)</mat-label>
                     <input matInput placeholder="" value="" [formControl]="usernameControl">
-                    <mat-error *ngIf="usernameControl.invalid">{{getErrorMessage()}}</mat-error>
+                    <mat-error *ngIf="usernameControl.invalid">{{this.usernameControl.hasError('maxlength') ? 'Maximum length 25' : ''}}</mat-error>
+                    <mat-error *ngIf="usernameControl.invalid">{{this.usernameControl.hasError('whitespace') ? 'Must not contain spaces' : ''}}</mat-error>
                 </mat-form-field>
             </mat-card-content>
             <mat-card-actions>
@@ -102,30 +103,12 @@
         <mat-card *ngIf="statsOpen" class="stats-container">
             <mat-card-title class="stats-title">STATS</mat-card-title>
             <mat-card-content>
-                <mat-tab-group mat-align-tabs="center" dynamicHeight>
-                    <mat-tab label="Personal Scores">
-                        <div class="stats-content">
-                            <div class="stat">
-                                <div>Played</div>
-                                <div class="stat-number">{{stats["played"]}}</div>
-                            </div>
-                            <div class="stat">
-                                <div>Highscore</div>
-                                <div class="stat-number">{{stats["highscore"]}}</div>
-                            </div>
-                            <div class="stat">
-                                <div>Rank</div>
-                                <div class="stat-number">#{{rank}}</div>
-                            </div>
-                        </div>
-                        <app-barchart [inputData]="barChartData" class="histo"></app-barchart>
-                    </mat-tab>
-                    <mat-tab label="Leaderboard">
-                        <app-leaderboard></app-leaderboard>
-                    </mat-tab>
-                </mat-tab-group>
-
-
+                <app-stats-panel
+                        [stats]="stats"
+                        [barChartData]="barChartData"
+                        [rank]="rank"
+                        [username]="username"
+                ></app-stats-panel>
             </mat-card-content>
             <mat-card-actions>
                 <button class="button-closehelp" color="basic" mat-raised-button (click)="closeStats()">
