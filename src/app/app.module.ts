@@ -18,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FooterComponent } from './components/footer/footer.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BarchartComponent } from './components/barchart/barchart.component';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { BarchartComponent } from './components/barchart/barchart.component';
     MapSelectorComponent,
     ImageCarouselComponent,
     FooterComponent,
-    BarchartComponent
+    BarchartComponent,
+    LeaderboardComponent
   ],
   imports: [
     BrowserModule,

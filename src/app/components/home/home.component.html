@@ -1,4 +1,5 @@
-<div [style.background]="gameStarted ? 'none' : backgroundStyle " [style.background-size]="gameStarted ? 'none' : 'cover'" class="app-container">
+<div [style.background]="gameStarted ? 'none' : backgroundStyle "
+    [style.background-size]="gameStarted ? 'none' : 'cover'" class="app-container">
     <div [ngClass]="settingsOpen || helpOpen || statsOpen ? 'overlay' : ''"></div>
     <div *ngIf="!gameStarted" class="container">
         <h1 class="title unselectable">PLACE GUESSER</h1>
@@ -20,8 +21,8 @@
         </div>
         <mat-card *ngIf="settingsOpen" class="settings-container middle">
             <mat-card-title class="help-title">Game settings</mat-card-title>
-            <h2>Zone</h2>
-            <mat-card-content>
+            <mat-card-content class="settings-content">
+                <h2>Zone</h2>
                 <mat-button-toggle-group class="settings-buttons" [formControl]="gameModeControl">
                     <mat-button-toggle value="worldwide">Worldwide</mat-button-toggle>
                     <mat-button-toggle value="europe">Europe</mat-button-toggle>
@@ -29,9 +30,10 @@
                     <mat-button-toggle value="americas">Americas</mat-button-toggle>
                     <mat-button-toggle value="asia/oceania">Asia/Oceania</mat-button-toggle>
                 </mat-button-toggle-group>
-            </mat-card-content>
-            <h2>Population</h2>
-            <mat-card-content>
+                <h2>Population
+                    <mat-icon class="tooltip" matTooltip="Play with cities that have a population greater than selected"
+                        matTooltipPosition="above">help</mat-icon>
+                </h2>
                 <mat-button-toggle-group class="settings-buttons" [formControl]="populationControl">
                     <mat-button-toggle value="500">> 500</mat-button-toggle>
                     <mat-button-toggle value="10000">> 10'000</mat-button-toggle>
@@ -39,13 +41,24 @@
                     <mat-button-toggle value="100000">> 100'000</mat-button-toggle>
                     <mat-button-toggle value="500000">> 500'000</mat-button-toggle>
                 </mat-button-toggle-group>
+                <h3>Number of cities: {{populationStats[gameModeControl.value][populationControl.value]}}</h3>
+                <h2> Username
+                    <mat-icon class="tooltip" matTooltip="Write a username if you want to appear in the leaderboards"
+                        matTooltipPosition="above">help</mat-icon>
+                </h2>
+                <mat-form-field class="" appearance="fill">
+                    <mat-label>Username (OPTIONAL)</mat-label>
+                    <input matInput placeholder="" value="" [formControl]="usernameControl">
+                    <mat-error *ngIf="usernameControl.invalid">{{getErrorMessage()}}</mat-error>
+                </mat-form-field>
             </mat-card-content>
             <mat-card-actions>
                 <div class="buttons-settings-container">
                     <button class="button-close-settings" color="basic" mat-raised-button (click)="closeSettings()">
                         CANCEL
                     </button>
-                    <button class="" color="primary" mat-raised-button (click)="startGame()">
+                    <button class="" color="primary" mat-raised-button (click)="startGame()"
+                        [disabled]="!usernameControl.valid">
                         NEXT
                     </button>
                 </div>
@@ -89,11 +102,30 @@
         <mat-card *ngIf="statsOpen" class="stats-container">
             <mat-card-title class="stats-title">STATS</mat-card-title>
             <mat-card-content>
-                <div class="stats-content">
-                    <div class="stat"> <div>Played</div>  <div class="stat-number">{{stats["played"]}}</div> </div>
-                    <div class="stat"> <div>Highscore</div>  <div class="stat-number">{{stats["highscore"]}}</div> </div>
-                </div>
-                <app-barchart [barChartData]="barChartData" class="histo"></app-barchart>
+                <mat-tab-group mat-align-tabs="center" dynamicHeight>
+                    <mat-tab label="Personal Scores">
+                        <div class="stats-content">
+                            <div class="stat">
+                                <div>Played</div>
+                                <div class="stat-number">{{stats["played"]}}</div>
+                            </div>
+                            <div class="stat">
+                                <div>Highscore</div>
+                                <div class="stat-number">{{stats["highscore"]}}</div>
+                            </div>
+                            <div class="stat">
+                                <div>Rank</div>
+                                <div class="stat-number">#{{rank}}</div>
+                            </div>
+                        </div>
+                        <app-barchart [inputData]="barChartData" class="histo"></app-barchart>
+                    </mat-tab>
+                    <mat-tab label="Leaderboard">
+                        <app-leaderboard></app-leaderboard>
+                    </mat-tab>
+                </mat-tab-group>
+
+
             </mat-card-content>
             <mat-card-actions>
                 <button class="button-closehelp" color="basic" mat-raised-button (click)="closeStats()">
@@ -104,6 +136,6 @@
         <div style="flex-grow:1"></div>
         <app-footer class="footer"></app-footer>
     </div>
-    <app-place-guesser *ngIf="gameStarted" [gameMode]="gameMode" [populationMode]="populationMode"
+    <app-place-guesser *ngIf="gameStarted" [gameMode]="gameMode" [populationMode]="populationMode" [username]="username"
         (resetGameEvent)="resetGame()"></app-place-guesser>
 </div>

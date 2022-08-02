@@ -21,6 +21,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   @Input() gameMode: string;
   @Input() populationMode: string;
+  @Input() username: string;
 
   guessCoords: google.maps.LatLng;
   solutionCoords: google.maps.LatLng;
@@ -36,6 +37,8 @@ export class PlaceGuesserComponent implements OnInit {
   round: number = 1;
   score: number;
   totalScore: number = 0;
+  rank: number;
+  gameRank: number;
 
   roundGeoids: number[] = [];
 
@@ -43,6 +46,10 @@ export class PlaceGuesserComponent implements OnInit {
   roundEnded: boolean = false;
 
   gameStarted: boolean = false;
+
+  stats: any = {}
+  statsOpen: boolean = false;
+  barChartData: any[] = []
 
   solutionLogging: boolean = false;
 
@@ -63,6 +70,12 @@ export class PlaceGuesserComponent implements OnInit {
       document.documentElement.requestFullscreen();
     }
 
+    if(this.solutionLogging){
+      console.log("Username: " , this.username)
+    }
+
+    this.getStats()
+    
   }
 
   ngAfterViewInit(): void {
@@ -149,6 +162,13 @@ export class PlaceGuesserComponent implements OnInit {
     
     return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_place_photos', body, { 'headers': headers });
   }
+
+  saveScoreToLeaderboard(body: Object): Observable<any> {
+    const headers = { 'content-type': 'application/json'}  
+    
+    return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_score_to_leaderboard', body, { 'headers': headers });
+  }
+
 
   getPlacePhotos() {
 
@@ -251,7 +271,19 @@ export class PlaceGuesserComponent implements OnInit {
   gameOver() {
     this.gameEnded = true
 
+    this.getGameRank()
     this.saveHistory()
+  
+    //saving score to leaderboard
+    if(this.totalScore > 0 && this.username != null)
+    this.saveScoreToLeaderboard(
+      {
+        username: this.username,
+        score: this.totalScore,
+        gamemode: this.gameMode,
+        population: this.populationMode
+      }
+    ).subscribe({error: e => { console.log(e)}})
 
   }
 
@@ -362,6 +394,55 @@ export class PlaceGuesserComponent implements OnInit {
     } else {
       this.mobile = true;
     }
+  }
+
+  getStats() {
+    if (localStorage.getItem('history') != null) {
+      this.stats = JSON.parse(localStorage.getItem('history'))
+    } else {
+      this.stats = { played: 0, highscore: 0, distribution: [] }
+    }
+
+    this.barChartData = this.stats["distribution"]
+    this.getRank()
+
+  }
+
+  getRank() {
+    this.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
+      next: data => {
+        this.rank = data.length
+      },
+      error: error => {
+        console.log(error)
+      }
+    })
+
+  }
+
+  getGameRank() {
+    this.getRankFromLeaderboard(this.totalScore).subscribe({
+      next: data => {
+        this.gameRank = data.length + 1
+      },
+      error: error => {
+        console.log(error)
+      }
+    })
+
+  }
+
+
+  getRankFromLeaderboard(highscore: number): Observable<any> {
+    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_rank?highscore=' + highscore, { responseType: "json" });
+  }
+
+  openStats(){
+    this.statsOpen = true;
+  }
+
+  closeStats(){
+    this.statsOpen = false;
   }
 
 
