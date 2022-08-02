@@ -1,5 +1,6 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
+import { codeToCountry } from '../../../assets/codeToCountry'
 
 
 @Component({
@@ -36,6 +37,8 @@ export class MapSelectorComponent implements OnInit {
   isPinned: boolean = false;
 
   @Input() solutionCoords: google.maps.LatLng;
+  @Input() solution: Object;
+  solutionCountry: string;
   destinationCoords: google.maps.LatLng;
 
   @Input() gameEnded: boolean;
@@ -158,6 +161,8 @@ export class MapSelectorComponent implements OnInit {
       // this.mapClasses = ['map', 'size3']
       this.responsiveClasses()
       this.isPinned = true
+
+      this.solutionCountry = codeToCountry[this.solution["country code"]]
     }
   }
 

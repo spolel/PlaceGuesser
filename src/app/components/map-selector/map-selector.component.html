@@ -13,12 +13,13 @@
     </div>
     <div *ngIf="roundEnded">
         <mat-card class="score-bar">
-            <div>
-                You were <b>{{distance}}</b> km away
+            <div *ngIf="!mobile">You were <b>{{distance}}</b> km away</div>
+            <div *ngIf="mobile"><b>{{distance}}</b> km away</div>
+            <div class="solution">
+                <div>{{ solution["name"] + ", " + solutionCountry}}  </div> <div [class]="'flag fi fi-'+solution['country code'].toLowerCase()" ></div>
             </div>
-            <div>
-             You scored <b>{{score}}</b> points
-            </div>        
+            <div *ngIf="!mobile">You scored <b>{{score}}</b> points </div>
+            <div *ngIf="mobile"><b>{{score}}</b> points </div>
         </mat-card>
     </div>
     <div [ngClass]="mapClasses">

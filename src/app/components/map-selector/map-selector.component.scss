@@ -1,3 +1,5 @@
+@import url('../../../../node_modules/flag-icons/css/flag-icons.min.css'); 
+
 .container{
 
     display:flex;
@@ -94,6 +96,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    align-items: center;
   }
   
   
@@ -130,6 +133,21 @@
   font-size: 1.5em;
   padding: 0.2em;
 }
+
+.solution{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.flag{
+  font-size: 2em;
+  //vertical-align:baseline;
+}
+
   
 
 .overlay{

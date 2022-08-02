@@ -171,6 +171,14 @@ export class PlaceGuesserComponent implements OnInit {
     return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_score_to_leaderboard', body, { 'headers': headers });
   }
 
+  saveHistoryToDb(username: string, body: Object): Observable<any> {
+    const headers = { 'content-type': 'application/json'}  
+    
+    return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_history?username='+username, body, { 'headers': headers });
+  }
+
+  
+
 
   getPlacePhotos() {
 
@@ -277,7 +285,7 @@ export class PlaceGuesserComponent implements OnInit {
     this.saveHistory()
   
     //saving score to leaderboard
-    if(this.totalScore > 0 && this.username != null)
+    if(this.totalScore > 0 && this.username != null && this.username != undefined && this.username != "")
     this.saveScoreToLeaderboard(
       {
         username: this.username,
@@ -288,6 +296,7 @@ export class PlaceGuesserComponent implements OnInit {
       }
     ).subscribe({error: e => { console.log(e)}})
 
+    this.getStats()
   }
 
   completePaths(paths: any){
@@ -311,6 +320,9 @@ export class PlaceGuesserComponent implements OnInit {
     history["distribution"].push(this.totalScore)
 
     localStorage.setItem('history', JSON.stringify(history))
+
+    this.saveHistoryToDb(this.username, history).subscribe({error: e => { console.log(e)}})
+    
   }
 
   resetGame() {
@@ -418,7 +430,7 @@ export class PlaceGuesserComponent implements OnInit {
   getRank() {
     this.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
       next: data => {
-        this.rank = data.length
+        this.rank = data.length + 1
       },
       error: error => {
         console.log(error)

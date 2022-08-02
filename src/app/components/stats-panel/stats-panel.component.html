@@ -1,0 +1,23 @@
+<h2 class="user">{{username}}</h2>
+<mat-tab-group mat-align-tabs="center" dynamicHeight>
+    <mat-tab label="Personal Scores">
+        <div class="stats-content">
+            <div class="stat">
+                <div>Played</div>
+                <div class="stat-number">{{stats["played"]}}</div>
+            </div>
+            <div class="stat">
+                <div>Highscore</div>
+                <div class="stat-number">{{stats["highscore"]}}</div>
+            </div>
+            <div class="stat">
+                <div>Rank</div>
+                <div class="stat-number">#{{rank}}</div>
+            </div>
+        </div>
+        <app-barchart [inputData]="barChartData" class="histo"></app-barchart>
+    </mat-tab>
+    <mat-tab label="Leaderboard">
+        <app-leaderboard></app-leaderboard>
+    </mat-tab>
+</mat-tab-group>
