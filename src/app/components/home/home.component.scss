@@ -151,7 +151,6 @@
 
     width: 50%;
     max-height: 97vh;
-    overflow: auto;
 }
 
 .stats-title{
@@ -159,6 +158,13 @@
     font-size: 3em;
     line-height: 1 ;
     margin-bottom: 10px;
+}
+
+.button-closehelp-mobile{
+    position: fixed;
+    top: 10vh;
+    right: 10vw;
+    z-index: 30;
 }
 
 .overlay{

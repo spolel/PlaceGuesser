@@ -1,3 +1,7 @@
+.stats-panel-container{
+    overflow: auto;
+}
+
 .stats-content{
     display: flex;
     flex-direction: row;
@@ -6,6 +10,8 @@
 
     margin-bottom: 20px;
     margin-top:20px;
+
+    
 }
 
 .user{

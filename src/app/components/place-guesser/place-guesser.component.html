@@ -7,9 +7,13 @@
         </div>
         <div *ngIf="!gameEnded">{{round}}/5 </div>
         <div>{{gameEnded && !mobile ? "Total Score " + totalScore : totalScore }} </div>
-        <div *ngIf="gameEnded">{{'Multi x' + multi+ '   ' + totalScoreMulti }} </div>
+        <div *ngIf="gameEnded">{{'x' + multi+ ' ' + totalScoreMulti }} </div>
         <div *ngIf="gameEnded">{{!mobile ? "Global Ranking #"+gameRank : '#'+gameRank }} </div>
-        <button *ngIf="gameEnded" class="button-showleaderboard" color="primary" mat-raised-button
+        <button *ngIf="gameEnded && mobile" class="button-showleaderboard" color="primary" mat-mini-fab 
+            (click)="openStats()">
+            <mat-icon>equalizer</mat-icon>
+        </button>
+        <button *ngIf="gameEnded && !mobile" class="button-showleaderboard" color="primary" mat-raised-button
             (click)="openStats()">
             <mat-icon>equalizer</mat-icon>
         </button>
