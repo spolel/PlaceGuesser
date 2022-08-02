@@ -38,6 +38,27 @@
     align-items: center;
 }
 
+.settings-content{
+    display: flex;
+
+    flex-direction: column;
+    align-items: center;
+
+    h2{
+        margin-top: 10px;
+    }
+
+    .tooltip{
+        
+        vertical-align: text-bottom;
+    }
+
+    // ::ng-deep .mat-tooltip{
+    //     font-size: 22px !important;
+    // }
+}
+
+
 .middle{
     position: fixed;
     top: 50%;
@@ -82,9 +103,13 @@
     margin: 5px 15px;
 }
 
+.button-iconopen{
+    transform: scale(1.7);
+}
+
 
 .spacer{
-    width:30px;
+    width:75px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,22 +149,25 @@
     z-index: 20;
 
     width: 50%;
+    max-height: 100vh;
+    overflow: auto;
 }
 
 .stats-title{
     text-align: center;
     font-size: 3em;
     line-height: 1 ;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 .stats-content{
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 100px;
+    gap: 40px;
 
-    margin-bottom: 20px
+    margin-bottom: 20px;
+    margin-top:20px;
 }
 
 .stat{
