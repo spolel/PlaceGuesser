@@ -43,6 +43,7 @@ export class MapSelectorComponent implements OnInit {
   @Input() score: number;
   @Input() round: number;
 
+
   roundEnded: boolean = false;
   mobile: boolean;
   
@@ -71,6 +72,8 @@ export class MapSelectorComponent implements OnInit {
   @Output() nextRoundEvent = new EventEmitter();
   @Output() playAgainEvent = new EventEmitter();
   @Output() resetGameEvent = new EventEmitter();
+  @Output() completePathsEvent = new EventEmitter<any>();
+
 
   @ViewChild('map') map: GoogleMap;
 
@@ -164,6 +167,10 @@ export class MapSelectorComponent implements OnInit {
   }
 
   nextRound(){
+    if(this.round == 5){
+      this.completePathsEvent.emit(this.paths)
+    }
+
     this.roundEnded = false
     // this.containerClasses = ['container', 'bottom-right']
     // this.mapClasses = ['map', 'size1']
