@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -82,12 +82,19 @@ export class HomeComponent implements OnInit {
 
   backgroundStyle: any;
 
+  mobile: boolean;
+  @HostListener("window:resize", []) onWindowResize() {
+    this.isMobile()
+  }
+
   logging: boolean = false;
 
 
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit(): void {
+    this.isMobile()
+    
     //console.log(document.getElementsByClassName('app-container')[0]);
     this.imageId = Math.floor(Math.random() * 16) + 1;
 
@@ -100,6 +107,7 @@ export class HomeComponent implements OnInit {
     this.populationMode = '10000'
     this.gameModeControl.setValue(this.gameMode)
     this.populationControl.setValue(this.populationMode)
+    
 
 
     this.getUserdata()
@@ -274,6 +282,14 @@ export class HomeComponent implements OnInit {
 
   closeStats() {
     this.statsOpen = false
+  }
+
+  isMobile() {
+    if (window.innerWidth >= 1000) {
+      this.mobile = false;
+    } else {
+      this.mobile = true;
+    }
   }
 
 }
