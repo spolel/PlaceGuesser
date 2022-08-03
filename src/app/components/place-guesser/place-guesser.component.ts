@@ -55,7 +55,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   paths: any = []
 
-  solutionLogging: boolean = true;
+  solutionLogging: boolean = false;
 
   @Output() resetGameEvent = new EventEmitter();
 
