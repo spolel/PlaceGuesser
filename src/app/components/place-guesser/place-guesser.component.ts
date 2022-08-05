@@ -347,12 +347,12 @@ export class PlaceGuesserComponent implements OnInit {
 
   generateScore(distance) {
     if (this.gameMode == 'europe') {
-      if (distance > 750) {
+      if (distance > 1500) {
         return 0
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000 * (1 - ((distance-50) / 700)))
+        return Math.floor(1000*(1-((distance-50) / 1450))**2)
       }
     } else if (this.gameMode == 'americas') {
       if (distance > 2000) {
@@ -360,15 +360,15 @@ export class PlaceGuesserComponent implements OnInit {
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000 * (1 - ((distance-50) / 1950)))
+        return Math.floor(1000*(1-((distance-50) / 1950))**2)
       }
     } else if (this.gameMode == 'africa') {
-      if (distance > 1500) {
+      if (distance > 2500) {
         return 0
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000 * (1 - ((distance-50) / 1450)))
+        return Math.floor(1000*(1-((distance-50) / 2450))**2)
       }
     } else if (this.gameMode == 'asia/oceania') {
       if (distance > 2000) {
@@ -376,15 +376,15 @@ export class PlaceGuesserComponent implements OnInit {
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000 * (1 - ((distance-50) / 1950)))
+        return Math.floor(1000*(1-((distance-50) / 1950))**2)
       }
     } else {
-      if (distance > 4000) {
+      if (distance > 2500) {
         return 0
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000 * (1 - ((distance-50) / 3950)))
+        return Math.floor(1000*(1-((distance-50) / 2450))**2)
       }
     }
   }
