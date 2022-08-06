@@ -89,7 +89,6 @@ export class HomeComponent implements OnInit {
 
   logging: boolean = false;
 
-
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit(): void {
@@ -282,6 +281,12 @@ export class HomeComponent implements OnInit {
 
   closeStats() {
     this.statsOpen = false
+  }
+
+  closeAll(){
+    this.statsOpen = false
+    this.helpOpen = false
+    this.settingsOpen = false
   }
 
   isMobile() {

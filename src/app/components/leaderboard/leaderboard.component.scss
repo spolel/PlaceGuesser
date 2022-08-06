@@ -18,6 +18,22 @@ table {
     width: 100%;
 }
 
+.mat-row .mat-cell {
+
+    cursor: pointer;
+}
+
+.active {
+    background-color: #BE1955 !important;
+}
+
+.mat-row:hover {
+    background-color: rgb(87, 87, 87);
+}
+
+
+
+
 .loading-shade {
     position: absolute;
     top: 0;

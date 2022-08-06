@@ -12,9 +12,17 @@ export class StatsPanelComponent implements OnInit {
   @Input() rank: number;
   @Input() username: string;
 
+  mapOpen: boolean = false;
+  selectedPaths: any[] = [];
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  openMap(paths){
+    this.selectedPaths = paths
+    this.mapOpen = true
   }
 
 }
