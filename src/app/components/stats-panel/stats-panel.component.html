@@ -1,25 +1,30 @@
 <div class="stats-panel-container">
-    <h2 class="user">{{username}}</h2>
     <mat-tab-group mat-align-tabs="center" dynamicHeight>
         <mat-tab label="Personal Scores">
-            <div class="stats-content">
-                <div class="stat">
-                    <div>Played</div>
-                    <div class="stat-number">{{stats["played"]}}</div>
+            <h2 class="user">{{username}}</h2>
+            <div class="scores-container">
+                <div class="stats-content">
+                    <div class="stat">
+                        <div>Played</div>
+                        <div class="stat-number">{{stats["played"]}}</div>
+                    </div>
+                    <div class="stat">
+                        <div>Highscore</div>
+                        <div class="stat-number">{{stats["highscore"]}}</div>
+                    </div>
+                    <div class="stat">
+                        <div>Rank</div>
+                        <div class="stat-number">#{{rank}}</div>
+                    </div>
                 </div>
-                <div class="stat">
-                    <div>Highscore</div>
-                    <div class="stat-number">{{stats["highscore"]}}</div>
-                </div>
-                <div class="stat">
-                    <div>Rank</div>
-                    <div class="stat-number">#{{rank}}</div>
-                </div>
+                <app-barchart [inputData]="barChartData" class="histo"></app-barchart>
             </div>
-            <app-barchart [inputData]="barChartData" class="histo"></app-barchart>
         </mat-tab>
         <mat-tab label="Leaderboard">
-            <app-leaderboard></app-leaderboard>
+            <div class="leaderboard-container">
+                <app-leaderboard class="leaderboard" (selectedPathsEvent)="openMap($event)"></app-leaderboard>
+                <app-map *ngIf="mapOpen"  class="map" [paths]="selectedPaths"></app-map>
+            </div>
         </mat-tab>
     </mat-tab-group>
 </div>

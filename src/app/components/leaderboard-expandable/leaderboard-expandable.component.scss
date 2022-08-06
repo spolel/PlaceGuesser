@@ -1,0 +1,95 @@
+/* Structure */
+.container {
+    position: relative;
+    overflow: auto;
+}
+
+.table-container {
+    position: relative;
+    min-height: 550px;
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 56px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Column Widths */
+.mat-column-number,
+.mat-column-state {
+    max-width: 64px;
+}
+
+.mat-column-created {
+    max-width: 124px;
+}
+
+tr.detail-row {
+    height: 0;
+  }
+  
+  tr.element-row:not(.expanded-row):hover {
+    background: rgb(82, 82, 82);
+  }
+  
+  tr.element-row:not(.expanded-row):active {
+    background: rgb(100, 100, 100);
+  }
+  
+  .element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  
+  .element-diagram {
+    min-width: 80px;
+    border: 2px solid black;
+    padding: 8px;
+    font-weight: lighter;
+    margin: 8px 0;
+    height: 104px;
+  }
+  
+  .element-symbol {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
+  }
+  
+  .element-description {
+    padding: 16px;
+    width:100%;
+  }
+  
+  .element-description-attribution {
+    opacity: 0.5;
+  }
+
+@media only screen and (max-width: 1000px) {
+    .table-container {
+        min-height: 100px;
+    }
+
+}

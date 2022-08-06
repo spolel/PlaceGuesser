@@ -1,6 +1,6 @@
 <div [style.background]="gameStarted ? 'none' : backgroundStyle "
     [style.background-size]="gameStarted ? 'none' : 'cover'" class="app-container">
-    <div [ngClass]="settingsOpen || helpOpen || statsOpen ? 'overlay' : ''"></div>
+    <div [ngClass]="settingsOpen || helpOpen || statsOpen ? 'overlay' : ''" (click)="closeAll()"></div>
     <div *ngIf="!gameStarted" class="container">
         <h1 class="title unselectable">PLACE GUESSER</h1>
         <img class="logo unselectable" src="../../../assets/earth-logo.svg" />
@@ -109,7 +109,7 @@
             </mat-card-actions>
         </mat-card>
         <mat-card *ngIf="statsOpen" class="stats-container">
-            <mat-card-title class="stats-title">STATS</mat-card-title>
+            <mat-card-title *ngIf="!mobile" class="stats-title">STATS</mat-card-title>
             <mat-card-content>
                 <app-stats-panel
                         [stats]="stats"

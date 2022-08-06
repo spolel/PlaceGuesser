@@ -20,6 +20,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BarchartComponent } from './components/barchart/barchart.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { StatsPanelComponent } from './components/stats-panel/stats-panel.component';
+import { LeaderboardExpandableComponent } from './components/leaderboard-expandable/leaderboard-expandable.component';
+import { MapComponent } from './components/map/map.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { StatsPanelComponent } from './components/stats-panel/stats-panel.compon
     FooterComponent,
     BarchartComponent,
     LeaderboardComponent,
-    StatsPanelComponent
+    StatsPanelComponent,
+    LeaderboardExpandableComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
