@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, EventEmitter, HostListener, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
-import { GoogleMap } from '@angular/google-maps';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, concatMap, filter, map, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 import { ImageCarouselComponent } from '../image-carousel/image-carousel.component';
 import { MapSelectorComponent } from '../map-selector/map-selector.component';
+
+import { BackendService } from 'src/app/services/backend.service';
 
 import { codeToCountry } from '../../../assets/codeToCountry'
 
@@ -33,6 +33,7 @@ export class PlaceGuesserComponent implements OnInit {
   distance: number;
 
   palcesService: google.maps.places.PlacesService;
+  geocoder: google.maps.Geocoder;
 
   round: number = 1;
   score: number;
@@ -42,8 +43,7 @@ export class PlaceGuesserComponent implements OnInit {
   rank: number;
   gameRank: number;
 
-  roundGeoids: number[] = [];
-
+  roundGeoids: number[] = []
   gameEnded: boolean = false;
   roundEnded: boolean = false;
 
@@ -55,7 +55,8 @@ export class PlaceGuesserComponent implements OnInit {
 
   paths: any = []
 
-  solutionLogging: boolean = false;
+  solutionLogging: boolean = true;
+  saveMoney: boolean = false;
 
   @Output() resetGameEvent = new EventEmitter();
 
@@ -64,7 +65,7 @@ export class PlaceGuesserComponent implements OnInit {
     this.isMobile()
   }
 
-  constructor(private httpClient: HttpClient, private ngZone: NgZone) {
+  constructor(private backendService: BackendService, private ngZone: NgZone) {
   }
 
   ngOnInit(): void {
@@ -87,113 +88,122 @@ export class PlaceGuesserComponent implements OnInit {
     //initialize google place service
     this.palcesService = new google.maps.places.PlacesService(this.placecontainer.nativeElement);
 
+    this.geocoder = new google.maps.Geocoder();
+
     this.getNewPlace()
 
   }
 
+  //gets a new random place and then it's photos from google maps
   getNewPlace() {
+    this.backendService.getRandomPlace(parseInt(this.populationMode), this.gameMode).pipe(
+      filter(data => {
+        //if the place was already seen this round we make the call again to find another place
+        if (this.roundGeoids.includes(data[0]["geonameid"])) {
+          if (this.solutionLogging) { console.log('place already seen this round ... getting new one') }
 
-    //TODO make it so you cant get same place in a row twice
-
-    this.getRandomPlace(parseInt(this.populationMode), this.gameMode).subscribe(data => {
-
-      if (this.roundGeoids.includes(data[0]["geonameid"])) {
-        if (this.solutionLogging) {
-          console.log('place already seen this round ... getting new one')
+          this.getNewPlace()
+          return false
         }
-
-        this.getNewPlace()
-
-      } else {
+        return true
+      })
+    ).subscribe({
+      next: data => {
         this.solution = data[0]
         this.solutionCoords = new google.maps.LatLng(this.solution["latitude"], this.solution["longitude"])
 
         this.roundGeoids.push(this.solution["geonameid"])
 
 
-        if (this.solutionLogging) {
-          console.log("SOLUTION: ")
-          console.log(this.solution)
-        }
+        if (this.solutionLogging) { console.log("SOLUTION: ", this.solution) }
 
-        this.getCachedPhotos(parseInt(this.solution["geonameid"])).subscribe({
-          next: data => {
-            // caching images disabled
-            // data == null replaced with true 
-            if (true) {
-              if (this.solutionLogging) {
-                console.log("Location not cached, ... getting new photos")
-              }
-
-              this.getPlacePhotos()
-            } else {
-              if (this.solutionLogging) {
-                console.log("Photos from cash: ")
-                console.log(data)
-              }
-
-              this.images = []
-              data["photos"].forEach(item => {
-                this.images.push(item)
-              })
-
-              this.ngZone.run(() => {
-                this.imageLoaded = true
-              });
-            }
-
-          },
-          error: error => {
-            console.log(error)
-          }
-        })
+        this.geocodeLatLng(this.geocoder, this.solutionCoords)
+      },
+      error: error => {
+        console.log(error)
       }
-
     })
   }
 
-  getRandomPlace(pop: number, zone: string): Observable<Object> {
-    //console.log('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_random_place?pop='+pop+'&zone='+zone)
-    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_random_place?pop=' + pop + '&zone=' + zone, { responseType: "json" });
+  geocodeLatLng(
+    geocoder: google.maps.Geocoder,
+    coords: google.maps.LatLng
+  ) {
+    const latlng = {
+      lat: coords.lat(),
+      lng: coords.lng(),
+    };
+
+    geocoder
+      .geocode({ location: latlng })
+      .then((response) => {
+        if (response.results[0]) {
+          let results = response.results
+
+          if (this.solutionLogging) { console.log("google geocoding return: ", results) }
+
+
+          let locality;
+          for (const result of results) {
+            if (result.types.includes("locality")) {
+              locality = result
+              break;
+            }
+          }
+
+          let firstPolitical;
+          for (const result of results) {
+            if (result.types.includes("political")
+              && !result.types.includes("country")
+              && !result.types.includes("administrative_area_level_1")
+              && !result.types.includes("administrative_area_level_2")
+              && !result.types.includes("administrative_area_level_3")) {
+              firstPolitical = result
+              break;
+            }
+          }
+
+
+          if (locality != undefined) {
+            if (this.solutionLogging) { console.log("locality address: ", locality.formatted_address) }
+            if (!this.saveMoney) { this.getPlaceDetails(locality.place_id) }
+          } else if (firstPolitical != undefined) {
+            if (this.solutionLogging) { console.log("first political address: ", firstPolitical.formatted_address) }
+            if (!this.saveMoney) { this.getPlaceDetails(firstPolitical.place_id) }
+          } else {
+            console.log("No Locality Found")
+            let address_components = results.find(obj => { return obj.types.includes("plus_code") }) ?
+              results.find(obj => { return obj.types.includes("plus_code") }).address_components :
+              results[0].address_components;
+
+            let query = "";
+            address_components.forEach(x => {
+              if (x.types.includes("political")) {
+                query += x.long_name + ", "
+              }
+            })
+            if (this.solutionLogging) { console.log("query: ", query) }
+            if (query != "") {
+              this.getPlaceFromQuery(query)
+            } else {
+              if (this.solutionLogging) { console.log("No political types in address ... getting new place") }
+              this.getNewPlace()
+            }
+
+          }
+
+        } else {
+          console.log("No results found");
+        }
+      })
+      .catch((e) => console.log("Geocoder failed due to: " + e));
   }
 
-  getCachedPhotos(goenameid: number): Observable<Object> {
-    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_place_photos?geonameid=' + goenameid, { responseType: "json" });
-  }
 
-  savePlacePhotos(body: Object): Observable<any> {
-    const headers = { 'content-type': 'application/json' }
-
-    return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_place_photos', body, { 'headers': headers });
-  }
-
-  saveScoreToLeaderboard(body: Object): Observable<any> {
-    const headers = { 'content-type': 'application/json' }
-
-    return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_score_to_leaderboard', body, { 'headers': headers });
-  }
-
-  saveHistoryToDb(username: string, body: Object): Observable<any> {
-    const headers = { 'content-type': 'application/json' }
-
-    return this.httpClient.post('https://data.mongodb-api.com/app/data-mwwux/endpoint/save_history?username=' + username, body, { 'headers': headers });
-  }
-
-
-
-
-  getPlacePhotos() {
-
-    //let queryString = this.solution["name"]+", "+codeToCountry[this.solution["country code"]]+", "+this.solution["admin1 code"]
-    let queryString = this.solution["name"] + ", " + codeToCountry[this.solution["country code"]]
-
-    if (this.solutionLogging) {
-      console.log(queryString)
-    }
-
+  getPlaceFromQuery(queryString: string) {
     var request = {
       query: queryString,
-      fields: ['name', 'place_id'],
+      fields: ['name', 'place_id', 'geometry'],
       locationBias: this.solutionCoords
     };
 
@@ -204,50 +214,53 @@ export class PlaceGuesserComponent implements OnInit {
         if (this.solutionLogging) {
           console.log("google query return: ")
           console.log(results)
+          console.log(results[0]["geometry"]["location"].lat(), results[0]["geometry"]["location"].lng())
         }
-        // get only 1 image from basic details
-        //this.imageUrl = results[0].photos[0].getUrl({maxWidth: 1000, maxHeight: 1000})
-        //console.log(this.imageUrl)
 
-        // this.images.push(results[0].photos[0].getUrl())
-        // this.ngZone.run(() => {
-        //         this.imageLoaded = true
-        // });
-
-        this.palcesService.getDetails(
-          {
-            placeId: results[0].place_id,
-            fields: ['photos'],
-          }
-          , (results, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-              if (results.photos == undefined) {
-                if (this.solutionLogging) {
-                  console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE")
-                }
-                this.getNewPlace()
-                return
-              }
-              results.photos.forEach(item => {
-                this.images.push(item.getUrl())
-              })
-
-              this.savePlacePhotos(
-                {
-                  geonameid: this.solution["geonameid"],
-                  photos: this.images
-                }
-              ).subscribe({ error: e => { console.log(e) } })
-
-              //console.log(this.images)
-              this.ngZone.run(() => {
-                this.imageLoaded = true
-              });
-            }
-          });
-
+        const queryDistance = this.getDistanceFromLatLonInKm(results[0]["geometry"]["location"].lat(), results[0]["geometry"]["location"].lng(), this.solutionCoords.lat(), this.solutionCoords.lng())
+        if (this.solutionLogging) { console.log(queryDistance, "km away from solution") }
+        if (queryDistance > 50) {
+          if (this.solutionLogging) { console.log("Google text query returned a different place ..... getting new place") }
+          this.getNewPlace()
+        } else {
+          if (!this.saveMoney) { this.getPlaceDetails(results[0].place_id) }
+        }
       }
-    });
+    })
+  }
+
+  getPlaceDetails(palce_id: string) {
+    this.images = []
+
+    this.palcesService.getDetails(
+      {
+        placeId: palce_id,
+        fields: ['photos'],
+      }
+      , (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          if (results.photos == undefined) {
+            if (this.solutionLogging) { console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE") }
+            this.getNewPlace()
+            return
+          }
+          results.photos.forEach(item => {
+            this.images.push(item.getUrl())
+          })
+
+          this.backendService.savePlacePhotos(
+            {
+              geonameid: this.solution["geonameid"],
+              photos: this.images
+            }
+          ).subscribe({ error: e => { console.log(e) } })
+
+          //console.log(this.images)
+          this.ngZone.run(() => {
+            this.imageLoaded = true
+          });
+        }
+      });
   }
 
   checkGuess(coordinates: google.maps.LatLng) {
@@ -290,7 +303,7 @@ export class PlaceGuesserComponent implements OnInit {
 
     //saving score to leaderboard
     if (this.totalScore > 0 && this.username != null && this.username != undefined && this.username != "")
-      this.saveScoreToLeaderboard(
+      this.backendService.saveScoreToLeaderboard(
         {
           username: this.username,
           score: this.totalScoreMulti,
@@ -327,7 +340,7 @@ export class PlaceGuesserComponent implements OnInit {
 
     localStorage.setItem('history', JSON.stringify(history))
 
-    this.saveHistoryToDb(this.username, history).subscribe({ error: e => { console.log(e) } })
+    this.backendService.saveHistoryToDb(this.username, history).subscribe({ error: e => { console.log(e) } })
 
   }
 
@@ -352,7 +365,7 @@ export class PlaceGuesserComponent implements OnInit {
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000*(1-((distance-50) / 1450))**2)
+        return Math.floor(1000 * (1 - ((distance - 50) / 1450)) ** 2)
       }
     } else if (this.gameMode == 'americas') {
       if (distance > 2000) {
@@ -360,7 +373,7 @@ export class PlaceGuesserComponent implements OnInit {
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000*(1-((distance-50) / 1950))**2)
+        return Math.floor(1000 * (1 - ((distance - 50) / 1950)) ** 2)
       }
     } else if (this.gameMode == 'africa') {
       if (distance > 2500) {
@@ -368,7 +381,7 @@ export class PlaceGuesserComponent implements OnInit {
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000*(1-((distance-50) / 2450))**2)
+        return Math.floor(1000 * (1 - ((distance - 50) / 2450)) ** 2)
       }
     } else if (this.gameMode == 'asia/oceania') {
       if (distance > 2000) {
@@ -376,7 +389,7 @@ export class PlaceGuesserComponent implements OnInit {
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000*(1-((distance-50) / 1950))**2)
+        return Math.floor(1000 * (1 - ((distance - 50) / 1950)) ** 2)
       }
     } else {
       if (distance > 2500) {
@@ -384,7 +397,7 @@ export class PlaceGuesserComponent implements OnInit {
       } else if (distance <= 50) {
         return 1000
       } else {
-        return Math.floor(1000*(1-((distance-50) / 2450))**2)
+        return Math.floor(1000 * (1 - ((distance - 50) / 2450)) ** 2)
       }
     }
   }
@@ -423,7 +436,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   multiplyScore(score: number) {
 
-    let multi = this.getGameMulti(this.gameMode,this.populationMode)
+    let multi = this.getGameMulti(this.gameMode, this.populationMode)
 
     if (this.solutionLogging) {
       console.log("Sore: ", score, " Multi: ", multi, " = ", score * multi)
@@ -478,7 +491,7 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   getRank() {
-    this.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
+    this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
       next: data => {
         this.rank = data.length + 1
       },
@@ -490,7 +503,7 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   getGameRank() {
-    this.getRankFromLeaderboard(this.totalScoreMulti).subscribe({
+    this.backendService.getRankFromLeaderboard(this.totalScoreMulti).subscribe({
       next: data => {
         this.gameRank = data.length + 1
       },
@@ -499,11 +512,6 @@ export class PlaceGuesserComponent implements OnInit {
       }
     })
 
-  }
-
-
-  getRankFromLeaderboard(highscore: number): Observable<any> {
-    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_rank?highscore=' + highscore, { responseType: "json" });
   }
 
   openStats() {

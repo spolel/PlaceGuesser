@@ -1,9 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { merge, startWith, switchMap, catchError, map, Observable, of } from 'rxjs';
+import { BackendService } from 'src/app/services/backend.service';
 
 @Component({
   selector: 'app-leaderboard',
@@ -37,14 +36,14 @@ export class LeaderboardComponent implements OnInit {
 
   @Output() selectedPathsEvent = new EventEmitter();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private backendService: BackendService) { }
 
   ngOnInit(): void {
     this.isMobile()
   }
 
   ngAfterViewInit() {
-    this.getLeaderboard().subscribe({
+    this.backendService.getLeaderboard().subscribe({
       next: data => {
         this.data = data
         this.dataSource = new MatTableDataSource(data);
@@ -70,10 +69,6 @@ export class LeaderboardComponent implements OnInit {
   openMap(row, paths) {
     this.selectedRow = row
     this.selectedPathsEvent.emit(paths)
-  }
-
-  getLeaderboard(): Observable<any> {
-    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_leaderboard', { responseType: "json" });
   }
 
   isMobile() {

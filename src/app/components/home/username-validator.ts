@@ -1,6 +1,5 @@
 import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { delay, map, Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 
 const takenUsernames: string[] = [
     'hello',

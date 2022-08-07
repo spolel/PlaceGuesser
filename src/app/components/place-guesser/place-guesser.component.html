@@ -22,7 +22,7 @@
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
     <div *ngIf="imageLoaded && !gameEnded" class="carousel-container">
-        <app-image-carousel [images]="images" (refreshImageUrlsEvent)="getPlacePhotos()"></app-image-carousel>
+        <app-image-carousel [images]="images"></app-image-carousel>
     </div>
     <mat-card *ngIf="statsOpen" class="stats-container">
         <mat-card-title class="stats-title">STATS</mat-card-title>
@@ -38,7 +38,7 @@
     <!-- <div style="flex-grow:1"></div> -->
     <div [class]="gameEnded ? 'endmap-container' : 'map-container'">
         <app-map-selector #map [solution]="solution" [solutionCoords]="solutionCoords" [gameEnded]="gameEnded"
-            [distance]="distance" [score]="score" [round]="round" (guessEvent)="checkGuess($event)"
+            [distance]="distance" [score]="score" [round]="round" [imageLoaded]="imageLoaded" (guessEvent)="checkGuess($event)"
             (nextRoundEvent)="nextRound()" (playAgainEvent)="playAgain()" (resetGameEvent)="resetGame()"
             (completePathsEvent)="completePaths($event)"></app-map-selector>
     </div>

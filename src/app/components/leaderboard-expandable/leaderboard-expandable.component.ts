@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { merge, startWith, switchMap, catchError, map, Observable, of } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { BackendService } from 'src/app/services/backend.service';
 
 @Component({
   selector: 'app-leaderboard-expandable',
@@ -63,14 +63,14 @@ export class LeaderboardExpandableComponent implements OnInit {
     this.isMobile()
   }
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private backendService: BackendService) { }
 
   ngOnInit(): void {
     this.isMobile()
   }
 
   ngAfterViewInit() {
-    this.getLeaderboard().subscribe({
+    this.backendService.getLeaderboard().subscribe({
       next: data => {
         this.data = data
         this.dataSource = new MatTableDataSource(data);
@@ -108,11 +108,6 @@ export class LeaderboardExpandableComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-
-  getLeaderboard(): Observable<any> {
-    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_leaderboard', { responseType: "json" });
   }
 
   isMobile() {
