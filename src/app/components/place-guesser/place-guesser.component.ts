@@ -55,7 +55,9 @@ export class PlaceGuesserComponent implements OnInit {
 
   paths: any = []
 
-  solutionLogging: boolean = true;
+  askResetOpen: boolean = false;
+
+  solutionLogging: boolean = false;
   saveMoney: boolean = false;
 
   @Output() resetGameEvent = new EventEmitter();
@@ -110,6 +112,7 @@ export class PlaceGuesserComponent implements OnInit {
     ).subscribe({
       next: data => {
         this.solution = data[0]
+
         this.solutionCoords = new google.maps.LatLng(this.solution["latitude"], this.solution["longitude"])
 
         this.roundGeoids.push(this.solution["geonameid"])
@@ -520,6 +523,18 @@ export class PlaceGuesserComponent implements OnInit {
 
   closeStats() {
     this.statsOpen = false;
+  }
+
+  openAskReset() {
+    this.askResetOpen = true
+  }
+
+  closeAskReset() {
+    this.askResetOpen = false
+  }
+
+  closeAll() {
+    this.askResetOpen = false
   }
 
 
