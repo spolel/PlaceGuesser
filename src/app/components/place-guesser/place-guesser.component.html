@@ -1,7 +1,20 @@
 <div #placecontainer></div>
 <div class="container">
+    <div [ngClass]="askResetOpen ? 'overlay' : ''" (click)="closeAll()"></div>
+    <mat-card *ngIf="askResetOpen" class="askreset-container">
+        <mat-card-title class="askreset-title">Are you sure you want to go back home ? </mat-card-title>
+        <mat-card-content>
+            <h2>Progress will be lost</h2>
+        </mat-card-content>
+        <mat-card-actions>
+            <div class="buttons-askreset-container">
+                <button class="" color="basic" mat-raised-button (click)="closeAskReset()"> CANCEL </button>
+                <button class="" color="primary" mat-raised-button (click)="resetGame()"> NEXT </button>
+            </div>
+        </mat-card-actions>
+    </mat-card>
     <div class="status-bar">
-        <div class="title-container" (click)="resetGame()">
+        <div class="title-container" (click)="openAskReset()">
             <img class="logo unselectable" src="../../../assets/earth-logo.svg" />
             <div *ngIf="!mobile" class="title unselectable">PLACE GUESSER</div>
         </div>
