@@ -1,9 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors, Validators } from '@angular/forms';
-import { delay, map, Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 
-import { UsernameValidator } from './username-validator';
+import { BackendService } from 'src/app/services/backend.service';
 
 const populationStats = {
   "worldwide": {
@@ -89,7 +87,7 @@ export class HomeComponent implements OnInit {
 
   logging: boolean = false;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private backendService: BackendService) { }
 
   ngOnInit(): void {
     this.isMobile()
@@ -151,7 +149,7 @@ export class HomeComponent implements OnInit {
         console.log("restoring history with username :", this.userdata["username"], typeof this.userdata["username"])
       }
 
-      this.getHistory(this.userdata["username"]).subscribe({
+      this.backendService.getHistory(this.userdata["username"]).subscribe({
         next: data => {
           if (this.logging) {
             console.log(data)
@@ -205,7 +203,7 @@ export class HomeComponent implements OnInit {
   }
 
   getRank() {
-    this.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
+    this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
       next: data => {
         this.rank = data.length + 1
       },
@@ -215,15 +213,6 @@ export class HomeComponent implements OnInit {
     })
 
   }
-
-  getRankFromLeaderboard(highscore: number): Observable<any> {
-    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_rank?highscore=' + highscore, { responseType: "json" });
-  }
-
-  getHistory(username: string): Observable<any> {
-    return this.httpClient.get('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_history?username=' + username, { responseType: "json" });
-  }
-
 
   // getErrorMessage() {
   //   return this.usernameControl.hasError('maxlength') ? 'Maximum length 25' : '';

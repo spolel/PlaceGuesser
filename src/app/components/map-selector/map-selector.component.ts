@@ -45,6 +45,7 @@ export class MapSelectorComponent implements OnInit {
   @Input() distance: number;
   @Input() score: number;
   @Input() round: number;
+  @Input() imageLoaded: Object;
 
 
   roundEnded: boolean = false;

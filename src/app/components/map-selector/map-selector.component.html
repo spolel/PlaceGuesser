@@ -43,7 +43,7 @@
             </div>
         </google-map>
     </div>
-    <button *ngIf="!roundEnded && !mobile" id="button-guess" color="primary" mat-raised-button (click)="guess()">
+    <button *ngIf="!roundEnded && !mobile" id="button-guess" color="primary" [disabled]="!true" mat-raised-button (click)="guess()">
         GUESS
     </button>
     <button *ngIf="!roundEnded && mobile" id="button-guess-mobile" color="primary" mat-fab (click)="guess()">
