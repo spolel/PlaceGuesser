@@ -3,6 +3,7 @@ import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors, Valid
 
 import { BackendService } from 'src/app/services/backend.service';
 
+//dictionary with the number of places present with that specific combination of GAMEMODE and POPULATION
 const populationStats = {
   "worldwide": {
     "500": 159872,
@@ -50,69 +51,65 @@ const populationStats = {
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  gameStarted: boolean = false
+
   gameMode: string;
   populationMode: string;
   username: string;
-
-  populationStats: any = populationStats;
-
-  settingsOpen: boolean = false
-  helpOpen: boolean = false
-  statsOpen: boolean = false
   stats: any = {}
   barChartData: any[] = []
   rank: number;
-
   userdata: any = {}
 
+  //booleans used to control the state of the game and to open and close windows
+  gameStarted: boolean = false
+  settingsOpen: boolean = false
+  helpOpen: boolean = false
+  statsOpen: boolean = false
+
+  // Form controls used in the game settings 
   gameModeControl = new FormControl('');
   populationControl = new FormControl('');
   usernameControl = new FormControl(undefined, [
     Validators.maxLength(25),
     this.noWhitespaceValidator
   ]);
-
   //[UsernameValidator.createValidator()]
 
+  populationStats: any = populationStats;
+
+  //used for the home background photo
   imageId: number;
   backgroundUrl: string;
-
   backgroundStyle: any;
 
+  //tracking if we are on a mobile device
   mobile: boolean;
   @HostListener("window:resize", []) onWindowResize() {
     this.isMobile()
   }
 
+  //when true all logs will be printed to console
   logging: boolean = false;
 
   constructor(private backendService: BackendService) { }
 
   ngOnInit(): void {
-    this.isMobile()
-    
-    //console.log(document.getElementsByClassName('app-container')[0]);
+
+    //setting a random photo for the home background
     this.imageId = Math.floor(Math.random() * 16) + 1;
-
     this.backgroundUrl = "../../assets/home-backgrounds/" + this.imageId + "-min.jpg"
-    //console.log(this.backgroundUrl)
-
     this.backgroundStyle = 'linear-gradient(0deg, rgba(0, 0, 0, 0.90), rgba(0, 0, 0, 0.6)), url(' + this.backgroundUrl + ') no-repeat center center fixed'
 
+    //inizializing variables
+    this.isMobile()
     this.gameMode = 'worldwide'
     this.populationMode = '10000'
     this.gameModeControl.setValue(this.gameMode)
     this.populationControl.setValue(this.populationMode)
-    
-
 
     this.getUserdata()
-    this.restoreHistoryFromDb()
-
+    this.syncStatsFromDb()
     this.getStats()
-
-
   }
 
   ngAfterViewInit() {
@@ -128,7 +125,7 @@ export class HomeComponent implements OnInit {
 
   startGame() {
     this.saveUserdata()
-    this.restoreHistoryFromDb()
+    this.syncStatsFromDb()
 
     this.settingsOpen = false
     this.gameStarted = true
@@ -143,7 +140,30 @@ export class HomeComponent implements OnInit {
     this.getUserdata()
   }
 
-  restoreHistoryFromDb() {
+  //checks in the localstorage for userdata if you played previously
+  // userdata :
+  // { username : 'example' }
+  getUserdata() {
+    if (localStorage.getItem('userdata') != null) {
+      this.userdata = JSON.parse(localStorage.getItem('userdata'))
+
+      this.usernameControl.setValue(this.userdata["username"])
+      this.username = this.userdata["username"]
+    }
+
+  }
+
+  //saves your username to localstorage
+  saveUserdata() {
+    if (this.usernameControl.value != "" && this.usernameControl.value != undefined && this.usernameControl.value != null) {
+      localStorage.setItem('userdata', JSON.stringify({ username: this.usernameControl.value }))
+    }
+
+    this.userdata = { username: this.usernameControl.value }
+  }
+
+  //gets you stats from the current username if present in the DB and saves them to localstorage
+  syncStatsFromDb() {
     if (this.userdata["username"] != "" && this.userdata["username"] != undefined && this.userdata["username"] != null) {
       if (this.logging) {
         console.log("restoring history with username :", this.userdata["username"], typeof this.userdata["username"])
@@ -172,6 +192,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  //gets stats from localstorage 
   getStats() {
     if (localStorage.getItem('history') != null) {
       this.stats = JSON.parse(localStorage.getItem('history'))
@@ -181,31 +202,13 @@ export class HomeComponent implements OnInit {
 
     this.barChartData = this.stats["distribution"]
     this.getRank()
-
   }
 
-  getUserdata() {
-    if (localStorage.getItem('userdata') != null) {
-      this.userdata = JSON.parse(localStorage.getItem('userdata'))
-
-      this.usernameControl.setValue(this.userdata["username"])
-      this.username = this.userdata["username"]
-    }
-
-  }
-
-  saveUserdata() {
-    if (this.usernameControl.value != "" && this.usernameControl.value != undefined && this.usernameControl.value != null) {
-      localStorage.setItem('userdata', JSON.stringify({ username: this.usernameControl.value }))
-    }
-
-    this.userdata = { username: this.usernameControl.value }
-  }
-
+  //gets you current highscore ranking in the global leaderboard from the db
   getRank() {
     this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
-      next: data => {
-        this.rank = data.length + 1
+      next: rank => {
+        this.rank = rank + 1
       },
       error: error => {
         console.log(error)
@@ -214,10 +217,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-  // getErrorMessage() {
-  //   return this.usernameControl.hasError('maxlength') ? 'Maximum length 25' : '';
-  // }
-
+  //returns the score mutiplier based on gamemode and population
   getGameMulti(zone: string, population: string) {
     let zoneMultis = {
       "worldwide": 4,
@@ -236,18 +236,20 @@ export class HomeComponent implements OnInit {
     return 1 + zoneMultis[zone] + popMultis[population]
   }
 
-  getDifficulty(multi: number){
-    if(multi >= 10){
+  //returns a description of the difficulty based on the score multiplier
+  getDifficulty(multi: number) {
+    if (multi >= 10) {
       return "HARDCORE"
-    }else if(multi >= 7){
+    } else if (multi >= 7) {
       return "Hard"
-    }else if(multi >= 3){
+    } else if (multi >= 3) {
       return "Medium"
-    }else {
+    } else {
       return "Easy"
     }
   }
 
+  //to open and close windows
   openSettings() {
     this.settingsOpen = true
   }
@@ -272,12 +274,13 @@ export class HomeComponent implements OnInit {
     this.statsOpen = false
   }
 
-  closeAll(){
+  closeAll() {
     this.statsOpen = false
     this.helpOpen = false
     this.settingsOpen = false
   }
 
+  //simple "mobile" check
   isMobile() {
     if (window.innerWidth >= 1000) {
       this.mobile = false;

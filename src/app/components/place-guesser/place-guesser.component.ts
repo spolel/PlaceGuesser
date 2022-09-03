@@ -14,27 +14,39 @@ import { codeToCountry } from '../../../assets/codeToCountry'
   templateUrl: './place-guesser.component.html',
   styleUrls: ['./place-guesser.component.scss']
 })
+
+//implements the main component for the guessing game
 export class PlaceGuesserComponent implements OnInit {
   @ViewChild('placecontainer') placecontainer: ElementRef;
   @ViewChild(MapSelectorComponent) map: MapSelectorComponent;
   @ViewChild(ImageCarouselComponent) carousel: ImageCarouselComponent;
 
+  //game settings
   @Input() gameMode: string;
   @Input() populationMode: string;
   @Input() username: string;
 
-  guessCoords: google.maps.LatLng;
-  solutionCoords: google.maps.LatLng;
+  //solution for the current round
   solution: Object;
-  imageUrl: string = "";
+  solutionCoords: google.maps.LatLng;
+
+  //coordinated guessed by the user
+  guessCoords: google.maps.LatLng;
+
+  //distance of guess to solution
+  distance: number;
+
+  //true when images received from server
   imageLoaded: boolean = false;
   placeId: string;
   images: string[] = [];
-  distance: number;
 
+  //used for requests to google geocoding and place service
+  //TODO: eventually move to backend the geocoding part and only return image links from server
   palcesService: google.maps.places.PlacesService;
   geocoder: google.maps.Geocoder;
 
+  //current game info
   round: number = 1;
   score: number;
   totalScore: number = 0;
@@ -42,26 +54,33 @@ export class PlaceGuesserComponent implements OnInit {
   multi: number = 0;
   rank: number;
   gameRank: number;
-
-  roundGeoids: number[] = []
   gameEnded: boolean = false;
   roundEnded: boolean = false;
-
   gameStarted: boolean = false;
 
+  //storing geoids of places this round, so that if we get the same random place again we fetch a new one
+  roundGeoids: number[] = []
+
+  //stats panel
   stats: any = {}
   statsOpen: boolean = false;
   barChartData: any[] = []
 
+  //all paths of guesses and solution from the played game
   paths: any = []
 
+  //confirmation of returning home during game
   askResetOpen: boolean = false;
 
+  //logs to console if true
   solutionLogging: boolean = false;
+
+  //when true it does not send place details requests to google that are very expensive
   saveMoney: boolean = false;
 
   @Output() resetGameEvent = new EventEmitter();
 
+  //tracking if we are on a mobile device
   mobile: boolean = false
   @HostListener("window:resize", []) onWindowResize() {
     this.isMobile()
@@ -73,23 +92,20 @@ export class PlaceGuesserComponent implements OnInit {
   ngOnInit(): void {
     this.isMobile()
 
+    //forcing fullscreen mode when on mobile
     if (this.mobile) {
       document.documentElement.requestFullscreen();
     }
 
-    if (this.solutionLogging) {
-      console.log("Username: ", this.username)
-    }
+    if (this.solutionLogging) { console.log("Username: ", this.username) }
 
     this.getStats()
 
   }
 
   ngAfterViewInit(): void {
-
-    //initialize google place service
+    //initialize google place and geocoder service
     this.palcesService = new google.maps.places.PlacesService(this.placecontainer.nativeElement);
-
     this.geocoder = new google.maps.Geocoder();
 
     this.getNewPlace()
@@ -128,6 +144,7 @@ export class PlaceGuesserComponent implements OnInit {
     })
   }
 
+  //getting the place on google maps from the coordinated using geocoding
   geocodeLatLng(
     geocoder: google.maps.Geocoder,
     coords: google.maps.LatLng
@@ -154,6 +171,7 @@ export class PlaceGuesserComponent implements OnInit {
             }
           }
 
+          //getting lowest level political zone
           let firstPolitical;
           for (const result of results) {
             if (result.types.includes("political")
@@ -166,7 +184,10 @@ export class PlaceGuesserComponent implements OnInit {
             }
           }
 
-
+          //trying to get the name of the city. Not always easy because different countries sometimes use different formats
+          //I prioritize locality, if not present the first political zone is used (for example the Municipality ),
+          //if not even a low level political is present is try to extract it from the plus code (https://maps.google.com/pluscodes/)
+          //if even the plus code does not contain a political type I fin a new place
           if (locality != undefined) {
             if (this.solutionLogging) { console.log("locality address: ", locality.formatted_address) }
             if (!this.saveMoney) { this.getPlaceDetails(locality.place_id) }
@@ -202,7 +223,7 @@ export class PlaceGuesserComponent implements OnInit {
       .catch((e) => console.log("Geocoder failed due to: " + e));
   }
 
-
+  //getting the place on google maps from a text search on google maps
   getPlaceFromQuery(queryString: string) {
     var request = {
       query: queryString,
@@ -232,6 +253,8 @@ export class PlaceGuesserComponent implements OnInit {
     })
   }
 
+  //getting the details given a placeId
+  //this is used to get the 10 photos of the place
   getPlaceDetails(palce_id: string) {
     this.images = []
 
@@ -266,20 +289,19 @@ export class PlaceGuesserComponent implements OnInit {
       });
   }
 
+  //checking guess against solution
   checkGuess(coordinates: google.maps.LatLng) {
-    //console.log(coordinates)
     this.guessCoords = coordinates
 
     this.distance = this.getDistanceFromLatLonInKm(this.solutionCoords.lat(), this.solutionCoords.lng(), coordinates.lat(), coordinates.lng())
-    //console.log(this.distance)
 
-    //this.score = Math.floor(this.getProgress(this.distance) * 1000)
     this.score = this.generateScore(this.distance)
     this.totalScore += this.score
 
     this.roundOverview()
   }
 
+  //behaviour for advancing to next round
   nextRound() {
     this.round += 1
     if (this.round > 5) {
@@ -296,6 +318,7 @@ export class PlaceGuesserComponent implements OnInit {
     this.roundEnded = true;
   }
 
+  //behaviour when the game is ended
   gameOver() {
     this.gameEnded = true
 
@@ -321,10 +344,12 @@ export class PlaceGuesserComponent implements OnInit {
     this.getStats()
   }
 
+  //getting complete paths from child at end of game
   completePaths(paths: any) {
     this.paths = paths
   }
 
+  //saves history to localstorage and DB
   saveHistory() {
     let history = {}
     if (localStorage.getItem('history') != null) {
@@ -361,6 +386,9 @@ export class PlaceGuesserComponent implements OnInit {
     this.totalScore = 0
   }
 
+  //logic to generate the score based on distance to solution
+  //based on the zone different parameters are used
+  //uses a quadratic function over distance. If within 50km you get full score
   generateScore(distance) {
     if (this.gameMode == 'europe') {
       if (distance > 1500) {
@@ -405,7 +433,7 @@ export class PlaceGuesserComponent implements OnInit {
     }
   }
 
-  //   Zone
+  // Zone
   // worldwide multiplier x4
   // europe multiplier x1
   // africa multiplier x1.5
@@ -419,6 +447,7 @@ export class PlaceGuesserComponent implements OnInit {
   // 10000 multiplier x3
   // 500 multiplier x6
 
+  //returns the score mutiplier based on gamemode and population
   getGameMulti(zone: string, population: string) {
     let zoneMultis = {
       "worldwide": 4,
@@ -454,6 +483,7 @@ export class PlaceGuesserComponent implements OnInit {
     return (1 - (distance / 20037.5))
   }
 
+  //calculates distance from two pairs of coordinates
   getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
     var dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
@@ -481,6 +511,7 @@ export class PlaceGuesserComponent implements OnInit {
     }
   }
 
+  //gets stats from localstorage 
   getStats() {
     if (localStorage.getItem('history') != null) {
       this.stats = JSON.parse(localStorage.getItem('history'))
@@ -493,10 +524,11 @@ export class PlaceGuesserComponent implements OnInit {
 
   }
 
+    //gets you current highscore ranking in the global leaderboard from the db
   getRank() {
     this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
-      next: data => {
-        this.rank = data.length + 1
+      next: rank => {
+        this.rank = rank + 1
       },
       error: error => {
         console.log(error)
@@ -505,10 +537,11 @@ export class PlaceGuesserComponent implements OnInit {
 
   }
 
+  //gets rank on leaderboard of current game
   getGameRank() {
     this.backendService.getRankFromLeaderboard(this.totalScoreMulti).subscribe({
-      next: data => {
-        this.gameRank = data.length + 1
+      next: rank => {
+        this.gameRank = rank + 1
       },
       error: error => {
         console.log(error)
@@ -526,7 +559,12 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   openAskReset() {
-    this.askResetOpen = true
+    //do not ask when game is not ongoing
+    if (!this.gameEnded) {
+      this.askResetOpen = true
+    }else{
+      this.resetGame()
+    }
   }
 
   closeAskReset() {
@@ -536,7 +574,5 @@ export class PlaceGuesserComponent implements OnInit {
   closeAll() {
     this.askResetOpen = false
   }
-
-
 
 }

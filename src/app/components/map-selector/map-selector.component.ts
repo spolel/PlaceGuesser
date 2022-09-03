@@ -9,7 +9,9 @@ import { codeToCountry } from '../../../assets/codeToCountry'
   styleUrls: ['./map-selector.component.scss']
 })
 
+//implements component to input your guess on the map
 export class MapSelectorComponent implements OnInit {
+  //settings for google map
   center: google.maps.LatLng = new google.maps.LatLng(40, -3)
   zoom: number = 2
   options: google.maps.MapOptions = {
@@ -17,27 +19,29 @@ export class MapSelectorComponent implements OnInit {
     scrollwheel: true,
     disableDoubleClickZoom: true,
     minZoom: 2,
-    fullscreenControl : false,
+    fullscreenControl: false,
     streetViewControl: false,
     mapTypeControl: false,
     clickableIcons: false,
     keyboardShortcuts: true
   }
+
   markerLatLng: google.maps.LatLng;
   markerSelected: boolean = false;
-  markerOptions: google.maps.MarkerOptions = {draggable: false};
+  markerOptions: google.maps.MarkerOptions = { draggable: false };
   guessCoords: google.maps.LatLng;
   path: google.maps.LatLng[];
   paths: any = [];
 
-  mapClasses: string[] = ['map','size1'];
-  containerClasses: string[] = ['container','bottom-right'];
+  mapClasses: string[] = ['map', 'size1'];
+  containerClasses: string[] = ['container', 'bottom-right'];
   enlargedSize: string = "size2";
   sizeIndex: number = 2;
   isPinned: boolean = false;
 
   @Input() solutionCoords: google.maps.LatLng;
   @Input() solution: Object;
+  //solution country is used to display flag of the country in the end of round screen
   solutionCountry: string;
   destinationCoords: google.maps.LatLng;
 
@@ -49,8 +53,7 @@ export class MapSelectorComponent implements OnInit {
 
 
   roundEnded: boolean = false;
-  mobile: boolean;
-  
+
   // svgMarker: any = {
   //   path: google.maps.SymbolPath ,
   //   fillColor: "blue",
@@ -70,7 +73,7 @@ export class MapSelectorComponent implements OnInit {
     // The anchor for this image is the base of the flagpole at (0, 32).
     anchor: new google.maps.Point(0, 32),
   };
-  
+
 
   @Output() guessEvent = new EventEmitter<google.maps.LatLng>();
   @Output() nextRoundEvent = new EventEmitter();
@@ -81,9 +84,18 @@ export class MapSelectorComponent implements OnInit {
 
   @ViewChild('map') map: GoogleMap;
 
-  @HostListener("window:resize", []) onWindowResize() {  
+  mobile: boolean;
+  @HostListener("window:resize", []) onWindowResize() {
     this.responsiveClasses()
-    
+  }
+
+  @HostListener('document:keypress', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.roundEnded == false && this.gameEnded == false) {
+      if (event.key == " " || event.key == "Spacebar" || event.key == "Enter") {
+        this.guess()
+      }
+    }
   }
 
   constructor() {
@@ -95,71 +107,74 @@ export class MapSelectorComponent implements OnInit {
     this.paths = []
   }
 
-  
-  responsiveClasses(){
+  //setting css classes to component based on window size and round state 
+  //(smaller during round and bigger in the middle of the screen to show end round solution)
+  responsiveClasses() {
+    //mobile
     if (window.innerWidth >= 1000) {
       this.mobile = false;
-      if(this.roundEnded){
+      if (this.roundEnded) {
         this.containerClasses = ['container', 'middle']
         this.mapClasses = ['map', 'size-middle']
-      }else{
+      } else {
         this.containerClasses = ['container', 'bottom-right']
         this.mapClasses = ['map', 'size1']
       }
 
       this.isPinned = false
+
+      //desktop 
     } else {
       this.mobile = true;
-      if(this.roundEnded){
+      if (this.roundEnded) {
         this.containerClasses = ['container-full', 'middle']
-        this.mapClasses = ['map','mapfull']
-      }else{
+        this.mapClasses = ['map', 'mapfull']
+      } else {
         this.containerClasses = ['container-mobile']
         this.mapClasses = ['map', 'mapfull']
       }
-      
+
       this.isPinned = true
     }
   }
 
-
+  //setting marker on map when clicking
   click(event: google.maps.MapMouseEvent) {
     //console.log(event.latLng.lat(),event.latLng.lng())
-    if(!this.roundEnded){
+    if (!this.roundEnded) {
       this.markerLatLng = event.latLng
       this.markerSelected = true
     }
   }
 
-  setMapBounds(a: google.maps.LatLng, b: google.maps.LatLng ){
+  //centering the map on given coordinate pair bounds
+  setMapBounds(a: google.maps.LatLng, b: google.maps.LatLng) {
     let bounds: google.maps.LatLngBounds;
-    if(a.lng() < b.lng()){
-      bounds = new google.maps.LatLngBounds(a,b);
-    }else{
-      bounds = new google.maps.LatLngBounds(b,a);
+    if (a.lng() < b.lng()) {
+      bounds = new google.maps.LatLngBounds(a, b);
+    } else {
+      bounds = new google.maps.LatLngBounds(b, a);
     }
-    
+
     this.center = bounds.getCenter()
     this.map.fitBounds(bounds)
   }
 
-  guess(){
-    if(this.markerSelected){
+  //handles behaviour when guessing a location
+  guess() {
+    if (this.markerSelected) {
       this.destinationCoords = this.solutionCoords
       this.guessCoords = this.markerLatLng
-  
+
+      //emitting guess to parent
       this.guessEvent.emit(this.markerLatLng)
-  
-      this.path = [this.guessCoords,this.destinationCoords]
+
+      this.path = [this.guessCoords, this.destinationCoords]
       this.paths.push(this.path)
 
-      //console.log(this.paths)
+      this.setMapBounds(this.guessCoords, this.destinationCoords)
 
-      this.setMapBounds(this.guessCoords,this.destinationCoords)
-  
       this.roundEnded = true
-      // this.containerClasses = ['container', 'middle']
-      // this.mapClasses = ['map', 'size3']
       this.responsiveClasses()
       this.isPinned = true
 
@@ -167,76 +182,76 @@ export class MapSelectorComponent implements OnInit {
     }
   }
 
-  resetMarker(){
+  //resets map marker
+  resetMarker() {
     this.markerLatLng = new google.maps.LatLng(0)
     this.markerSelected = false
   }
 
-  nextRound(){
-    if(this.round == 5){
+  nextRound() {
+    //if it was the last round send to parent all paths of guesses and solutions
+    if (this.round == 5) {
       this.completePathsEvent.emit(this.paths)
     }
 
     this.roundEnded = false
-    // this.containerClasses = ['container', 'bottom-right']
-    // this.mapClasses = ['map', 'size1']
     this.isPinned = false
     this.responsiveClasses()
-    
+
     this.path = undefined
     this.markerLatLng = new google.maps.LatLng(0)
     this.markerSelected = false
 
-    this.setMapBounds(new google.maps.LatLng(-11,-76),new google.maps.LatLng(74,80))
+    this.setMapBounds(new google.maps.LatLng(-11, -76), new google.maps.LatLng(74, 80))
 
     this.nextRoundEvent.emit()
   }
 
-  playAgain(){
+  playAgain() {
     this.playAgainEvent.emit()
   }
 
-  resetGame(){
+  resetGame() {
     this.resetGameEvent.emit()
   }
 
-  resize(size: string){
-      this.mapClasses = ['map', size]
+  //resize the map based on class
+  resize(size: string) {
+    this.mapClasses = ['map', size]
   }
 
-  resizeHover(size: string){
-    if(!this.isPinned){
+  //resizing the map is disabled on hover if the map is pinned
+  resizeHover(size: string) {
+    if (!this.isPinned) {
       this.mapClasses = ['map', size]
     }
   }
 
-  enlarge(){
-    //console.log(this.isPinned)
-      if(this.sizeIndex < 4){
-        this.sizeIndex += 1
-        this.resize("size" + this.sizeIndex)
-      }
+  //increase size of the map
+  enlarge() {
+    if (this.sizeIndex < 4) {
+      this.sizeIndex += 1
+      this.resize("size" + this.sizeIndex)
+    }
   }
 
-  reduce(){
-    if(this.sizeIndex > 1){
-        this.sizeIndex -= 1
-        this.resize("size" + this.sizeIndex)
-      }
+  //reduce size of the map
+  reduce() {
+    if (this.sizeIndex > 1) {
+      this.sizeIndex -= 1
+      this.resize("size" + this.sizeIndex)
+    }
   }
 
-  setEnlargedSize(size: string){
+  //sets the size the map will change to when enlarged
+  setEnlargedSize(size: string) {
     this.enlargedSize = size
     this.resize(this.enlargedSize)
   }
 
-  pin(){
+  //pins the map so it does not resize when hovering out
+  pin() {
     this.isPinned = !this.isPinned
-    //console.log(this.isPinned)
   }
-
-
-
-
 
 }

@@ -9,30 +9,31 @@ import { BackendService } from 'src/app/services/backend.service';
   templateUrl: './leaderboard.component.html',
   styleUrls: ['./leaderboard.component.scss']
 })
+
+//Implementing a leaderboard with Angular Material components
 export class LeaderboardComponent implements OnInit {
   displayedColumns: string[] = ['rank', 'username', 'score', 'multi', 'basescore'];
   data: any[];
   dataSource;
 
-  clickedRows = new Set<any>();
-
   resultsLength = 0;
   isLoadingResults = true;
 
+  //tracking selected row for highlighting
+  selectedRow: any;
+
+  //paths to show on map when selecting score from leaderboard
   paths: any[];
   mapOpen: boolean = false;
-
-  highlightedRows: any[] = [];
-  selectedRow: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  //tracking if we are on a mobile device
   mobile: boolean;
   @HostListener("window:resize", []) onWindowResize() {
     this.isMobile()
   }
-
 
   @Output() selectedPathsEvent = new EventEmitter();
 
