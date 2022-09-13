@@ -34,6 +34,7 @@ export class BarchartComponent implements OnInit {
 
   scheme = undefined
 
+  //setting custom colors for each of the histogram bins
   customColors = [{name:"0",value: '#12cde9'},{name:"5k",value: '#00c4f5'},{name:"10k",value: '#00bafd'},{name:"15k",value: '#34aeff'},{name:"20k",value: '#649fff'},
   {name:"25k",value: '#8b8ef6'},{name:"30k",value: '#ad7be5'},{name:"35k",value: '#c865cc'},{name:"40k",value: '#db4dad'},{name:"45k",value: '#e53489'},{name:"50k",value: '#e61e62'}]
 
@@ -48,6 +49,7 @@ export class BarchartComponent implements OnInit {
     this.data = this.generateBarChartData(this.inputData)
   }
 
+  //binning the scores into the bar chart
   generateBarChartData(history: any[]) {
     let data = [
       { "name": "0", "value": 0 },
@@ -70,6 +72,7 @@ export class BarchartComponent implements OnInit {
     return data;
   }
 
+  //returning the right column number from the score
   getScoreCategory(score: number) {
     switch (true) {
       case (score >= 50000):

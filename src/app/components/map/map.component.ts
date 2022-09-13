@@ -5,7 +5,9 @@ import { Component, Input, OnInit } from '@angular/core';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
+//Angular material google maps component
 export class MapComponent implements OnInit {
+  //map settings
   center: google.maps.LatLng = new google.maps.LatLng(40, -3)
   zoom: number = 2
   options: google.maps.MapOptions = {

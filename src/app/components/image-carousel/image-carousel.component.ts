@@ -5,6 +5,8 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
   templateUrl: './image-carousel.component.html',
   styleUrls: ['./image-carousel.component.scss']
 })
+
+//Implementing an image carousel to display the photos of the place
 export class ImageCarouselComponent implements OnInit {
   @Input() images: string[] = [];
 
@@ -22,38 +24,35 @@ export class ImageCarouselComponent implements OnInit {
     if (this.imagesLength > 0){
       this.displayIdx = 0
     }
-    //console.log(this.imagesLength)
-    //console.log(this.displayIdx)
   }
 
   ngAfterViewInit(){
-    //console.log(this.imagesContainer)
   }
 
+  //scrolling to next photo
   next(){
     if (this.displayIdx < this.imagesLength-1)
       this.displayIdx += 1
 
     this.imagesContainer.nativeElement.children[this.displayIdx].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
-
-    //console.log(this.displayIdx)
   }
 
+  //scrolling to previous photo
   previous(){
     if (this.displayIdx > 0)
       this.displayIdx -= 1
 
     this.imagesContainer.nativeElement.children[this.displayIdx].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
-
-    //console.log(this.displayIdx)
   }
 
+  //scrollwheel behaviour
   scroll($event){
     this.imagesContainer.nativeElement.scrollLeft += ($event.deltaY * 2)
 
     this.updateIndex()
   }
 
+  //scrollbar behaviour
   scrollBar(){
     this.updateIndex()
   }
@@ -66,7 +65,6 @@ export class ImageCarouselComponent implements OnInit {
     if(dataIndex != null){
       this.displayIdx = parseInt(dataIndex)
     }
-    //console.log(dataIndex)
   }
 
   refreshImageUrls(){
