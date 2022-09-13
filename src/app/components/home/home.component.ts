@@ -208,7 +208,7 @@ export class HomeComponent implements OnInit {
   getRank() {
     this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
       next: rank => {
-        this.rank = rank + 1
+        this.rank = rank[0]+1
       },
       error: error => {
         console.log(error)

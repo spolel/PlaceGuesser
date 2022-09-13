@@ -8,7 +8,8 @@ import { HttpClient } from '@angular/common/http';
 export class BackendService {
 
   //backendUrl: any = "https://data.mongodb-api.com/app/data-mwwux/endpoint"
-  backendUrl: any = "http://localhost:5000"
+  //backendUrl: any = "http://localhost:8000"
+  backendUrl: any = "https://placeguesser-api-mrfsd73xma-ew.a.run.app"
 
   constructor(private httpClient: HttpClient) { }
 

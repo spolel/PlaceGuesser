@@ -274,12 +274,12 @@ export class PlaceGuesserComponent implements OnInit {
             this.images.push(item.getUrl())
           })
 
-          this.backendService.savePlacePhotos(
-            {
-              geonameid: this.solution["geonameid"],
-              photos: this.images
-            }
-          ).subscribe({ error: e => { console.log(e) } })
+          // this.backendService.savePlacePhotos(
+          //   {
+          //     geonameid: this.solution["geonameid"],
+          //     photos: this.images
+          //   }
+          // ).subscribe({ error: e => { console.log(e) } })
 
           //console.log(this.images)
           this.ngZone.run(() => {
@@ -324,7 +324,6 @@ export class PlaceGuesserComponent implements OnInit {
 
     this.multiplyScore(this.totalScore)
 
-    this.getGameRank()
     this.saveHistory()
 
     //saving score to leaderboard
@@ -341,6 +340,7 @@ export class PlaceGuesserComponent implements OnInit {
         }
       ).subscribe({ error: e => { console.log(e) } })
 
+    this.getGameRank()
     this.getStats()
   }
 
@@ -528,7 +528,7 @@ export class PlaceGuesserComponent implements OnInit {
   getRank() {
     this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
       next: rank => {
-        this.rank = rank + 1
+        this.rank = rank[0]+1
       },
       error: error => {
         console.log(error)
@@ -541,7 +541,7 @@ export class PlaceGuesserComponent implements OnInit {
   getGameRank() {
     this.backendService.getRankFromLeaderboard(this.totalScoreMulti).subscribe({
       next: rank => {
-        this.gameRank = rank + 1
+        this.gameRank = rank[0]+1
       },
       error: error => {
         console.log(error)
