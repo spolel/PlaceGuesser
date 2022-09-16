@@ -7,15 +7,27 @@ export class LocalstorageService {
 
   constructor() { }
 
-  // getStats() {
-  //   if (localStorage.getItem('history') != null) {
-  //     this.stats = JSON.parse(localStorage.getItem('history'))
-  //   } else {
-  //     this.stats = { played: 0, highscore: 0, distribution: [] }
-  //   }
+  getHistory() {
+    if (localStorage.getItem('history') != null) {
+      return JSON.parse(localStorage.getItem('history'))
+    } else {
+      return { played: 0, highscore: 0, distribution: [] }
+    }
+  }
 
-  //   this.barChartData = this.stats["distribution"]
-  //   this.getRank()
+  setHistory(history: string) {
+    localStorage.setItem("history", history)
+  }
 
-  // }
+  getUserdata() {
+    return JSON.parse(localStorage.getItem('userdata'))
+  }
+
+  setUserdata(userdata: string) {
+    localStorage.setItem("userdata", userdata)
+  }
+
+  setUsername(username: string) {
+    localStorage.setItem("userdata", JSON.stringify({ username: username }))
+  }
 }

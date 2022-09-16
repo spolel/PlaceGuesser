@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors, Validators } from '@angular/forms';
 
 import { BackendService } from 'src/app/services/backend.service';
+import { LocalstorageService } from 'src/app/services/localstorage.service';
 
 //dictionary with the number of places present with that specific combination of GAMEMODE and POPULATION
 const populationStats = {
@@ -91,7 +92,7 @@ export class HomeComponent implements OnInit {
   //when true all logs will be printed to console
   logging: boolean = false;
 
-  constructor(private backendService: BackendService) { }
+  constructor(private backendService: BackendService, private localstorageService: LocalstorageService) { }
 
   ngOnInit(): void {
 
@@ -144,19 +145,17 @@ export class HomeComponent implements OnInit {
   // userdata :
   // { username : 'example' }
   getUserdata() {
-    if (localStorage.getItem('userdata') != null) {
-      this.userdata = JSON.parse(localStorage.getItem('userdata'))
-
+    if (this.localstorageService.getUserdata() != null) {
+      this.userdata = this.localstorageService.getUserdata()
       this.usernameControl.setValue(this.userdata["username"])
       this.username = this.userdata["username"]
     }
-
   }
 
   //saves your username to localstorage
   saveUserdata() {
     if (this.usernameControl.value != "" && this.usernameControl.value != undefined && this.usernameControl.value != null) {
-      localStorage.setItem('userdata', JSON.stringify({ username: this.usernameControl.value }))
+      this.localstorageService.setUsername(this.usernameControl.value)
     }
 
     this.userdata = { username: this.usernameControl.value }
@@ -175,9 +174,9 @@ export class HomeComponent implements OnInit {
             console.log(data)
           }
           if (data.length > 0) {
-            localStorage.setItem("history", JSON.stringify(data[0]["history"]))
+            this.localstorageService.setHistory(JSON.stringify(data[0]["history"]))
           } else {
-            localStorage.setItem("history", JSON.stringify({ played: 0, highscore: 0, distribution: [] }))
+            this.localstorageService.setHistory(JSON.stringify({ played: 0, highscore: 0, distribution: [] }))
           }
         },
         error: error => {
@@ -194,11 +193,7 @@ export class HomeComponent implements OnInit {
 
   //gets stats from localstorage 
   getStats() {
-    if (localStorage.getItem('history') != null) {
-      this.stats = JSON.parse(localStorage.getItem('history'))
-    } else {
-      this.stats = { played: 0, highscore: 0, distribution: [] }
-    }
+    this.stats = this.localstorageService.getHistory()
 
     this.barChartData = this.stats["distribution"]
     this.getRank()

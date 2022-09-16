@@ -7,6 +7,7 @@ import { MapSelectorComponent } from '../map-selector/map-selector.component';
 import { BackendService } from 'src/app/services/backend.service';
 
 import { codeToCountry } from '../../../assets/codeToCountry'
+import { LocalstorageService } from 'src/app/services/localstorage.service';
 
 
 @Component({
@@ -81,7 +82,7 @@ export class PlaceGuesserComponent implements OnInit {
     this.isMobile()
   }
 
-  constructor(private backendService: BackendService, private ngZone: NgZone) {
+  constructor(private backendService: BackendService, private localstorageService: LocalstorageService, private ngZone: NgZone) {
   }
 
   ngOnInit(): void {
@@ -218,12 +219,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   //saves history to localstorage and DB
   saveHistory() {
-    let history = {}
-    if (localStorage.getItem('history') != null) {
-      history = JSON.parse(localStorage.getItem('history'))
-    } else {
-      history = { played: 0, highscore: 0, distribution: [] }
-    }
+    let history = this.localstorageService.getHistory()
 
     history["played"] = history["played"] + 1
 
@@ -233,7 +229,7 @@ export class PlaceGuesserComponent implements OnInit {
 
     history["distribution"].push(this.totalScoreMulti)
 
-    localStorage.setItem('history', JSON.stringify(history))
+    this.localstorageService.setHistory(JSON.stringify(history))
 
     this.backendService.saveHistoryToDb(this.username, history).subscribe({ error: e => { console.log(e) } })
 
@@ -380,11 +376,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   //gets stats from localstorage 
   getStats() {
-    if (localStorage.getItem('history') != null) {
-      this.stats = JSON.parse(localStorage.getItem('history'))
-    } else {
-      this.stats = { played: 0, highscore: 0, distribution: [] }
-    }
+    this.stats = this.localstorageService.getHistory()
 
     this.barChartData = this.stats["distribution"]
     this.getRank()
