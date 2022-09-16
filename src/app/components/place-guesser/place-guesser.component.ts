@@ -117,7 +117,7 @@ export class PlaceGuesserComponent implements OnInit {
     this.backendService.getRandomPlace(parseInt(this.populationMode), this.gameMode).pipe(
       filter(data => {
         //if the place was already seen this round we make the call again to find another place
-        if (this.roundGeoids.includes(data[0]["geonameid"])) {
+        if (this.roundGeoids.includes(data["geonameid"])) {
           if (this.solutionLogging) { console.log('place already seen this round ... getting new one') }
 
           this.getNewPlace()
@@ -127,16 +127,31 @@ export class PlaceGuesserComponent implements OnInit {
       })
     ).subscribe({
       next: data => {
-        this.solution = data[0]
+        this.solution = data
 
-        this.solutionCoords = new google.maps.LatLng(this.solution["latitude"], this.solution["longitude"])
+        this.solutionCoords = new google.maps.LatLng(this.solution["geometry"]["location"]["lat"], this.solution["geometry"]["location"]["lng"])
 
         this.roundGeoids.push(this.solution["geonameid"])
 
 
         if (this.solutionLogging) { console.log("SOLUTION: ", this.solution) }
 
-        this.geocodeLatLng(this.geocoder, this.solutionCoords)
+        if(this.solution["photos"] == undefined){
+          if (this.solutionLogging) { console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE") }
+          this.getNewPlace()
+          return
+        }
+
+        this.images = []
+        this.solution["photos"].forEach(item => {
+          this.images.push("https://maps.googleapis.com/maps/api/place/photo?maxwidth=1600&photo_reference="+ item["photo_reference"] +"&key=AIzaSyDiTzjP62tJNRFMdCqbpEYeqkIehzM49lY")
+        })
+
+        this.ngZone.run(() => {
+          this.imageLoaded = true
+        });
+
+        //this.geocodeLatLng(this.geocoder, this.solutionCoords)
       },
       error: error => {
         console.log(error)
