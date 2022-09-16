@@ -41,11 +41,6 @@ export class PlaceGuesserComponent implements OnInit {
   placeId: string;
   images: string[] = [];
 
-  //used for requests to google geocoding and place service
-  //TODO: eventually move to backend the geocoding part and only return image links from server
-  palcesService: google.maps.places.PlacesService;
-  geocoder: google.maps.Geocoder;
-
   //current game info
   round: number = 1;
   score: number;
@@ -104,10 +99,6 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    //initialize google place and geocoder service
-    this.palcesService = new google.maps.places.PlacesService(this.placecontainer.nativeElement);
-    this.geocoder = new google.maps.Geocoder();
-
     this.getNewPlace()
 
   }
@@ -143,165 +134,26 @@ export class PlaceGuesserComponent implements OnInit {
         }
 
         this.images = []
-        this.solution["photos"].forEach(item => {
-          this.images.push("https://maps.googleapis.com/maps/api/place/photo?maxwidth=1600&photo_reference="+ item["photo_reference"] +"&key=AIzaSyDiTzjP62tJNRFMdCqbpEYeqkIehzM49lY")
+        this.solution["photos"].forEach(x => {
+          this.backendService.getPhotoUrl(x["photo_reference"]).subscribe({
+            next: imageUrl => {
+              this.images.push(imageUrl)
+            },
+            error: error => {
+              console.log(error)
+            }
+          })
         })
 
         this.ngZone.run(() => {
           this.imageLoaded = true
         });
 
-        //this.geocodeLatLng(this.geocoder, this.solutionCoords)
       },
       error: error => {
         console.log(error)
       }
     })
-  }
-
-  //getting the place on google maps from the coordinated using geocoding
-  geocodeLatLng(
-    geocoder: google.maps.Geocoder,
-    coords: google.maps.LatLng
-  ) {
-    const latlng = {
-      lat: coords.lat(),
-      lng: coords.lng(),
-    };
-
-    geocoder
-      .geocode({ location: latlng })
-      .then((response) => {
-        if (response.results[0]) {
-          let results = response.results
-
-          if (this.solutionLogging) { console.log("google geocoding return: ", results) }
-
-
-          let locality;
-          for (const result of results) {
-            if (result.types.includes("locality")) {
-              locality = result
-              break;
-            }
-          }
-
-          //getting lowest level political zone
-          let firstPolitical;
-          for (const result of results) {
-            if (result.types.includes("political")
-              && !result.types.includes("country")
-              && !result.types.includes("administrative_area_level_1")
-              && !result.types.includes("administrative_area_level_2")
-              && !result.types.includes("administrative_area_level_3")) {
-              firstPolitical = result
-              break;
-            }
-          }
-
-          //trying to get the name of the city. Not always easy because different countries sometimes use different formats
-          //I prioritize locality, if not present the first political zone is used (for example the Municipality ),
-          //if not even a low level political is present is try to extract it from the plus code (https://maps.google.com/pluscodes/)
-          //if even the plus code does not contain a political type I fin a new place
-          if (locality != undefined) {
-            if (this.solutionLogging) { console.log("locality address: ", locality.formatted_address) }
-            if (!this.saveMoney) { this.getPlaceDetails(locality.place_id) }
-          } else if (firstPolitical != undefined) {
-            if (this.solutionLogging) { console.log("first political address: ", firstPolitical.formatted_address) }
-            if (!this.saveMoney) { this.getPlaceDetails(firstPolitical.place_id) }
-          } else {
-            console.log("No Locality Found")
-            let address_components = results.find(obj => { return obj.types.includes("plus_code") }) ?
-              results.find(obj => { return obj.types.includes("plus_code") }).address_components :
-              results[0].address_components;
-
-            let query = "";
-            address_components.forEach(x => {
-              if (x.types.includes("political")) {
-                query += x.long_name + ", "
-              }
-            })
-            if (this.solutionLogging) { console.log("query: ", query) }
-            if (query != "") {
-              this.getPlaceFromQuery(query)
-            } else {
-              if (this.solutionLogging) { console.log("No political types in address ... getting new place") }
-              this.getNewPlace()
-            }
-
-          }
-
-        } else {
-          console.log("No results found");
-        }
-      })
-      .catch((e) => console.log("Geocoder failed due to: " + e));
-  }
-
-  //getting the place on google maps from a text search on google maps
-  getPlaceFromQuery(queryString: string) {
-    var request = {
-      query: queryString,
-      fields: ['name', 'place_id', 'geometry'],
-      locationBias: this.solutionCoords
-    };
-
-    this.images = []
-
-    this.palcesService.findPlaceFromQuery(request, (results, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        if (this.solutionLogging) {
-          console.log("google query return: ")
-          console.log(results)
-          console.log(results[0]["geometry"]["location"].lat(), results[0]["geometry"]["location"].lng())
-        }
-
-        const queryDistance = this.getDistanceFromLatLonInKm(results[0]["geometry"]["location"].lat(), results[0]["geometry"]["location"].lng(), this.solutionCoords.lat(), this.solutionCoords.lng())
-        if (this.solutionLogging) { console.log(queryDistance, "km away from solution") }
-        if (queryDistance > 50) {
-          if (this.solutionLogging) { console.log("Google text query returned a different place ..... getting new place") }
-          this.getNewPlace()
-        } else {
-          if (!this.saveMoney) { this.getPlaceDetails(results[0].place_id) }
-        }
-      }
-    })
-  }
-
-  //getting the details given a placeId
-  //this is used to get the 10 photos of the place
-  getPlaceDetails(palce_id: string) {
-    this.images = []
-
-    this.palcesService.getDetails(
-      {
-        placeId: palce_id,
-        fields: ['photos'],
-      }
-      , (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          if (results.photos == undefined) {
-            if (this.solutionLogging) { console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE") }
-            this.getNewPlace()
-            return
-          }
-          results.photos.forEach(item => {
-            this.images.push(item.getUrl())
-          })
-
-          // this.backendService.savePlacePhotos(
-          //   {
-          //     geonameid: this.solution["geonameid"],
-          //     photos: this.images
-          //   }
-          // ).subscribe({ error: e => { console.log(e) } })
-
-          //console.log(this.images)
-          this.ngZone.run(() => {
-            this.imageLoaded = true
-          });
-        }
-      });
   }
 
   //checking guess against solution

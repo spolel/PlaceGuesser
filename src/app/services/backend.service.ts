@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class BackendService {
 
   //backendUrl: any = "https://data.mongodb-api.com/app/data-mwwux/endpoint"
-  //backendUrl: any = "http://localhost:8000"
+  //backendUrl: any = "http://localhost:8080"
   backendUrl: any = "https://placeguesser-api-mrfsd73xma-ew.a.run.app"
 
   constructor(private httpClient: HttpClient) { }
@@ -16,6 +16,10 @@ export class BackendService {
   getRandomPlace(pop: number, zone: string): Observable<Object> {
     //console.log('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_random_place?pop='+pop+'&zone='+zone)
     return this.httpClient.get( this.backendUrl + '/get_random_place?pop=' + pop + '&zone=' + zone, { responseType: "json" });
+  }
+
+  getPhotoUrl(photoreference: string): Observable<string> {
+    return this.httpClient.get( this.backendUrl + '/get_photo_url?photoreference=' + photoreference, { responseType: "text" });
   }
 
   getCachedPhotos(goenameid: number): Observable<Object> {
