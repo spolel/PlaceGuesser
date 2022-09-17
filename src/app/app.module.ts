@@ -22,6 +22,9 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
 import { StatsPanelComponent } from './components/stats-panel/stats-panel.component';
 import { LeaderboardExpandableComponent } from './components/leaderboard-expandable/leaderboard-expandable.component';
 import { MapComponent } from './components/map/map.component';
+import { AuthComponent } from './components/auth/auth.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,10 @@ import { MapComponent } from './components/map/map.component';
     LeaderboardComponent,
     StatsPanelComponent,
     LeaderboardExpandableComponent,
-    MapComponent
+    MapComponent,
+    AuthComponent,
+    ProfileComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
