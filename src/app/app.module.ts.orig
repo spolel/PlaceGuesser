@@ -22,10 +22,13 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
 import { StatsPanelComponent } from './components/stats-panel/stats-panel.component';
 import { LeaderboardExpandableComponent } from './components/leaderboard-expandable/leaderboard-expandable.component';
 import { MapComponent } from './components/map/map.component';
+<<<<<<< HEAD
 import { AuthComponent } from './components/auth/auth.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LoginComponent } from './components/login/login.component';
+=======
 import { CountryAutocompleteComponent } from './components/country-autocomplete/country-autocomplete.component';
+>>>>>>> master
 
 @NgModule({
   declarations: [
@@ -40,11 +43,13 @@ import { CountryAutocompleteComponent } from './components/country-autocomplete/
     StatsPanelComponent,
     LeaderboardExpandableComponent,
     MapComponent,
+<<<<<<< HEAD
     AuthComponent,
     ProfileComponent,
     LoginComponent
-    MapComponent,
+=======
     CountryAutocompleteComponent
+>>>>>>> master
   ],
   imports: [
     BrowserModule,

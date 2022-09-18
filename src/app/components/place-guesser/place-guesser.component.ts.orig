@@ -6,9 +6,12 @@ import { MapSelectorComponent } from '../map-selector/map-selector.component';
 
 import { BackendService } from 'src/app/services/backend.service';
 
+<<<<<<< HEAD
 import { codeToCountry } from '../../../assets/codeToCountry'
 import { LocalstorageService } from 'src/app/services/localstorage.service';
 
+=======
+>>>>>>> master
 
 @Component({
   selector: 'app-place-guesser',
