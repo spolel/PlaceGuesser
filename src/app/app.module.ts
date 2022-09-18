@@ -22,6 +22,7 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
 import { StatsPanelComponent } from './components/stats-panel/stats-panel.component';
 import { LeaderboardExpandableComponent } from './components/leaderboard-expandable/leaderboard-expandable.component';
 import { MapComponent } from './components/map/map.component';
+import { CountryAutocompleteComponent } from './components/country-autocomplete/country-autocomplete.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { MapComponent } from './components/map/map.component';
     LeaderboardComponent,
     StatsPanelComponent,
     LeaderboardExpandableComponent,
-    MapComponent
+    MapComponent,
+    CountryAutocompleteComponent
   ],
   imports: [
     BrowserModule,

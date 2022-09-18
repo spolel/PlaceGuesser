@@ -1,9 +1,13 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors, Validators } from '@angular/forms';
+import { MatTabGroup } from '@angular/material/tabs';
 
 import { BackendService } from 'src/app/services/backend.service';
+import { CountryAutocompleteComponent } from '../country-autocomplete/country-autocomplete.component';
 
-//dictionary with the number of places present with that specific combination of GAMEMODE and POPULATION
+import { countryToCode } from '../../../assets/countryToCode'
+
+//dictionary with the number of places present with that specific combination of zoneMode and POPULATION
 const populationStats = {
   "worldwide": {
     "500": 159872,
@@ -53,7 +57,9 @@ const populationStats = {
 export class HomeComponent implements OnInit {
 
   gameMode: string;
+  zoneMode: string;
   populationMode: string;
+  countryCode: string;
   username: string;
   stats: any = {}
   barChartData: any[] = []
@@ -67,8 +73,9 @@ export class HomeComponent implements OnInit {
   statsOpen: boolean = false
 
   // Form controls used in the game settings 
-  gameModeControl = new FormControl('');
+  zoneModeControl = new FormControl('');
   populationControl = new FormControl('');
+  countrypopulationControl = new FormControl('');
   usernameControl = new FormControl(undefined, [
     Validators.maxLength(25),
     this.noWhitespaceValidator
@@ -81,6 +88,8 @@ export class HomeComponent implements OnInit {
   imageId: number;
   backgroundUrl: string;
   backgroundStyle: any;
+
+  @ViewChild('autocomplete') autocomplete: CountryAutocompleteComponent;
 
   //tracking if we are on a mobile device
   mobile: boolean;
@@ -102,10 +111,12 @@ export class HomeComponent implements OnInit {
 
     //inizializing variables
     this.isMobile()
-    this.gameMode = 'worldwide'
+    this.gameMode = 'classic'
+    this.zoneMode = 'worldwide'
     this.populationMode = '10000'
-    this.gameModeControl.setValue(this.gameMode)
+    this.zoneModeControl.setValue(this.zoneMode)
     this.populationControl.setValue(this.populationMode)
+    this.countrypopulationControl.setValue(this.populationMode)
 
     this.getUserdata()
     this.syncStatsFromDb()
@@ -113,7 +124,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-
+  
   }
 
   noWhitespaceValidator(control: FormControl) {
@@ -123,15 +134,31 @@ export class HomeComponent implements OnInit {
     return isValid ? null : { 'whitespace': true };
   }
 
+  tabChanged($event){
+    console.log($event.index)
+    if($event.index == 1){
+      this.gameMode = 'country'
+    }else if($event.index == 0){
+      this.gameMode = 'classic'
+    }
+  }
+
   startGame() {
     this.saveUserdata()
     this.syncStatsFromDb()
 
     this.settingsOpen = false
     this.gameStarted = true
-    this.gameMode = this.gameModeControl.value
-    this.populationMode = this.populationControl.value
+    
+    this.zoneMode = this.zoneModeControl.value
+    if(this.gameMode == "classic"){
+      this.populationMode = this.populationControl.value
+    }else if(this.gameMode == "country"){
+      this.populationMode = this.countrypopulationControl.value
+    }
     this.username = this.usernameControl.value
+
+    this.countryCode = countryToCode[this.autocomplete.countryCtrl.value]
   }
 
   resetGame() {
@@ -217,7 +244,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-  //returns the score mutiplier based on gamemode and population
+  //returns the score mutiplier based on zoneMode and population
   getGameMulti(zone: string, population: string) {
     let zoneMultis = {
       "worldwide": 4,
