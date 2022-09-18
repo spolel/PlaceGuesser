@@ -24,7 +24,9 @@ export class PlaceGuesserComponent implements OnInit {
 
   //game settings
   @Input() gameMode: string;
+  @Input() zoneMode: string;
   @Input() populationMode: string;
+  @Input() countryCode: string;
   @Input() username: string;
 
   //solution for the current round
@@ -97,6 +99,8 @@ export class PlaceGuesserComponent implements OnInit {
 
     this.getStats()
 
+    console.log(this.countryCode)
+
   }
 
   ngAfterViewInit(): void {
@@ -106,7 +110,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   //gets a new random place and then it's photos from google maps
   getNewPlace() {
-    this.backendService.getRandomPlace(parseInt(this.populationMode), this.gameMode).pipe(
+    this.backendService.getRandomPlace(this.gameMode, parseInt(this.populationMode), this.zoneMode, this.countryCode).pipe(
       filter(data => {
         //if the place was already seen this round we make the call again to find another place
         if (this.roundGeoids.includes(data["geonameid"])) {
@@ -202,7 +206,7 @@ export class PlaceGuesserComponent implements OnInit {
           score: this.totalScoreMulti,
           multi: this.multi,
           basescore: this.totalScore,
-          gamemode: this.gameMode,
+          zoneMode: this.zoneMode,
           population: this.populationMode,
           paths: this.paths
         }
@@ -253,7 +257,7 @@ export class PlaceGuesserComponent implements OnInit {
   //based on the zone different parameters are used
   //uses a quadratic function over distance. If within 50km you get full score
   generateScore(distance) {
-    if (this.gameMode == 'europe') {
+    if (this.zoneMode == 'europe') {
       if (distance > 1500) {
         return 0
       } else if (distance <= 50) {
@@ -261,7 +265,7 @@ export class PlaceGuesserComponent implements OnInit {
       } else {
         return Math.floor(1000 * (1 - ((distance - 50) / 1450)) ** 2)
       }
-    } else if (this.gameMode == 'americas') {
+    } else if (this.zoneMode == 'americas') {
       if (distance > 2000) {
         return 0
       } else if (distance <= 50) {
@@ -269,7 +273,7 @@ export class PlaceGuesserComponent implements OnInit {
       } else {
         return Math.floor(1000 * (1 - ((distance - 50) / 1950)) ** 2)
       }
-    } else if (this.gameMode == 'africa') {
+    } else if (this.zoneMode == 'africa') {
       if (distance > 2500) {
         return 0
       } else if (distance <= 50) {
@@ -277,7 +281,7 @@ export class PlaceGuesserComponent implements OnInit {
       } else {
         return Math.floor(1000 * (1 - ((distance - 50) / 2450)) ** 2)
       }
-    } else if (this.gameMode == 'asia/oceania') {
+    } else if (this.zoneMode == 'asia/oceania') {
       if (distance > 2000) {
         return 0
       } else if (distance <= 50) {
@@ -310,7 +314,7 @@ export class PlaceGuesserComponent implements OnInit {
   // 10000 multiplier x3
   // 500 multiplier x6
 
-  //returns the score mutiplier based on gamemode and population
+  //returns the score mutiplier based on zoneMode and population
   getGameMulti(zone: string, population: string) {
     let zoneMultis = {
       "worldwide": 4,
@@ -331,7 +335,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   multiplyScore(score: number) {
 
-    let multi = this.getGameMulti(this.gameMode, this.populationMode)
+    let multi = this.getGameMulti(this.zoneMode, this.populationMode)
 
     if (this.solutionLogging) {
       console.log("Sore: ", score, " Multi: ", multi, " = ", score * multi)

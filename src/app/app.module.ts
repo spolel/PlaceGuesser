@@ -25,6 +25,7 @@ import { MapComponent } from './components/map/map.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LoginComponent } from './components/login/login.component';
+import { CountryAutocompleteComponent } from './components/country-autocomplete/country-autocomplete.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,8 @@ import { LoginComponent } from './components/login/login.component';
     AuthComponent,
     ProfileComponent,
     LoginComponent
+    MapComponent,
+    CountryAutocompleteComponent
   ],
   imports: [
     BrowserModule,

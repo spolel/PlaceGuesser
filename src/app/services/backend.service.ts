@@ -13,9 +13,12 @@ export class BackendService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getRandomPlace(pop: number, zone: string): Observable<Object> {
-    //console.log('https://data.mongodb-api.com/app/data-mwwux/endpoint/get_random_place?pop='+pop+'&zone='+zone)
-    return this.httpClient.get( this.backendUrl + '/get_random_place?pop=' + pop + '&zone=' + zone, { responseType: "json" });
+  getRandomPlace(gameMode: string, pop: number, zone: string, countrycode: string): Observable<Object> {
+    if(gameMode == "country"){
+      return this.httpClient.get( this.backendUrl + '/get_random_place?pop=' + pop + '&countrycode=' + countrycode, { responseType: "json" });
+    }else{
+      return this.httpClient.get( this.backendUrl + '/get_random_place?pop=' + pop + '&zone=' + zone, { responseType: "json" });
+    }
   }
 
   getPhotoUrl(photoreference: string): Observable<string> {

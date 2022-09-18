@@ -22,41 +22,74 @@
         <mat-card *ngIf="settingsOpen" class="settings-container middle">
             <mat-card-title class="help-title">Game settings</mat-card-title>
             <mat-card-content class="settings-content">
-                <h2>Zone</h2>
-                <mat-button-toggle-group class="settings-buttons" [formControl]="gameModeControl">
-                    <mat-button-toggle value="worldwide">Worldwide</mat-button-toggle>
-                    <mat-button-toggle value="europe">Europe</mat-button-toggle>
-                    <mat-button-toggle value="africa">Africa</mat-button-toggle>
-                    <mat-button-toggle value="americas">Americas</mat-button-toggle>
-                    <mat-button-toggle value="asia/oceania">Asia/Oceania</mat-button-toggle>
-                </mat-button-toggle-group>
-                <h2>Population
-                    <mat-icon class="tooltip" matTooltip="Play with cities that have a population greater than selected"
-                        matTooltipPosition="above">help</mat-icon>
-                </h2>
-                <mat-button-toggle-group class="settings-buttons" [formControl]="populationControl">
-                    <mat-button-toggle value="500">> 500</mat-button-toggle>
-                    <mat-button-toggle value="10000">> 10'000</mat-button-toggle>
-                    <mat-button-toggle value="50000">> 50'000</mat-button-toggle>
-                    <mat-button-toggle value="100000">> 100'000</mat-button-toggle>
-                    <mat-button-toggle value="500000">> 500'000</mat-button-toggle>
-                </mat-button-toggle-group>
-                <h3>Number of cities {{populationStats[gameModeControl.value][populationControl.value]}}</h3>
-                <h3>Multi x{{getGameMulti(gameModeControl.value,populationControl.value)}} 
-                    <mat-icon class="tooltip" matTooltip="Based on the selected zone and population you receive a multiplier for the final score."
-                    matTooltipPosition="above">help</mat-icon>
-                </h3>
-                <h3>{{getDifficulty(getGameMulti(gameModeControl.value,populationControl.value))}}</h3>
+                <mat-tab-group #tabGroup (selectedTabChange)="tabChanged($event)" animationDuration="0ms">
+                    <mat-tab label="Classic">
+                        <div class="settings-content">
+                            <h2>Zone</h2>
+                            <mat-button-toggle-group class="settings-buttons" [formControl]="zoneModeControl">
+                                <mat-button-toggle value="worldwide">Worldwide</mat-button-toggle>
+                                <mat-button-toggle value="europe">Europe</mat-button-toggle>
+                                <mat-button-toggle value="africa">Africa</mat-button-toggle>
+                                <mat-button-toggle value="americas">Americas</mat-button-toggle>
+                                <mat-button-toggle value="asia/oceania">Asia/Oceania</mat-button-toggle>
+                            </mat-button-toggle-group>
+                            <h2>Population
+                                <mat-icon class="tooltip"
+                                    matTooltip="Play with cities that have a population greater than selected"
+                                    matTooltipPosition="above">help</mat-icon>
+                            </h2>
+                            <mat-button-toggle-group class="settings-buttons" [formControl]="populationControl">
+                                <mat-button-toggle value="500">> 500</mat-button-toggle>
+                                <mat-button-toggle value="10000">> 10'000</mat-button-toggle>
+                                <mat-button-toggle value="50000">> 50'000</mat-button-toggle>
+                                <mat-button-toggle value="100000">> 100'000</mat-button-toggle>
+                                <mat-button-toggle value="500000">> 500'000</mat-button-toggle>
+                            </mat-button-toggle-group>
+                            <h3>Number of cities {{populationStats[zoneModeControl.value][populationControl.value]}}
+                            </h3>
+                            <h3>Multi x{{getGameMulti(zoneModeControl.value,populationControl.value)}}
+                                <mat-icon class="tooltip"
+                                    matTooltip="Based on the selected zone and population you receive a multiplier for the final score."
+                                    matTooltipPosition="above">help</mat-icon>
+                            </h3>
+                            <h3>{{getDifficulty(getGameMulti(zoneModeControl.value,populationControl.value))}}</h3>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Country">
+                        <div class="settings-content">
+                            <h2>Select a country</h2>
+                            <app-country-autocomplete #autocomplete></app-country-autocomplete>
+                            <h2>Population
+                                <mat-icon class="tooltip"
+                                    matTooltip="Play with cities that have a population greater than selected"
+                                    matTooltipPosition="above">help</mat-icon>
+                            </h2>
+                            <mat-button-toggle-group class="settings-buttons" [formControl]="countrypopulationControl">
+                                <mat-button-toggle value="500">> 500</mat-button-toggle>
+                                <mat-button-toggle value="10000">> 10'000</mat-button-toggle>
+                                <mat-button-toggle value="50000">> 50'000</mat-button-toggle>
+                                <mat-button-toggle value="100000">> 100'000</mat-button-toggle>
+                                <mat-button-toggle value="500000">> 500'000</mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </div>     
+                    </mat-tab>
+                </mat-tab-group>
                 <h2> Username
-                    <mat-icon class="tooltip" matTooltip="Write a username if you want to appear in the leaderboards"
+                    <mat-icon class="tooltip"
+                        matTooltip="Write a username if you want to appear in the leaderboards"
                         matTooltipPosition="above">help</mat-icon>
                 </h2>
                 <mat-form-field class="" appearance="fill">
                     <mat-label>Username (OPTIONAL)</mat-label>
                     <input matInput placeholder="" value="" [formControl]="usernameControl">
-                    <mat-error *ngIf="usernameControl.invalid">{{this.usernameControl.hasError('maxlength') ? 'Maximum length 25' : ''}}</mat-error>
-                    <mat-error *ngIf="usernameControl.invalid">{{this.usernameControl.hasError('whitespace') ? 'Must not contain spaces' : ''}}</mat-error>
+                    <mat-error *ngIf="usernameControl.invalid">{{this.usernameControl.hasError('maxlength')
+                        ?
+                        'Maximum length 25' : ''}}</mat-error>
+                    <mat-error *ngIf="usernameControl.invalid">{{this.usernameControl.hasError('whitespace')
+                        ?
+                        'Must not contain spaces' : ''}}</mat-error>
                 </mat-form-field>
+
             </mat-card-content>
             <mat-card-actions>
                 <div class="buttons-settings-container">
@@ -85,7 +118,8 @@
                     <br> The maximum points you can reach are 5000. You can get a maximum of 1000 points per round
                     depending on how close you were.
                     <br><br>
-                    In the end your base score will be multiplied by a multiplier that is depended on the zone and city population chosen.
+                    In the end your base score will be multiplied by a multiplier that is depended on the zone and city
+                    population chosen.
                     This way you are rewarded for playing harder difficulties.
                     <br><br>
                     At the end of the game you will be shown a summary with all your guesses on the map.
@@ -111,12 +145,8 @@
         <mat-card *ngIf="statsOpen" class="stats-container">
             <mat-card-title *ngIf="!mobile" class="stats-title">STATS</mat-card-title>
             <mat-card-content>
-                <app-stats-panel
-                        [stats]="stats"
-                        [barChartData]="barChartData"
-                        [rank]="rank"
-                        [username]="username"
-                ></app-stats-panel>
+                <app-stats-panel [stats]="stats" [barChartData]="barChartData" [rank]="rank" [username]="username">
+                </app-stats-panel>
             </mat-card-content>
             <mat-card-actions>
                 <button class="button-closehelp" color="basic" mat-raised-button (click)="closeStats()">
@@ -130,6 +160,6 @@
         <div style="flex-grow:1"></div>
         <app-footer class="footer"></app-footer>
     </div>
-    <app-place-guesser *ngIf="gameStarted" [gameMode]="gameMode" [populationMode]="populationMode" [username]="username"
+    <app-place-guesser *ngIf="gameStarted" [gameMode]="gameMode" [zoneMode]="zoneMode" [populationMode]="populationMode" [countryCode]="countryCode" [username]="username"
         (resetGameEvent)="resetGame()"></app-place-guesser>
 </div>
