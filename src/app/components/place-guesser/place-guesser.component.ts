@@ -6,7 +6,7 @@ import { MapSelectorComponent } from '../map-selector/map-selector.component';
 
 import { BackendService } from 'src/app/services/backend.service';
 
-import { codeToCountry } from '../../../assets/codeToCountry'
+import { bounds } from '../../../assets/countryBoundingBoxes'
 import { LocalstorageService } from 'src/app/services/localstorage.service';
 
 
@@ -206,7 +206,8 @@ export class PlaceGuesserComponent implements OnInit {
           score: this.totalScoreMulti,
           multi: this.multi,
           basescore: this.totalScore,
-          zoneMode: this.zoneMode,
+          zonemode: this.zoneMode,
+          gamemode: this.gameMode,
           population: this.populationMode,
           paths: this.paths
         }
@@ -257,47 +258,35 @@ export class PlaceGuesserComponent implements OnInit {
   //based on the zone different parameters are used
   //uses a quadratic function over distance. If within 50km you get full score
   generateScore(distance) {
-    if (this.zoneMode == 'europe') {
-      if (distance > 1500) {
-        return 0
-      } else if (distance <= 50) {
-        return 1000
-      } else {
-        return Math.floor(1000 * (1 - ((distance - 50) / 1450)) ** 2)
-      }
-    } else if (this.zoneMode == 'americas') {
-      if (distance > 2000) {
-        return 0
-      } else if (distance <= 50) {
-        return 1000
-      } else {
-        return Math.floor(1000 * (1 - ((distance - 50) / 1950)) ** 2)
-      }
-    } else if (this.zoneMode == 'africa') {
-      if (distance > 2500) {
-        return 0
-      } else if (distance <= 50) {
-        return 1000
-      } else {
-        return Math.floor(1000 * (1 - ((distance - 50) / 2450)) ** 2)
-      }
-    } else if (this.zoneMode == 'asia/oceania') {
-      if (distance > 2000) {
-        return 0
-      } else if (distance <= 50) {
-        return 1000
-      } else {
-        return Math.floor(1000 * (1 - ((distance - 50) / 1950)) ** 2)
-      }
-    } else {
-      if (distance > 2500) {
-        return 0
-      } else if (distance <= 50) {
-        return 1000
-      } else {
-        return Math.floor(1000 * (1 - ((distance - 50) / 2450)) ** 2)
-      }
+
+    let zoneMaxDistance = {
+      "worldwide": 2500,
+      "europe": 1500,
+      "africa": 2500,
+      "americas": 2000,
+      "asia/oceania": 2000
     }
+
+    let maxDistance = zoneMaxDistance[this.zoneMode]
+    let maxPointsCutoff = 50
+
+    //calculate maxDistance based on country bounds
+    if(this.gameMode == 'country'){
+      const diagonal = this.getDistanceFromLatLonInKm(bounds[this.countryCode][1][0],bounds[this.countryCode][1][1],bounds[this.countryCode][1][2],bounds[this.countryCode][1][3])
+      
+      maxDistance = diagonal/4
+      maxPointsCutoff = diagonal/500
+    }
+
+    if (distance > maxDistance) {
+      return 0
+    } else if (distance <= maxPointsCutoff) {
+      return 1000
+    } else {
+      console.log(Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance-maxPointsCutoff))) ** 2))
+      return Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance-maxPointsCutoff))) ** 2)
+    }
+
   }
 
   // Zone
