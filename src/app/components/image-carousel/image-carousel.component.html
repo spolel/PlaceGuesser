@@ -5,7 +5,7 @@
     </button>
     <div class="images-container" (wheel)="scroll($event)" (scroll)="scrollBar()" #imagesContainer>
       <div class="image-normalizer2" *ngFor="let image of images; let i = index" >
-        <img class="image unselectable" [attr.data-index]="i" [src]="image" (error)="refreshImageUrls()"/>
+        <img class="image unselectable" [attr.data-index]="i" [src]="image"/>
       </div>
       <!-- <img class="image" *ngFor="let image of images" [src]="image"/> -->
     </div>

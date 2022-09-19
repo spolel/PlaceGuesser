@@ -1,108 +1,139 @@
-.container{
-    display:flex;
-    max-height: 100vh;
-    height: 100%;
-  
-    flex-direction: row;
-    justify-content:center;
+.container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  max-height: 100vh;
+  height: 100%;
 
-    position:relative;
-  }
-  
-  
-  .button-next{
-    position: absolute;
-    top: 45%;
-    right: 20px;
-  }
-  
-  .button-previous{
-    position: absolute;
-    top: 45%;
-    left: 20px;
-  }
+  -webkit-box-orient: horizontal;
 
-  .mat-icon-button.large {
+  -webkit-box-direction: normal;
 
-    width: 64px;
-    height: 64px;
-    line-height: 64px;
+  -ms-flex-direction: row;
 
-    .mat-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
-      line-height: 48px;
-    }
-  }
-  
-  .images-container{
-    white-space:nowrap;
-    overflow: auto;
-  
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 
+  position: relative;
+}
+
+
+.button-next {
+  position: absolute;
+  top: 45%;
+  right: 20px;
+}
+
+.button-previous {
+  position: absolute;
+  top: 45%;
+  left: 20px;
+}
+
+.mat-icon-button.large {
+
+  width: 64px;
+  height: 64px;
+  line-height: 64px;
+
+  .mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
   }
-  
-  .image-normalizer{
-    min-width: 100%;
-  
-    background-color: black;
-  
-    display: flex;
-    justify-content: center;
-  }
-  
-  .image-normalizer2{
-    min-width: fit-content;
-    min-height: fit-content;
-  
-    margin-left: 50px;
-    margin-right: 50px;
-  }
-  
-  .image{
-    margin: auto;
-    height: 100%;
-    /* max-width: 100%; */
-    vertical-align:top;
-  
-  }
-  
-  .unselectable{
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
-  }
-  
-  
-  /* scrollbar */
-  
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background-color: rgb(60, 60, 60);
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    background: rgb(30, 30, 30);
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgb(40, 40, 40);
-  }
-  
-  ::-webkit-scrollbar-corner {
-    background: rgb(10, 10, 10);
-  }
-  
+}
+
+.images-container {
+  white-space: nowrap;
+  overflow: auto;
+
+  display: -webkit-box;
+
+  display: -ms-flexbox;
+
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+
+}
+
+.image-normalizer {
+  min-width: 100%;
+
+  background-color: black;
+
+  display: -webkit-box;
+
+  display: -ms-flexbox;
+
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.image-normalizer2 {
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  min-height: -webkit-fit-content;
+  min-height: -moz-fit-content;
+  min-height: fit-content;
+
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.image {
+  margin: auto;
+  height: 100%;
+  /* max-width: 100%; */
+  vertical-align: top;
+
+}
+
+.unselectable {
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE 10 and IE 11 */
+  -moz-user-select: none;
+  user-select: none;
+  /* Standard syntax */
+}
+
+
+/* scrollbar */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: rgb(60, 60, 60);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgb(30, 30, 30);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(40, 40, 40);
+}
+
+::-webkit-scrollbar-corner {
+  background: rgb(10, 10, 10);
+}

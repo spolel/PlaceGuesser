@@ -67,9 +67,4 @@ export class ImageCarouselComponent implements OnInit {
     }
   }
 
-  refreshImageUrls(){
-    console.log("ERROOOOOOOOOOOR on imageload")
-    this.refreshImageUrlsEvent.emit()
-  }
-
 }
