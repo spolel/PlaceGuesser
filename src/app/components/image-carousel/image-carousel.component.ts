@@ -21,6 +21,7 @@ export class ImageCarouselComponent implements OnInit {
 
   ngOnInit(): void {
     this.imagesLength = this.images.length
+    console.log(this.imagesLength)
     if (this.imagesLength > 0){
       this.displayIdx = 0
     }
@@ -65,11 +66,6 @@ export class ImageCarouselComponent implements OnInit {
     if(dataIndex != null){
       this.displayIdx = parseInt(dataIndex)
     }
-  }
-
-  refreshImageUrls(){
-    console.log("ERROOOOOOOOOOOR on imageload")
-    this.refreshImageUrlsEvent.emit()
   }
 
 }

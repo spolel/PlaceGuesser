@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^14.0.0",
     "@angular/platform-browser-dynamic": "^14.0.0",
     "@angular/router": "^14.0.0",
+    "@ngrx/store": "^14.3.1",
     "@supabase/supabase-js": "^1.35.6",
     "@swimlane/ngx-charts": "^20.1.0",
     "flag-icons": "^6.6.4",

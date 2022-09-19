@@ -99,8 +99,6 @@ export class PlaceGuesserComponent implements OnInit {
 
     this.getStats()
 
-    console.log(this.countryCode)
-
   }
 
   ngAfterViewInit(): void {
@@ -139,20 +137,22 @@ export class PlaceGuesserComponent implements OnInit {
         }
 
         this.images = []
-        this.solution["photos"].forEach(x => {
-          this.backendService.getPhotoUrl(x["photo_reference"]).subscribe({
+        for (let i = 0; i < this.solution["photos"].length; i++) {
+          this.backendService.getPhotoUrl(this.solution["photos"][i]["photo_reference"]).subscribe({
             next: imageUrl => {
-              this.images.push(imageUrl)
+              this.images[i] = imageUrl
+
+              if(i == this.solution["photos"].length - 1){
+                this.ngZone.run(() => {
+                  this.imageLoaded = true
+                });
+              }
             },
             error: error => {
               console.log(error)
             }
           })
-        })
-
-        this.ngZone.run(() => {
-          this.imageLoaded = true
-        });
+        }
 
       },
       error: error => {

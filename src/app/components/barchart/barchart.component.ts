@@ -127,8 +127,4 @@ export class BarchartComponent implements OnInit {
     }
   }
 
-  onSelect(event) {
-    console.log(event);
-  }
-
 }

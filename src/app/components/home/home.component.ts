@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-  
+
   }
 
   noWhitespaceValidator(control: FormControl) {
@@ -136,11 +136,10 @@ export class HomeComponent implements OnInit {
     return isValid ? null : { 'whitespace': true };
   }
 
-  tabChanged($event){
-    console.log($event.index)
-    if($event.index == 1){
+  tabChanged($event) {
+    if ($event.index == 1) {
       this.gameMode = 'country'
-    }else if($event.index == 0){
+    } else if ($event.index == 0) {
       this.gameMode = 'classic'
     }
   }
@@ -151,11 +150,11 @@ export class HomeComponent implements OnInit {
 
     this.settingsOpen = false
     this.gameStarted = true
-    
+
     this.zoneMode = this.zoneModeControl.value
-    if(this.gameMode == "classic"){
+    if (this.gameMode == "classic") {
       this.populationMode = this.populationControl.value
-    }else if(this.gameMode == "country"){
+    } else if (this.gameMode == "country") {
       this.populationMode = this.countrypopulationControl.value
     }
     this.username = this.usernameControl.value
@@ -198,9 +197,7 @@ export class HomeComponent implements OnInit {
 
       this.backendService.getHistory(this.userdata["username"]).subscribe({
         next: data => {
-          if (this.logging) {
-            console.log(data)
-          }
+          if (this.logging) { console.log(data) }
           if (data.length > 0) {
             this.localstorageService.setHistory(JSON.stringify(data[0]["history"]))
           } else {
@@ -213,9 +210,7 @@ export class HomeComponent implements OnInit {
       })
 
     } else {
-      if (this.logging) {
-        console.log("anonymous user not restoring stats")
-      }
+      if (this.logging) { console.log("anonymous user not restoring stats") }
     }
   }
 
@@ -231,7 +226,7 @@ export class HomeComponent implements OnInit {
   getRank() {
     this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
       next: rank => {
-        this.rank = rank[0]+1
+        this.rank = rank[0] + 1
       },
       error: error => {
         console.log(error)
@@ -275,6 +270,7 @@ export class HomeComponent implements OnInit {
   //to open and close windows
   openSettings() {
     this.settingsOpen = true
+    this.gameMode = 'classic'
   }
 
   closeSettings() {
