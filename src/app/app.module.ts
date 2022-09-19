@@ -21,10 +21,10 @@ import { BarchartComponent } from './components/barchart/barchart.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { StatsPanelComponent } from './components/stats-panel/stats-panel.component';
 import { LeaderboardExpandableComponent } from './components/leaderboard-expandable/leaderboard-expandable.component';
-import { MapComponent } from './components/map/map.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LoginComponent } from './components/login/login.component';
+import { MapComponent } from './components/map/map.component';
 import { CountryAutocompleteComponent } from './components/country-autocomplete/country-autocomplete.component';
 
 @NgModule({
@@ -42,7 +42,7 @@ import { CountryAutocompleteComponent } from './components/country-autocomplete/
     MapComponent,
     AuthComponent,
     ProfileComponent,
-    LoginComponent
+    LoginComponent,
     MapComponent,
     CountryAutocompleteComponent
   ],
