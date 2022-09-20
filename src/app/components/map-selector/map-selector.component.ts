@@ -49,7 +49,8 @@ export class MapSelectorComponent implements OnInit {
   @Input() distance: number;
   @Input() score: number;
   @Input() round: number;
-  @Input() imageLoaded: Object;
+  @Input() gameMode: string;
+  @Input() bounds: any;
 
 
   roundEnded: boolean = false;
@@ -105,6 +106,14 @@ export class MapSelectorComponent implements OnInit {
   ngOnInit(): void {
     this.responsiveClasses()
     this.paths = []
+  }
+
+  ngAfterViewInit() {
+
+    if (this.gameMode == "country") {
+      this.setMapBounds(this.bounds[0], this.bounds[1])
+    }
+
   }
 
   //setting css classes to component based on window size and round state 
@@ -192,6 +201,21 @@ export class MapSelectorComponent implements OnInit {
     //if it was the last round send to parent all paths of guesses and solutions
     if (this.round == 5) {
       this.completePathsEvent.emit(this.paths)
+
+      if (this.gameMode == "country") {
+        this.options = {
+          restriction: {latLngBounds: new google.maps.LatLngBounds(this.bounds[0],this.bounds[1]), strictBounds: false},
+          zoomControl: true,
+          scrollwheel: true,
+          disableDoubleClickZoom: true,
+          minZoom: 2,
+          fullscreenControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          clickableIcons: false,
+          keyboardShortcuts: true
+        }
+      }
     }
 
     this.roundEnded = false
@@ -202,9 +226,13 @@ export class MapSelectorComponent implements OnInit {
     this.markerLatLng = new google.maps.LatLng(0)
     this.markerSelected = false
 
-    this.setMapBounds(new google.maps.LatLng(-11, -76), new google.maps.LatLng(74, 80))
-
     this.nextRoundEvent.emit()
+
+    if (this.gameMode == "country") {
+      this.setMapBounds(this.bounds[0], this.bounds[1])
+    } else {
+      this.setMapBounds(new google.maps.LatLng(-11, -76), new google.maps.LatLng(74, 80))
+    }
   }
 
   playAgain() {

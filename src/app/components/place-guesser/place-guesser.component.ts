@@ -55,6 +55,7 @@ export class PlaceGuesserComponent implements OnInit {
   gameEnded: boolean = false;
   roundEnded: boolean = false;
   gameStarted: boolean = false;
+  bounds: any;
 
   //storing geoids of places this round, so that if we get the same random place again we fetch a new one
   roundGeoids: number[] = []
@@ -99,11 +100,16 @@ export class PlaceGuesserComponent implements OnInit {
 
     this.getStats()
 
+    //set map bounds when in country mode
+    this.bounds = [
+      new google.maps.LatLng(bounds[this.countryCode][1][1], bounds[this.countryCode][1][0]),
+      new google.maps.LatLng(bounds[this.countryCode][1][3], bounds[this.countryCode][1][2]),
+    ];
+
   }
 
   ngAfterViewInit(): void {
     this.getNewPlace()
-
   }
 
   //gets a new random place and then it's photos from google maps
@@ -208,6 +214,7 @@ export class PlaceGuesserComponent implements OnInit {
           basescore: this.totalScore,
           zonemode: this.zoneMode,
           gamemode: this.gameMode,
+          countrycode: this.countryCode,
           population: this.populationMode,
           paths: this.paths
         }
@@ -283,7 +290,7 @@ export class PlaceGuesserComponent implements OnInit {
     } else if (distance <= maxPointsCutoff) {
       return 1000
     } else {
-      console.log(Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance-maxPointsCutoff))) ** 2))
+      //console.log(Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance-maxPointsCutoff))) ** 2))
       return Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance-maxPointsCutoff))) ** 2)
     }
 
@@ -304,7 +311,7 @@ export class PlaceGuesserComponent implements OnInit {
   // 500 multiplier x6
 
   //returns the score mutiplier based on zoneMode and population
-  getGameMulti(zone: string, population: string) {
+  getGameMulti(gamemode: string, zone: string, population: string) {
     let zoneMultis = {
       "worldwide": 4,
       "europe": 0,
@@ -319,12 +326,18 @@ export class PlaceGuesserComponent implements OnInit {
       "100000": 1,
       "500000": 0
     }
-    return 1 + zoneMultis[zone] + popMultis[population]
+
+    if(gamemode == "country"){
+      return 1
+    } else{
+      return 1 + zoneMultis[zone] + popMultis[population]
+    }
+    
   }
 
   multiplyScore(score: number) {
 
-    let multi = this.getGameMulti(this.zoneMode, this.populationMode)
+    let multi = this.getGameMulti(this.gameMode, this.zoneMode, this.populationMode)
 
     if (this.solutionLogging) {
       console.log("Sore: ", score, " Multi: ", multi, " = ", score * multi)
