@@ -51,7 +51,7 @@
     <!-- <div style="flex-grow:1"></div> -->
     <div [class]="gameEnded ? 'endmap-container' : 'map-container'">
         <app-map-selector #map [solution]="solution" [solutionCoords]="solutionCoords" [gameEnded]="gameEnded"
-            [distance]="distance" [score]="score" [round]="round" [imageLoaded]="imageLoaded" (guessEvent)="checkGuess($event)"
+            [distance]="distance" [score]="score" [round]="round" [gameMode]="gameMode" [bounds]="bounds" (guessEvent)="checkGuess($event)"
             (nextRoundEvent)="nextRound()" (playAgainEvent)="playAgain()" (resetGameEvent)="resetGame()"
             (completePathsEvent)="completePaths($event)"></app-map-selector>
     </div>
