@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SupabaseService } from 'src/app/services/supabase.service'
 
 @Component({
@@ -9,7 +10,7 @@ import { SupabaseService } from 'src/app/services/supabase.service'
 export class AuthComponent implements OnInit {
   loading = false
 
-  constructor(private readonly supabase: SupabaseService) { }
+  constructor(private readonly supabase: SupabaseService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -18,12 +19,16 @@ export class AuthComponent implements OnInit {
     try {
       this.loading = true
       await this.supabase.signIn(input)
-      alert('Check your email for the login link!')
+      this.openSnackBar('Check your email for the login link!','close')
     } catch (error) {
-      alert(error.error_description || error.message)
+      console.log(error.error_description || error.message)
     } finally {
       this.loading = false
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 
 }

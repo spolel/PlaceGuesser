@@ -27,6 +27,7 @@ import { LoginComponent } from './components/login/login.component';
 import { MapComponent } from './components/map/map.component';
 import { CountryAutocompleteComponent } from './components/country-autocomplete/country-autocomplete.component';
 import { StoreModule } from '@ngrx/store';
+import { AvatarComponent } from './components/avatar/avatar.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { StoreModule } from '@ngrx/store';
     ProfileComponent,
     LoginComponent,
     MapComponent,
-    CountryAutocompleteComponent
+    CountryAutocompleteComponent,
+    AvatarComponent
   ],
   imports: [
     BrowserModule,
