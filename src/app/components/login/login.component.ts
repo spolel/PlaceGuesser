@@ -19,13 +19,13 @@ export class LoginComponent implements OnInit {
 
       //reroute on login
       if(this.session){
-        this.router.navigate(['profile']);
+        this.router.navigate(['']);
       }
     })
 
     //reroute if already logged in
     if(this.session){
-      this.router.navigate(['profile']);
+      this.router.navigate(['']);
     }
   }
 }

@@ -1,24 +1,18 @@
-<div class="row flex-center flex">
-    <form class="col-6 form-widget">
-      <h1 class="header">Supabase + Angular</h1>
+<div class="container">
+  <mat-card class="auth-card">
+    <mat-card-content class="auth-form">
+
       <p class="description">Sign in via magic link with your email below</p>
-      <div>
-        <input
-          #input
-          class="inputField"
-          type="email"
-          placeholder="Your email"
-        />
-      </div>
-      <div>
-        <button
-          type="submit"
-          (click)="handleLogin(input.value)"
-          class="button block"
-          [disabled]="loading"
-        >
-          {{ loading ? 'Loading' : 'Send magic link' }}
-        </button>
-      </div>
-    </form>
-  </div>
+      <mat-form-field appearance="fill">
+        <mat-label>Enter your email</mat-label>
+        <input #input matInput (keyup.enter)="email.valid ? handleLogin(input.value) : false" placeholder="cow@example.com" [formControl]="email" required>
+        <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" type="submit" (click)="handleLogin(input.value)" [disabled]="loading || !email.valid">
+        {{ loading ? 'Loading' : 'Send magic link' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
