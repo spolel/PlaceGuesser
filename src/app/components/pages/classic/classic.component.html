@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <h2>Zone</h2>
+    <mat-button-toggle-group class="settings-buttons" [formControl]="zoneModeControl">
+        <mat-button-toggle value="worldwide">Worldwide</mat-button-toggle>
+        <mat-button-toggle value="europe">Europe</mat-button-toggle>
+        <mat-button-toggle value="africa">Africa</mat-button-toggle>
+        <mat-button-toggle value="americas">Americas</mat-button-toggle>
+        <mat-button-toggle value="asia/oceania">Asia/Oceania</mat-button-toggle>
+    </mat-button-toggle-group>
+    <h2>Population
+        <mat-icon class="tooltip" matTooltip="Play with cities that have a population greater than selected"
+            matTooltipPosition="above">help</mat-icon>
+    </h2>
+    <mat-button-toggle-group class="settings-buttons" [formControl]="populationControl">
+        <mat-button-toggle value="500">> 500</mat-button-toggle>
+        <mat-button-toggle value="10000">> 10'000</mat-button-toggle>
+        <mat-button-toggle value="50000">> 50'000</mat-button-toggle>
+        <mat-button-toggle value="100000">> 100'000</mat-button-toggle>
+        <mat-button-toggle value="500000">> 500'000</mat-button-toggle>
+    </mat-button-toggle-group>
+    <h3>Number of cities {{populationStats[zoneModeControl.value][populationControl.value]}}
+    </h3>
+    <h3>Multi x{{getGameMulti(zoneModeControl.value,populationControl.value)}}
+        <mat-icon class="tooltip"
+            matTooltip="Based on the selected zone and population you receive a multiplier for the final score."
+            matTooltipPosition="above">help</mat-icon>
+    </h3>
+    <h3>{{getDifficulty(getGameMulti(zoneModeControl.value,populationControl.value))}}</h3>
+    <button class="" color="primary" mat-raised-button (click)="startGame()">
+        PLAY
+    </button>
+</div>

@@ -5,9 +5,9 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { BackendService } from 'src/app/services/backend.service';
 import { LocalstorageService } from 'src/app/services/localstorage.service';
 
-import { CountryAutocompleteComponent } from '../country-autocomplete/country-autocomplete.component';
+import { CountryAutocompleteComponent } from '../../country-autocomplete/country-autocomplete.component';
 
-import { countryToCode } from '../../../assets/countryToCode'
+import { countryToCode } from '../../../../assets/countryToCode'
 
 //dictionary with the number of places present with that specific combination of zoneMode and POPULATION
 const populationStats = {
@@ -52,11 +52,11 @@ const populationStats = {
 
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-home-old',
+  templateUrl: './home-old.component.html',
+  styleUrls: ['./home-old.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeOldComponent implements OnInit {
 
   gameMode: string;
   zoneMode: string;

@@ -1,0 +1,20 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <h2>Select a country</h2>
+    <app-country-autocomplete #autocomplete></app-country-autocomplete>
+    <h2>Population
+        <mat-icon class="tooltip" matTooltip="Play with cities that have a population greater than selected"
+            matTooltipPosition="above">help</mat-icon>
+    </h2>
+    <mat-button-toggle-group class="settings-buttons" [formControl]="populationControl">
+        <mat-button-toggle value="500">> 500</mat-button-toggle>
+        <mat-button-toggle value="10000">> 10'000</mat-button-toggle>
+        <mat-button-toggle value="50000">> 50'000</mat-button-toggle>
+        <mat-button-toggle value="100000">> 100'000</mat-button-toggle>
+        <mat-button-toggle value="500000">> 500'000</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <button class="" color="primary" mat-raised-button (click)="startGame()">
+        PLAY
+    </button>
+</div>

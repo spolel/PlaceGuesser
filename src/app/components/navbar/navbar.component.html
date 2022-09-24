@@ -1,0 +1,22 @@
+<div class="toolbar">
+    <div class="container">
+        <div class="left">
+            <div class="title unselectable" (click)="routeTo('home')"> PLACE GUESSER </div>
+        </div>
+        <div class="middle">
+            <button mat-button class="unselectable" (click)="routeTo('classic')"> CLASSIC </button>
+            <button mat-button class="unselectable" (click)="routeTo('country')"> COUNTRY </button>
+        </div>
+        <div class="right">
+            <button mat-icon-button (click)="routeTo('help')">
+                <mat-icon>help</mat-icon>
+            </button>
+            <button class="" mat-icon-button (click)="routeTo('stats')">
+                <mat-icon>equalizer</mat-icon>
+            </button>
+            <button mat-icon-button (click)="routeTo('profile')">
+                <mat-icon>account_circle</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>
