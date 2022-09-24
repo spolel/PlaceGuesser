@@ -13,8 +13,6 @@ export class StatsComponent implements OnInit {
   loading = true
   profile: Profile | undefined
 
-  session = this.supabase.session
-
   rank: number;
   stats: any = {played: "", distribution: []};
   username: string = "";
@@ -23,13 +21,7 @@ export class StatsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.supabase.authChanges((_, session) => (this.session = session))
-
-    if (this.session == null) {
-      this.router.navigate(['login']);
-    } else {
-      this.getProfile()
-    }
+    this.getProfile()
   }
 
   async getProfile() {

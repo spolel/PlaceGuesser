@@ -9,17 +9,18 @@ import { PlayComponent } from './components/pages/play/play.component';
 import { ProfileComponent } from './components/pages/profile/profile.component';
 import { HomeComponent } from './components/pages/home/home.component';
 import { StatsComponent } from './components/pages/stats/stats.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeOldComponent },
-  { path: 'home', component: HomeComponent },
+  { path: '', component: HomeOldComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'classic', component: ClassicComponent },
-  { path: 'country', component: CountryComponent },
-  { path: 'play', component: PlayComponent },
-  { path: 'help', component: HelpComponent },
-  { path: 'stats', component: StatsComponent }
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'classic', component: ClassicComponent, canActivate: [AuthGuard] },
+  { path: 'country', component: CountryComponent, canActivate: [AuthGuard]  },
+  { path: 'play', component: PlayComponent, canActivate: [AuthGuard]  },
+  { path: 'help', component: HelpComponent, canActivate: [AuthGuard]  },
+  { path: 'stats', component: StatsComponent, canActivate: [AuthGuard]  }
 ];
 
 @NgModule({

@@ -21,12 +21,7 @@ export class ProfileComponent implements OnInit {
 
     this.supabase.authChanges((_, session) => (this.session = session))
 
-    if (this.session == null) {
-      this.router.navigate(['login']);
-    } else {
-      this.getProfile()
-    }
-
+    this.getProfile()
   }
 
   async getProfile() {
