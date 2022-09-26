@@ -1,3 +1,20 @@
-.app-container{
-    min-height:100vh;
+.app-container {
+    min-height: 100vh;
+
+    // background: rgb(0, 0, 0);
+    // background: linear-gradient(rgba(0, 126, 255, 1) 26%, rgba(29, 234, 74, 1) 100%), 
+    // linear-gradient(rgba(0, 0, 0, 0.9) 26%, rgba(0, 0, 0, 0.9) 100%);
+
+    //     background: rgb(31,147,57);
+    // background: linear-gradient(0deg, rgba(31,147,57,1) 0%, rgba(2,96,194,1) 100%);
+
+    background-color: #246756;
+
+    background:
+        linear-gradient(0deg, rgba(0, 0, 0, 0.8), rgb(0, 0, 0, 0.7)),
+        // linear-gradient(rgba(0, 126, 255, 1) 60%, rgba(29, 234, 74, 1) 100%)
+        linear-gradient(rgba(0, 126, 255, 1) 60%, rgb(155, 40, 200) 100%)
+        // linear-gradient(rgba(0, 126, 255, 1) 60%, rgb(200, 40, 184) 100%)
+        
+
 }
