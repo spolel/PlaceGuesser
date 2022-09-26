@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 <div class="container">
-  <div class="title">Edit your profile</div>
+  <div class="title unselectable">EDIT YOUR PROFILE</div>
   <mat-card class="profile-card">
     <!-- <mat-card-title class="profile title">Edit your profile</mat-card-title> -->
     <mat-card-content class="profile-form">
@@ -15,7 +15,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Username</mat-label>
-        <input #username type="text" [value]="profile?.username ?? ''" matInput>
+        <input #username type="text" [value]="profile?.username ?? ''" matInput disabled>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Country</mat-label>

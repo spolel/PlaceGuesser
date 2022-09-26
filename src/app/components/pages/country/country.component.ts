@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CountryAutocompleteComponent } from '../../country-autocomplete/country-autocomplete.component';
 import { countryToCode } from '../../../../assets/countryToCode'
@@ -35,11 +35,20 @@ export class CountryComponent implements OnInit {
     this.gameSettings.countryCode = value;
   }
 
+  //tracking if we are on a mobile device
+  mobile: boolean;
+  @HostListener("window:resize", []) onWindowResize() {
+    this.isMobile()
+  }
+
   @ViewChild('autocomplete') autocomplete: CountryAutocompleteComponent;
 
   constructor(private router: Router, public gameSettings: GamesettingsService) { }
 
   ngOnInit(): void {
+    this.isMobile()
+
+    
     this.gameMode = 'country'
     this.populationControl.setValue(this.populationMode)
     this.populationMode = '10000'
@@ -53,6 +62,14 @@ export class CountryComponent implements OnInit {
 
     //route to game page
     this.router.navigate(['play'])
+  }
+
+  isMobile() {
+    if (window.innerWidth >= 1000) {
+      this.mobile = false;
+    } else {
+      this.mobile = true;
+    }
   }
 
 }

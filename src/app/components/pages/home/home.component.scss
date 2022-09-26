@@ -13,6 +13,15 @@
     }
 }
 
+.title{
+    text-align: center;
+    font-family: 'Gugi', cursive;
+    font-size: 4em;
+    line-height: 1 ;
+    margin-bottom:75px;
+}
+
+
 .logo {
     width: 20%;
     height: auto;
@@ -33,7 +42,7 @@
 
 }
 
-.example-ripple-container {
+.ripple-container {
     cursor: pointer;
     text-align: center;
 
@@ -54,14 +63,49 @@
     border-radius: 10px;
 }
 
+.classic-background{
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgb(0, 0, 0, 0.4)), url('../../../../assets/earth-space-min.jpg') no-repeat center center  ;
+    background-size: cover;
+}
+
+.country-background{
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgb(0, 0, 0, 0.4)), url('../../../../assets/shanghai-min.jpg') no-repeat center center  ;
+    background-size: cover;
+}
 
 
 
 @media only screen and (max-width: 1000px) {
 
-    .logo {
-        max-height: 40vh;
-        max-width: 90%;
+    .container {
+        padding-top: 70px;
+    }
+
+    .buttons-container{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+
+        width:90%;
+    }
+
+    .ripple-container {
+        width: 80%;
+        height: 200px;
+    }
+
+    .classic-background{
+        background-size:cover;
+    }
+
+    .country-background{
+        background-size:cover;
+    }
+
+
+    .title{
+        margin-bottom:25px;
     }
 
 }

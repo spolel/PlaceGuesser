@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,13 +8,30 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
+  @Input() inLogin: boolean;
+
+  //tracking if we are on a mobile device
+  mobile: boolean;
+  @HostListener("window:resize", []) onWindowResize() {
+    this.isMobile()
+  }
+
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+    this.isMobile()
   }
 
-  routeTo(routeName: string){
+  routeTo(routeName: string) {
     this.router.navigate([routeName])
+  }
+
+  isMobile() {
+    if (window.innerWidth >= 1000) {
+      this.mobile = false;
+    } else {
+      this.mobile = true;
+    }
   }
 
 }

@@ -1,5 +1,7 @@
 <app-navbar></app-navbar>
 <div class="container">
+    <h1 class="title unselectable">Classic Mode</h1>
+    <p>Choose zone and population and compete for the leaderboards.</p>
     <h2>Zone</h2>
     <mat-button-toggle-group class="settings-buttons" [formControl]="zoneModeControl">
         <mat-button-toggle value="worldwide">Worldwide</mat-button-toggle>
@@ -27,7 +29,7 @@
             matTooltipPosition="above">help</mat-icon>
     </h3>
     <h3>{{getDifficulty(getGameMulti(zoneModeControl.value,populationControl.value))}}</h3>
-    <button class="" color="primary" mat-raised-button (click)="startGame()">
+    <button class="play" color="primary" mat-raised-button (click)="startGame()">
         PLAY
     </button>
 </div>

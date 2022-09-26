@@ -1,13 +1,14 @@
 <app-image-background></app-image-background>
 <app-navbar></app-navbar>
 <div class="container">
-    <img class="logo unselectable" src="../../../../assets/earth-logo.svg" />
+    <h1 class="title unselectable">PLACE GUESSER</h1>
+    <!-- <img *ngIf="!mobile" class="logo unselectable" src="../../../../assets/earth-logo.svg" /> -->
     <div class="buttons-container">
-        <div class="example-ripple-container" matRipple [matRippleCentered]="false" [matRippleDisabled]="false"
+        <div class="ripple-container classic-background" matRipple [matRippleCentered]="false" [matRippleDisabled]="false"
             (click)="routeTo('classic')">
             Classic
         </div>
-        <div class="example-ripple-container" matRipple [matRippleCentered]="false" [matRippleDisabled]="false"
+        <div class="ripple-container country-background" matRipple [matRippleCentered]="false" [matRippleDisabled]="false"
             (click)="routeTo('country')">
             Country
         </div>

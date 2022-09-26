@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GamesettingsService } from 'src/app/services/gamesettings.service';
+import { Profile, SupabaseService } from 'src/app/services/supabase.service';
 
 @Component({
   selector: 'app-play',
@@ -36,22 +37,46 @@ export class PlayComponent implements OnInit {
     this.gameSettings.countryCode = value;
   }
 
-
-  get username(): string {
-    return this.gameSettings.username;
-  }
-  set username(value: string) {
-    this.gameSettings.username = value;
-  }
+  loading: boolean;
+  profile: Profile | undefined
+  username: string;
 
 
-  constructor(private router: Router, public gameSettings: GamesettingsService) { }
+  constructor(private router: Router, public gameSettings: GamesettingsService, private supabase: SupabaseService) { }
 
   ngOnInit(): void {
+
+    this.getProfile()
+    // console.log(this.gameMode)
+    // console.log(this.zoneMode)
+    // console.log(this.populationMode)
+    // console.log(this.countryCode)
   }
 
   resetGame(){
-    this.router.navigate(['home'])
+    this.router.navigate([''])
+  }
+
+
+  async getProfile() {
+    try {
+      this.loading = true
+      let { data: profile, error, status } = await this.supabase.profile
+
+      if (error && status !== 406) {
+        throw error
+      }
+
+      if (profile) {
+        this.profile = profile
+        this.username = profile.username
+        // console.log(this.username)
+      }
+    } catch (error) {
+      console.log(error.message)
+    } finally {
+      this.loading = false
+    }
   }
 
 }

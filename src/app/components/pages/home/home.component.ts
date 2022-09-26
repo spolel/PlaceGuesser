@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MobileService } from 'src/app/services/mobile.service';
 
 @Component({
   selector: 'app-home',
@@ -8,14 +9,31 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-
+  //tracking if we are on a mobile device
+  mobile: boolean;
+  @HostListener("window:resize", []) onWindowResize() {
+    this.isMobile()
   }
 
-  routeTo(routeName: string){
+  constructor(private router: Router, private mobileService: MobileService) { }
+
+  ngOnInit(): void {
+    this.isMobile()
+  }
+
+  test() {
+    console.log(this.mobile)
+  }
+  routeTo(routeName: string) {
     this.router.navigate([routeName])
+  }
+
+  isMobile() {
+    if (window.innerWidth >= 1000) {
+      this.mobile = false;
+    } else {
+      this.mobile = true;
+    }
   }
 
 }

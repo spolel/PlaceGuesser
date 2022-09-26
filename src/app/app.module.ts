@@ -32,10 +32,12 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ClassicComponent } from './components/pages/classic/classic.component';
 import { CountryComponent } from './components/pages/country/country.component';
 import { PlayComponent } from './components/pages/play/play.component';
-import { HelpComponent } from './components/pages/login/help/help.component';
+import { HelpComponent } from './components/pages/help/help.component';
 import { HomeComponent } from './components/pages/home/home.component';
 import { ImageBackgroundComponent } from './components/image-background/image-background.component';
 import { StatsComponent } from './components/pages/stats/stats.component';
+import { MultiplayerComponent } from './components/pages/multiplayer/multiplayer.component';
+import { NavbarMobileComponent } from './components/navbar-mobile/navbar-mobile.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,9 @@ import { StatsComponent } from './components/pages/stats/stats.component';
     HelpComponent,
     HomeComponent,
     ImageBackgroundComponent,
-    StatsComponent
+    StatsComponent,
+    MultiplayerComponent,
+    NavbarMobileComponent
   ],
   imports: [
     BrowserModule,

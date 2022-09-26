@@ -1,5 +1,9 @@
 <app-navbar></app-navbar>
 <div class="container">
+    <h1 class="title unselectable">Country Mode</h1>
+    <p>Select only a specific country to play in. 
+        <br>
+        Try your home country :) Let's see how well you know it !</p>
     <h2>Select a country</h2>
     <app-country-autocomplete #autocomplete></app-country-autocomplete>
     <h2>Population
@@ -14,7 +18,7 @@
         <mat-button-toggle value="500000">> 500'000</mat-button-toggle>
     </mat-button-toggle-group>
 
-    <button class="" color="primary" mat-raised-button (click)="startGame()">
+    <button class="play" color="primary" mat-raised-button (click)="startGame()">
         PLAY
     </button>
 </div>

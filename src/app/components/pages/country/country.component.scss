@@ -1,4 +1,4 @@
-.container{
+.container {
     padding-top: 100px;
 
     display: flex;
@@ -7,7 +7,52 @@
 
     gap: 10px;
 
-    >*{
+    >* {
         z-index: 10;
     }
+}
+
+.title {
+    text-align: center;
+    font-size: 2em;
+    line-height: 1;
+    margin-bottom: 25px;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    -moz-user-select: none;
+    user-select: none;
+    /* Standard syntax */
+}
+
+
+.play {
+    font-size: 2em;
+    padding: 15px 25px;
+
+    margin-top: 20px;
+}
+
+@media only screen and (max-width: 1000px) {
+
+    .container {
+        padding-top: 70px;
+
+        width:90%;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .title{
+        margin-bottom: 10px;
+    }
+
+    .settings-buttons {
+        transform: scale(0.9);
+    }
+
 }

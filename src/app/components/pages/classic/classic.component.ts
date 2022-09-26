@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GamesettingsService } from 'src/app/services/gamesettings.service';
@@ -75,9 +75,18 @@ export class ClassicComponent implements OnInit {
     this.gameSettings.populationMode = value;
   }
 
+  //tracking if we are on a mobile device
+  mobile: boolean;
+  @HostListener("window:resize", []) onWindowResize() {
+    this.isMobile()
+  }
+
   constructor(private router: Router, public gameSettings: GamesettingsService) { }
 
   ngOnInit(): void {
+    this.isMobile()
+
+    
     this.gameMode = 'classic'
     this.zoneMode = 'worldwide'
     this.populationMode = '10000'
@@ -123,6 +132,14 @@ export class ClassicComponent implements OnInit {
       return "Medium"
     } else {
       return "Easy"
+    }
+  }
+
+  isMobile() {
+    if (window.innerWidth >= 1000) {
+      this.mobile = false;
+    } else {
+      this.mobile = true;
     }
   }
 
