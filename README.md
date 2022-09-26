@@ -1,27 +1,13 @@
 # PlaceGuesser
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.4.
+Open the app [here](https://placeguesser.vercel.app/).
 
-## Development server
+### Description 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+I wrote this application since I really like geography games. The basic idea is that you get images from random places around the world and you have to guess where it is on the map, the closer you get the more points you get.
 
-## Code scaffolding
+This is inspired from Geuguessr but instead of using streetview I am using images from places on Google maps. I find the idea of using map images instead of streetview very interesting. First of all the images have basically a global coverage, instead streetview is not available in all countries around the globe. Also with photos you get to see a lot of places and panoramas that you would not be able to see from the street.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This web app is developed with Angular as a Frontend framework with Material for the UI. In the backend I use Express Js with Supabase for the database to store all places around the world, and to handle authenticaion. I am using Google Map APIs to get the photos of a place and for the embedded interactive map. The app is developed to be responsive so that it is mobile friendly.
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Tech stack: Frontend : Angular, Material. Backend: Node.js, Express, Supabase, PostgreSQL
