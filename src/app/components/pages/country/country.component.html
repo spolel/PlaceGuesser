@@ -1,0 +1,24 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <h1 class="title unselectable">Country Mode</h1>
+    <p>Select only a specific country to play in. 
+        <br>
+        Try your home country :) Let's see how well you know it !</p>
+    <h2>Select a country</h2>
+    <app-country-autocomplete #autocomplete></app-country-autocomplete>
+    <h2>Population
+        <mat-icon class="tooltip" matTooltip="Play with cities that have a population greater than selected"
+            matTooltipPosition="above">help</mat-icon>
+    </h2>
+    <mat-button-toggle-group class="settings-buttons" [formControl]="populationControl">
+        <mat-button-toggle value="500">> 500</mat-button-toggle>
+        <mat-button-toggle value="10000">> 10'000</mat-button-toggle>
+        <mat-button-toggle value="50000">> 50'000</mat-button-toggle>
+        <mat-button-toggle value="100000">> 100'000</mat-button-toggle>
+        <mat-button-toggle value="500000">> 500'000</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <button class="play" color="primary" mat-raised-button (click)="startGame()">
+        PLAY
+    </button>
+</div>

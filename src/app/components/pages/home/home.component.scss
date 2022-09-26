@@ -1,0 +1,111 @@
+.container {
+    padding-top: 100px;
+    font-family: 'Gugi', cursive;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    >* {
+        z-index: 10;
+    }
+}
+
+.title{
+    text-align: center;
+    font-family: 'Gugi', cursive;
+    font-size: 4em;
+    line-height: 1 ;
+    margin-bottom:75px;
+}
+
+
+.logo {
+    width: 20%;
+    height: auto;
+    // height: 50vh;
+    // width:auto;
+    margin-bottom: 50px;
+    border-radius: 50%;
+    // box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+    box-shadow: rgba(0, 0, 0, 0.803) 0px 19px 38px, rgba(0, 0, 0, 0.749) 0px 15px 12px;
+
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    justify-content: center;
+
+}
+
+.ripple-container {
+    cursor: pointer;
+    text-align: center;
+
+    font-size: 2em;
+
+    width: 400px;
+    height: 300px;
+    line-height: 300px;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+
+    background: linear-gradient(0deg, rgba(0, 0, 0, 1), rgb(11, 11, 11));
+    border-radius: 10px;
+}
+
+.classic-background{
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgb(0, 0, 0, 0.4)), url('../../../../assets/earth-space-min.jpg') no-repeat center center  ;
+    background-size: cover;
+}
+
+.country-background{
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgb(0, 0, 0, 0.4)), url('../../../../assets/shanghai-min.jpg') no-repeat center center  ;
+    background-size: cover;
+}
+
+
+
+@media only screen and (max-width: 1000px) {
+
+    .container {
+        padding-top: 70px;
+    }
+
+    .buttons-container{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+
+        width:90%;
+    }
+
+    .ripple-container {
+        width: 80%;
+        height: 200px;
+    }
+
+    .classic-background{
+        background-size:cover;
+    }
+
+    .country-background{
+        background-size:cover;
+    }
+
+
+    .title{
+        margin-bottom:25px;
+    }
+
+}

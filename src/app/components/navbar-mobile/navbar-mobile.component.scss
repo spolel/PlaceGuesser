@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Gugi&display=swap');
+
+.toolbar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    height: 56px;
+
+    // background-color: rgba(0, 0, 0, 1);
+    background-color: #181818;
+
+    z-index: 200;
+
+    font-family: 'Gugi', cursive;
+
+    >* {
+        z-index: 100;
+    }
+}
+
+.container {
+    z-index: 500;
+
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    width:100%;
+    height:100%;
+    
+
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.hide{
+    display:none
+}
+
+.clickthrough{
+    pointer-events: none
+}
+
+.sidenav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    //background: rgba(0, 0, 0, 0.90);
+    background-color: #303030;
+
+    z-index: 500;
+}
+
+.sidenav-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items:flex-start;
+
+    button{
+        width: 100%;
+
+        text-align: left;
+    }
+}
+
+.title {
+    margin-left: 8px;
+}
+
+.logo {
+    // margin: 0px 10px;
+    width: 40px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+
+.unselectable {
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
+}

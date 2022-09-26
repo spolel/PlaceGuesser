@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HomeComponent } from './components/home/home.component';
+import { HomeOldComponent } from './components/pages/home-old/home-old.component';
 import { PlaceGuesserComponent } from './components/place-guesser/place-guesser.component';
 import { MapSelectorComponent } from './components/map-selector/map-selector.component';
 import { ImageCarouselComponent } from './components/image-carousel/image-carousel.component';
@@ -22,16 +22,27 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
 import { StatsPanelComponent } from './components/stats-panel/stats-panel.component';
 import { LeaderboardExpandableComponent } from './components/leaderboard-expandable/leaderboard-expandable.component';
 import { AuthComponent } from './components/auth/auth.component';
-import { ProfileComponent } from './components/profile/profile.component';
-import { LoginComponent } from './components/login/login.component';
+import { ProfileComponent } from './components/pages/profile/profile.component';
+import { LoginComponent } from './components/pages/login/login.component';
 import { MapComponent } from './components/map/map.component';
 import { CountryAutocompleteComponent } from './components/country-autocomplete/country-autocomplete.component';
 import { StoreModule } from '@ngrx/store';
+import { AvatarComponent } from './components/avatar/avatar.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { ClassicComponent } from './components/pages/classic/classic.component';
+import { CountryComponent } from './components/pages/country/country.component';
+import { PlayComponent } from './components/pages/play/play.component';
+import { HelpComponent } from './components/pages/help/help.component';
+import { HomeComponent } from './components/pages/home/home.component';
+import { ImageBackgroundComponent } from './components/image-background/image-background.component';
+import { StatsComponent } from './components/pages/stats/stats.component';
+import { MultiplayerComponent } from './components/pages/multiplayer/multiplayer.component';
+import { NavbarMobileComponent } from './components/navbar-mobile/navbar-mobile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
+    HomeOldComponent,
     PlaceGuesserComponent,
     MapSelectorComponent,
     ImageCarouselComponent,
@@ -45,7 +56,18 @@ import { StoreModule } from '@ngrx/store';
     ProfileComponent,
     LoginComponent,
     MapComponent,
-    CountryAutocompleteComponent
+    CountryAutocompleteComponent,
+    AvatarComponent,
+    NavbarComponent,
+    ClassicComponent,
+    CountryComponent,
+    PlayComponent,
+    HelpComponent,
+    HomeComponent,
+    ImageBackgroundComponent,
+    StatsComponent,
+    MultiplayerComponent,
+    NavbarMobileComponent
   ],
   imports: [
     BrowserModule,

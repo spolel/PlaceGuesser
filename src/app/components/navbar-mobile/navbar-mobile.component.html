@@ -1,0 +1,20 @@
+<mat-toolbar class="toolbar">
+    <button *ngIf="!inLogin" mat-icon-button class="icon" (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <div class="title" (click)="routeTo('')">Place Guesser</div>
+    <span class="spacer"></span>
+    <img class="logo unselectable" (click)="routeTo('')" src="../../../assets/earth-logo.svg" />
+</mat-toolbar>
+<mat-sidenav-container [hasBackdrop]="true" class="container" [ngClass]="{'clickthrough' : !sidenav.opened}">
+    <mat-sidenav #sidenav mode="side" class="sidenav" [fixedInViewport]="true" [fixedTopGap]="56" [fixedBottomGap]="0">
+        <div class="sidenav-container">
+            <button mat-button class="unselectable" (click)="routeTo('')"> HOME </button>
+            <button mat-button class="unselectable" (click)="routeTo('classic')"> CLASSIC </button>
+            <button mat-button class="unselectable" (click)="routeTo('country')"> COUNTRY </button>
+            <button mat-button class="unselectable" (click)="routeTo('multiplayer')"> MULTIPLAYER </button>
+            <button mat-button class="unselectable" (click)="routeTo('stats')"> STATS </button>
+            <button mat-button class="unselectable" (click)="routeTo('profile')"> PROFILE </button>
+        </div>
+    </mat-sidenav>
+</mat-sidenav-container>

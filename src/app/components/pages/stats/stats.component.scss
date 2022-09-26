@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+
+    padding-top: 100px;
+
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.spinner-container {
+    width: 100%;
+    padding-top: 200px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    text-align: center;
+    font-size: 2.5em;
+    line-height: normal;
+    margin-bottom: 25px;
+
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    -moz-user-select: none;
+    user-select: none;
+    /* Standard syntax */
+}
+
+
+@media only screen and (max-width: 1000px) {
+    .container {
+        padding-top: 70px;
+    }
+
+    .title {
+        margin-bottom: 10px;
+    }
+
+}

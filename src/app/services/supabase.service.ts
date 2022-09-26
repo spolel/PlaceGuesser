@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment'
 
 export interface Profile {
   username: string
-  website: string
+  country: string
   avatar_url: string
 }
 
@@ -37,7 +37,7 @@ export class SupabaseService {
   get profile() {
     return this.supabase
       .from('profiles')
-      .select(`username, website, avatar_url`)
+      .select(`username, country, avatar_url`)
       .eq('id', this.user?.id)
       .single()
   }
@@ -48,8 +48,17 @@ export class SupabaseService {
     return this.supabase.auth.onAuthStateChange(callback)
   }
 
-  signIn(email: string) {
-    return this.supabase.auth.signIn({ email })
+
+  signUp(email: string, password: string, username: string) {
+    return this.supabase.auth.signUp({ email, password }, { data: { username } })
+  }
+
+  signInMagic(email: string) {
+    return this.supabase.auth.signIn({ email }, { redirectTo: window.location.origin + "/login" })
+  }
+
+  signIn(email: string, password: string) {
+    return this.supabase.auth.signIn({ email, password })
   }
 
   signOut() {

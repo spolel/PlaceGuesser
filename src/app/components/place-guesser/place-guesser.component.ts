@@ -100,11 +100,15 @@ export class PlaceGuesserComponent implements OnInit {
 
     this.getStats()
 
+
     //set map bounds when in country mode
-    this.bounds = [
-      new google.maps.LatLng(bounds[this.countryCode][1][1], bounds[this.countryCode][1][0]),
-      new google.maps.LatLng(bounds[this.countryCode][1][3], bounds[this.countryCode][1][2]),
-    ];
+    if (this.gameMode == 'country') {
+      this.bounds = [
+        new google.maps.LatLng(bounds[this.countryCode][1][1], bounds[this.countryCode][1][0]),
+        new google.maps.LatLng(bounds[this.countryCode][1][3], bounds[this.countryCode][1][2]),
+      ];
+    }
+
 
   }
 
@@ -136,7 +140,7 @@ export class PlaceGuesserComponent implements OnInit {
 
         if (this.solutionLogging) { console.log("SOLUTION: ", this.solution) }
 
-        if(this.solution["photos"] == undefined){
+        if (this.solution["photos"] == undefined) {
           if (this.solutionLogging) { console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE") }
           this.getNewPlace()
           return
@@ -148,7 +152,7 @@ export class PlaceGuesserComponent implements OnInit {
             next: imageUrl => {
               this.images[i] = imageUrl
 
-              if(i == this.solution["photos"].length - 1){
+              if (i == this.solution["photos"].length - 1) {
                 this.ngZone.run(() => {
                   this.imageLoaded = true
                 });
@@ -278,11 +282,11 @@ export class PlaceGuesserComponent implements OnInit {
     let maxPointsCutoff = 50
 
     //calculate maxDistance based on country bounds
-    if(this.gameMode == 'country'){
-      const diagonal = this.getDistanceFromLatLonInKm(bounds[this.countryCode][1][0],bounds[this.countryCode][1][1],bounds[this.countryCode][1][2],bounds[this.countryCode][1][3])
-      
-      maxDistance = diagonal/4
-      maxPointsCutoff = diagonal/500
+    if (this.gameMode == 'country') {
+      const diagonal = this.getDistanceFromLatLonInKm(bounds[this.countryCode][1][0], bounds[this.countryCode][1][1], bounds[this.countryCode][1][2], bounds[this.countryCode][1][3])
+
+      maxDistance = diagonal / 4
+      maxPointsCutoff = diagonal / 500
     }
 
     if (distance > maxDistance) {
@@ -291,7 +295,7 @@ export class PlaceGuesserComponent implements OnInit {
       return 1000
     } else {
       //console.log(Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance-maxPointsCutoff))) ** 2))
-      return Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance-maxPointsCutoff))) ** 2)
+      return Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance - maxPointsCutoff))) ** 2)
     }
 
   }
@@ -327,12 +331,12 @@ export class PlaceGuesserComponent implements OnInit {
       "500000": 0
     }
 
-    if(gamemode == "country"){
+    if (gamemode == "country") {
       return 1
-    } else{
+    } else {
       return 1 + zoneMultis[zone] + popMultis[population]
     }
-    
+
   }
 
   multiplyScore(score: number) {
@@ -389,11 +393,11 @@ export class PlaceGuesserComponent implements OnInit {
 
   }
 
-    //gets you current highscore ranking in the global leaderboard from the db
+  //gets you current highscore ranking in the global leaderboard from the db
   getRank() {
     this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
       next: rank => {
-        this.rank = rank[0]+1
+        this.rank = rank[0] + 1
       },
       error: error => {
         console.log(error)
@@ -406,7 +410,7 @@ export class PlaceGuesserComponent implements OnInit {
   getGameRank() {
     this.backendService.getRankFromLeaderboard(this.totalScoreMulti).subscribe({
       next: rank => {
-        this.gameRank = rank[0]+1
+        this.gameRank = rank[0] + 1
       },
       error: error => {
         console.log(error)
@@ -427,7 +431,7 @@ export class PlaceGuesserComponent implements OnInit {
     //do not ask when game is not ongoing
     if (!this.gameEnded) {
       this.askResetOpen = true
-    }else{
+    } else {
       this.resetGame()
     }
   }
