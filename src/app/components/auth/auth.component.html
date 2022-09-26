@@ -47,6 +47,7 @@
           placeholder="happycow" [formControl]="signupUser" required>
         <mat-error *ngIf="this.signupUser.hasError('required')">Username is required</mat-error>
         <mat-error *ngIf="this.signupUser.hasError('whitespace')">No whitespaces allowed in username</mat-error>
+        <mat-error *ngIf="this.signupUser.hasError('usernameAlreadyExists')">Username already exists</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Enter your password</mat-label>

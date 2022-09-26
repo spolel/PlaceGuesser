@@ -59,6 +59,10 @@ export class BackendService {
   getLeaderboard(): Observable<any> {
     return this.httpClient.get( this.backendUrl + '/get_leaderboard', { responseType: "json" });
   }
+
+  usernameExists(username: string): Observable<any> {
+    return this.httpClient.get( this.backendUrl + '/username_exists?username=' + username, { responseType: "json" });
+  }
   
 
 }

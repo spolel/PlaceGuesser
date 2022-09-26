@@ -42,6 +42,13 @@ export class SupabaseService {
       .single()
   }
 
+  usernameExists(username: string) {
+    return this.supabase
+      .from('profiles')
+      .select()
+      .eq('username', username)
+  }
+
   authChanges(
     callback: (event: AuthChangeEvent, session: Session | null) => void
   ) {

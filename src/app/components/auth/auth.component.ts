@@ -1,9 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { MatError } from '@angular/material/form-field';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { map, Observable } from 'rxjs';
 import { SupabaseService } from 'src/app/services/supabase.service'
+import { UsernameExistsValidator } from './usernameExists.validator';
 
 @Component({
   selector: 'app-auth',
@@ -20,12 +22,12 @@ export class AuthComponent implements OnInit {
   loginPass = new FormControl('', [Validators.required, this.noWhitespaceValidator]);
   signupEmail = new FormControl('', [Validators.required, Validators.email]);
   signupPass = new FormControl('', [Validators.required, this.noWhitespaceValidator]);
-  signupUser = new FormControl('', [Validators.required, this.noWhitespaceValidator]);
+  signupUser = new FormControl('', [Validators.required, this.noWhitespaceValidator], [this.usernameExistsValid.validate]);
 
-  loginError : string = ""; 
-  signupError : string = ""; 
+  loginError: string = "";
+  signupError: string = "";
 
-  constructor(private readonly supabase: SupabaseService, private _snackBar: MatSnackBar) { }
+  constructor(private readonly supabase: SupabaseService,private usernameExistsValid: UsernameExistsValidator, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
 
@@ -69,7 +71,7 @@ export class AuthComponent implements OnInit {
   async signUp(email: string, password: string, username: string) {
     try {
       this.loadingSignup = true
-      const { user, session, error } =  await this.supabase.signUp(email, password, username)
+      const { user, session, error } = await this.supabase.signUp(email, password, username)
       this.openSnackBar('Check your email to verify the account!', 'close')
 
       if (error) {
