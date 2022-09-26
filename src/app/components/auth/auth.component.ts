@@ -11,7 +11,9 @@ import { SupabaseService } from 'src/app/services/supabase.service'
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  loading = false
+  loading: boolean = false
+  loadingLogin: boolean = false
+  loadingSignup: boolean = false
 
   // magic = new FormControl('', [Validators.required, Validators.email]);
   loginEmail = new FormControl('', [Validators.required, Validators.email]);
@@ -50,7 +52,7 @@ export class AuthComponent implements OnInit {
 
   async passLogin(email: string, password: string) {
     try {
-      this.loading = true
+      this.loadingLogin = true
       const { user, session, error } = await this.supabase.signIn(email, password)
       if (error) {
         //this.openSnackBar(error.message, 'close')
@@ -60,13 +62,13 @@ export class AuthComponent implements OnInit {
     } catch (error) {
       console.log(error.error_description || error.message)
     } finally {
-      this.loading = false
+      this.loadingLogin = false
     }
   }
 
   async signUp(email: string, password: string, username: string) {
     try {
-      this.loading = true
+      this.loadingSignup = true
       const { user, session, error } =  await this.supabase.signUp(email, password, username)
       this.openSnackBar('Check your email to verify the account!', 'close')
 
@@ -77,7 +79,7 @@ export class AuthComponent implements OnInit {
     } catch (error) {
       console.log(error.error_description || error.message)
     } finally {
-      this.loading = false
+      this.loadingSignup = false
     }
   }
 

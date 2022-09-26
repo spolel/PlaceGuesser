@@ -8,8 +8,9 @@
 
     height: 56px;
 
-    background-color: rgba(0, 0, 0, 1);
-    /*dim the background*/
+    // background-color: rgba(0, 0, 0, 1);
+    background-color: #181818;
+
     z-index: 200;
 
     font-family: 'Gugi', cursive;
@@ -46,7 +47,8 @@
     align-items: center;
     justify-content: center;
     width: 200px;
-    background: rgba(0, 0, 0, 0.90);
+    //background: rgba(0, 0, 0, 0.90);
+    background-color: #303030;
 
     z-index: 500;
 }

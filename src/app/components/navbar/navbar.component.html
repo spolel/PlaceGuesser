@@ -5,12 +5,12 @@
             <img class="logo unselectable" (click)="routeTo('')" src="../../../assets/earth-logo.svg" />
             <div class="title unselectable" (click)="routeTo('')"> PLACE GUESSER </div>
         </div>
-        <div class="middle">
+        <div *ngIf="!inLogin" class="middle">
             <button mat-button class="unselectable" (click)="routeTo('classic')"> CLASSIC </button>
             <button mat-button class="unselectable" (click)="routeTo('country')"> COUNTRY </button>
             <button mat-button class="unselectable" (click)="routeTo('multiplayer')"> MULTIPLAYER </button>
         </div>
-        <div class="right">
+        <div *ngIf="!inLogin" class="right">
             <button mat-icon-button (click)="routeTo('help')">
                 <mat-icon>help</mat-icon>
             </button>
