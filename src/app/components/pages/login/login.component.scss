@@ -1,6 +1,21 @@
-.title{
+.container {
+    padding-top: 100px;
+}
+
+.title {
     text-align: center;
     font-size: 3.5em;
-    line-height:normal;
+    line-height: normal;
     margin-bottom: 20px
+}
+
+@media only screen and (max-width: 1000px) {
+    .container{
+        padding-top: 70px;
+    }
+    
+    .title {
+        font-size: 2em;
+    }
+
 }

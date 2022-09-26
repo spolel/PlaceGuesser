@@ -48,8 +48,17 @@ export class SupabaseService {
     return this.supabase.auth.onAuthStateChange(callback)
   }
 
-  signIn(email: string) {
-    return this.supabase.auth.signIn({ email }, {redirectTo: window.location.origin + "/login"})
+
+  signUp(email: string, password: string, username: string) {
+    return this.supabase.auth.signUp({ email, password }, { data: { username } })
+  }
+
+  signInMagic(email: string) {
+    return this.supabase.auth.signIn({ email }, { redirectTo: window.location.origin + "/login" })
+  }
+
+  signIn(email: string, password: string) {
+    return this.supabase.auth.signIn({ email, password })
   }
 
   signOut() {

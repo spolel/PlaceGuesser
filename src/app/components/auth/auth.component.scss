@@ -2,6 +2,10 @@
     display: flex; 
     flex-direction: column;
     align-items: center; 
+
+    gap:15px;
+
+    padding-bottom: 20px;
 }
 
 .auth-card{
@@ -13,4 +17,15 @@
     flex-direction: column;
     // align-items: center;
     gap: 5px;
+}
+
+@media only screen and (max-width: 1000px) {
+    
+    .auth-card{
+        width: 90%;
+    }
+    
+    .title{
+        font-size: 2em;
+    }
 }
