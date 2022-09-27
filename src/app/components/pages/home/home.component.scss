@@ -13,25 +13,51 @@
     }
 }
 
-.title{
+.title {
     text-align: center;
     font-family: 'Gugi', cursive;
     font-size: 4em;
-    line-height: 1 ;
-    margin-bottom:25px;
+    line-height: 1;
 }
 
 
 .logo {
-    height: 35vh;
+    height: 120px;
     width: auto;
     // height: 50vh;
     // width:auto;
-    margin-bottom: 50px;
     border-radius: 50%;
     // box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
     box-shadow: rgba(0, 0, 0, 0.803) 0px 19px 38px, rgba(0, 0, 0, 0.749) 0px 15px 12px;
 
+}
+
+.title-container {
+    width: 100%; 
+
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 75px;
+}
+
+.left {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    vertical-align: center;
+    margin-bottom: 0px;
+}
+
+.right {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .buttons-container {
@@ -39,6 +65,9 @@
     flex-direction: row;
     gap: 100px;
     justify-content: center;
+
+
+    margin-bottom: 40px;
 
 }
 
@@ -63,13 +92,13 @@
     border-radius: 10px;
 }
 
-.classic-background{
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgb(0, 0, 0, 0.4)), url('../../../../assets/earth-space-min.jpg') no-repeat center center  ;
+.classic-background {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgb(0, 0, 0, 0.4)), url('../../../../assets/earth-space-min.jpg') no-repeat center center;
     background-size: cover;
 }
 
-.country-background{
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgb(0, 0, 0, 0.4)), url('../../../../assets/shanghai-min.jpg') no-repeat center center  ;
+.country-background {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgb(0, 0, 0, 0.4)), url('../../../../assets/shanghai-min.jpg') no-repeat center center;
     background-size: cover;
 }
 
@@ -81,8 +110,8 @@
     -moz-user-select: none;
     user-select: none;
     /* Standard syntax */
-  }
-  
+}
+
 
 
 
@@ -92,13 +121,13 @@
         padding-top: 70px;
     }
 
-    .buttons-container{
+    .buttons-container {
         display: flex;
         flex-direction: column;
         gap: 10px;
         align-items: center;
 
-        width:90%;
+        width: 90%;
     }
 
     .ripple-container {
@@ -106,17 +135,25 @@
         height: 200px;
     }
 
-    .classic-background{
-        background-size:cover;
+    .classic-background {
+        background-size: cover;
     }
 
-    .country-background{
-        background-size:cover;
+    .country-background {
+        background-size: cover;
     }
 
+    .title-container{
+        gap: 10px;
+    }
 
-    .title{
-        margin-bottom:25px;
+    .title {
+        font-size: 2em;
+        margin-bottom: 15px;
+    }
+
+    .logo{
+        height: 50px;
     }
 
 }
