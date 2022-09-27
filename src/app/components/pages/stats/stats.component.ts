@@ -14,7 +14,7 @@ export class StatsComponent implements OnInit {
   profile: Profile | undefined
 
   rank: number;
-  stats: any = {played: "", distribution: []};
+  stats: any = {highscore: "0", played: "0", distribution: []};
   username: string = "";
 
   constructor(private readonly supabase: SupabaseService, private router: Router, private backendService: BackendService) { }
@@ -47,9 +47,13 @@ export class StatsComponent implements OnInit {
   getHistory(){
     this.backendService.getHistory(this.profile.username).subscribe({
       next: data => {
-        this.stats = data[0].history
-        console.log(this.stats)
-        this.getRank()
+        console.log(data)
+        if(data.length == 0){
+          this.loading = false
+        }else{
+          this.stats = data[0].history
+          this.getRank()
+        }
       },
       error: error => {
         console.log(error)
@@ -61,7 +65,12 @@ export class StatsComponent implements OnInit {
   getRank() {
     this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
       next: rank => {
-        this.rank = rank[0] + 1
+        if(rank.length > 0){
+          this.rank = rank[0] + 1
+        }else{
+          this.rank = undefined
+        }
+        
 
         this.loading = false
       },
