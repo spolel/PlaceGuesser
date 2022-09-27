@@ -1,2 +1,2 @@
-<app-place-guesser  [gameMode]="gameMode" [zoneMode]="zoneMode" [populationMode]="populationMode" [countryCode]="countryCode" [username]="username"
+<app-place-guesser *ngIf="!loading"  [gameMode]="gameMode" [zoneMode]="zoneMode" [populationMode]="populationMode" [countryCode]="countryCode" [username]="username"
 (resetGameEvent)="resetGame()"></app-place-guesser>

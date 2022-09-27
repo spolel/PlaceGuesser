@@ -59,6 +59,7 @@ export class PlaceGuesserComponent implements OnInit {
 
   //storing geoids of places this round, so that if we get the same random place again we fetch a new one
   roundGeoids: number[] = []
+  roundPlaceNames: string[] = []
 
   //stats panel
   stats: any = {}
@@ -121,7 +122,7 @@ export class PlaceGuesserComponent implements OnInit {
     this.backendService.getRandomPlace(this.gameMode, parseInt(this.populationMode), this.zoneMode, this.countryCode).pipe(
       filter(data => {
         //if the place was already seen this round we make the call again to find another place
-        if (this.roundGeoids.includes(data["geonameid"])) {
+        if (this.roundPlaceNames.includes(data["formatted_address"])) {
           if (this.solutionLogging) { console.log('place already seen this round ... getting new one') }
 
           this.getNewPlace()
@@ -136,6 +137,7 @@ export class PlaceGuesserComponent implements OnInit {
         this.solutionCoords = new google.maps.LatLng(this.solution["geometry"]["location"]["lat"], this.solution["geometry"]["location"]["lng"])
 
         this.roundGeoids.push(this.solution["geonameid"])
+        this.roundPlaceNames.push(this.solution["formatted_address"])
 
 
         if (this.solutionLogging) { console.log("SOLUTION: ", this.solution) }
@@ -260,6 +262,7 @@ export class PlaceGuesserComponent implements OnInit {
     this.imageLoaded = false
     this.getNewPlace()
     this.roundGeoids = []
+    this.roundPlaceNames = []
     this.map.ngOnInit()
     this.round = 1
     this.totalScore = 0
