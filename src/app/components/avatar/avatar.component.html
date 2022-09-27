@@ -2,8 +2,8 @@
     <div class="image-container">
         <img *ngIf="_avatarUrl" [src]="_avatarUrl" alt="Avatar" class="avatar image" />
     </div>
-    <div>
-        <button mat-raised-button color="secondary" (click)="fileInput.click()" [disabled]="uploading">
+    <div class="upload-button">
+        <button mat-raised-button color="accent" (click)="fileInput.click()" [disabled]="uploading">
             {{ uploading ? 'Uploading ...' : 'Upload new image' }}
         </button>
         <input hidden #fileInput (change)="uploadAvatar($event)" [disabled]="uploading" type="file" id="file">

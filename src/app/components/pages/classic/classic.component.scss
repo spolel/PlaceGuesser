@@ -37,6 +37,14 @@
     padding: 15px 25px;
 }
 
+.mat-button-toggle{
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.mat-button-toggle-checked{
+    background-color: rgba(50, 50, 50, 0.8);
+}
+
 
 @media only screen and (max-width: 1000px) {
 

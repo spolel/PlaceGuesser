@@ -7,10 +7,17 @@
     position: relative;
     min-height: 550px;
     overflow: auto;
+    
 }
 
 table {
     width: 100%;
+
+    background-color: rgba(0, 0, 0, 0.35);
+}
+
+mat-paginator{
+    background-color: rgba(0, 0, 0, 0.75);
 }
 
 .mat-form-field {
@@ -28,7 +35,8 @@ table {
 }
 
 .mat-row:hover {
-    background-color: rgb(87, 87, 87);
+    // background-color: rgb(87, 87, 87);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 

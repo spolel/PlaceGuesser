@@ -73,6 +73,17 @@
     background-size: cover;
 }
 
+.unselectable {
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    -moz-user-select: none;
+    user-select: none;
+    /* Standard syntax */
+  }
+  
+
 
 
 @media only screen and (max-width: 1000px) {
