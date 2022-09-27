@@ -128,6 +128,14 @@ export class PlaceGuesserComponent implements OnInit {
           this.getNewPlace()
           return false
         }
+
+        if (Object.keys(data).length == 0) {
+          if (this.solutionLogging) { console.log('no data for this place ... getting new one') }
+
+          this.getNewPlace()
+          return false
+        }
+        
         return true
       })
     ).subscribe({
