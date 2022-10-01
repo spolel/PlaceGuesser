@@ -1,72 +1,159 @@
 <div class="container">
-  <h1 class="title unselectable">Log In</h1>
-  <mat-card class="auth-card">
-    <mat-card-content class="auth-form">
-      <mat-form-field appearance="fill">
-        <mat-label>Enter your email</mat-label>
-        <input type="email" matInput
-          (keyup.enter)="loginEmail.valid && loginPass.valid ? passLogin(loginEmail.value, loginPass.value) : false"
-          placeholder="cow@example.com" [formControl]="loginEmail" required>
-        <mat-error *ngIf="this.loginEmail.hasError('required')">Email is required</mat-error>
-        <mat-error *ngIf="this.loginEmail.hasError('email')">Not a valid e-mail</mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Enter your password</mat-label>
-        <input type="password" matInput
-          (keyup.enter)="loginEmail.valid && loginPass.valid ? passLogin(loginEmail.value, loginPass.value) : false" placeholder="12345"
-          [formControl]="loginPass" required>
-        <mat-error *ngIf="this.loginPass.hasError('required')">Password is required</mat-error>
-        <mat-error *ngIf="this.loginPass.hasError('whitespace')">No whitespaces allowed in password</mat-error>
-      </mat-form-field>
-      <mat-error>{{loginError}}</mat-error>
-    </mat-card-content>
-    <mat-card-actions align="end">
+  <div *ngIf="!newAccount">
+    <h1 class="title unselectable">Log In</h1>
+    <mat-card class="auth-card">
+      <mat-card-content class="auth-form">
+        <mat-form-field appearance="fill">
+          <mat-label>Enter your email</mat-label>
+          <input
+            type="email"
+            matInput
+            (keyup.enter)="
+              loginEmail.valid && loginPass.valid
+                ? passLogin(loginEmail.value, loginPass.value)
+                : false
+            "
+            placeholder="cow@example.com"
+            [formControl]="loginEmail"
+            required
+          />
+          <mat-error *ngIf="this.loginEmail.hasError('required')"
+            >Email is required</mat-error
+          >
+          <mat-error *ngIf="this.loginEmail.hasError('email')"
+            >Not a valid e-mail</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Enter your password</mat-label>
+          <input
+            type="password"
+            matInput
+            (keyup.enter)="
+              loginEmail.valid && loginPass.valid
+                ? passLogin(loginEmail.value, loginPass.value)
+                : false
+            "
+            placeholder="12345"
+            [formControl]="loginPass"
+            required
+          />
+          <mat-error *ngIf="this.loginPass.hasError('required')"
+            >Password is required</mat-error
+          >
+          <mat-error *ngIf="this.loginPass.hasError('whitespace')"
+            >No whitespaces allowed in password</mat-error
+          >
+        </mat-form-field>
+        <mat-error>{{ loginError }}</mat-error>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="passLogin(loginEmail.value, loginPass.value)"
+          [disabled]="loadingLogin || !loginEmail.valid || !loginPass.valid"
+        >
+          {{ loadingLogin ? "Loading" : "Log in" }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 
-      <button mat-raised-button color="primary" type="submit" (click)="passLogin(loginEmail.value, loginPass.value)"
-        [disabled]="loadingLogin || !loginEmail.valid || !loginPass.valid">
-        {{ loadingLogin ? 'Loading' : 'Log in' }}
-      </button>
-    </mat-card-actions>
-  </mat-card>
+  <div *ngIf="newAccount">
+    <h1 class="title unselectable">Register</h1>
+    <mat-card class="auth-card">
+      <mat-card-content class="auth-form">
+        <mat-form-field appearance="fill">
+          <mat-label>Enter your email</mat-label>
+          <input
+            type="email"
+            matInput
+            (keyup.enter)="
+              signupEmail.valid && signupUser.valid && signupPass.valid
+                ? signUp(signupEmail.value, signupPass.value, signupUser.value)
+                : false
+            "
+            placeholder="cow@example.com"
+            [formControl]="signupEmail"
+            required
+          />
+          <mat-error *ngIf="this.signupEmail.hasError('required')"
+            >Email is required</mat-error
+          >
+          <mat-error *ngIf="this.signupEmail.hasError('email')"
+            >Not a valid e-mail</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Enter your username</mat-label>
+          <input
+            matInput
+            (keyup.enter)="
+              signupEmail.valid && signupUser.valid && signupPass.valid
+                ? signUp(signupEmail.value, signupPass.value, signupUser.value)
+                : false
+            "
+            placeholder="happycow"
+            [formControl]="signupUser"
+            required
+          />
+          <mat-error *ngIf="this.signupUser.hasError('required')"
+            >Username is required</mat-error
+          >
+          <mat-error *ngIf="this.signupUser.hasError('whitespace')"
+            >No whitespaces allowed in username</mat-error
+          >
+          <mat-error *ngIf="this.signupUser.hasError('usernameAlreadyExists')"
+            >Username already exists</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Enter your password</mat-label>
+          <input
+            type="password"
+            matInput
+            (keyup.enter)="
+              signupEmail.valid && signupUser.valid && signupPass.valid
+                ? signUp(signupEmail.value, signupPass.value, signupUser.value)
+                : false
+            "
+            placeholder="12345"
+            [formControl]="signupPass"
+            required
+          />
+          <mat-error *ngIf="this.signupPass.hasError('required')"
+            >Password is required</mat-error
+          >
+          <mat-error *ngIf="this.signupPass.hasError('whitespace')"
+            >No whitespaces allowed in password</mat-error
+          >
+        </mat-form-field>
+        <mat-error>{{ signupError }}</mat-error>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="
+            signUp(signupEmail.value, signupPass.value, signupUser.value)
+          "
+          [disabled]="
+            loadingSignup ||
+            !signupEmail.valid ||
+            !signupPass.valid ||
+            !signupUser.valid
+          "
+        >
+          {{ loadingSignup ? "Loading" : "Sign up" }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 
-  <h1 class="title unselectable">Register</h1>
-  <mat-card class="auth-card">
-    <mat-card-content class="auth-form">
-      <mat-form-field appearance="fill">
-        <mat-label>Enter your email</mat-label>
-        <input type="email" matInput
-          (keyup.enter)="signupEmail.valid && signupUser.valid && signupPass.valid  ? signUp(signupEmail.value, signupPass.value, signupUser.value) : false"
-          placeholder="cow@example.com" [formControl]="signupEmail" required>
-        <mat-error *ngIf="this.signupEmail.hasError('required')">Email is required</mat-error>
-        <mat-error *ngIf="this.signupEmail.hasError('email')">Not a valid e-mail</mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Enter your username</mat-label>
-        <input matInput
-          (keyup.enter)="signupEmail.valid && signupUser.valid && signupPass.valid ? signUp(signupEmail.value, signupPass.value, signupUser.value) : false"
-          placeholder="happycow" [formControl]="signupUser" required>
-        <mat-error *ngIf="this.signupUser.hasError('required')">Username is required</mat-error>
-        <mat-error *ngIf="this.signupUser.hasError('whitespace')">No whitespaces allowed in username</mat-error>
-        <mat-error *ngIf="this.signupUser.hasError('usernameAlreadyExists')">Username already exists</mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Enter your password</mat-label>
-        <input type="password" matInput
-          (keyup.enter)="signupEmail.valid && signupUser.valid && signupPass.valid ? signUp(signupEmail.value, signupPass.value, signupUser.value) : false"
-          placeholder="12345" [formControl]="signupPass" required>
-        <mat-error *ngIf="this.signupPass.hasError('required')">Password is required</mat-error>
-        <mat-error *ngIf="this.signupPass.hasError('whitespace')">No whitespaces allowed in password</mat-error>
-      </mat-form-field>
-      <mat-error>{{signupError}}</mat-error>
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button mat-raised-button color="primary" type="submit"
-        (click)="signUp(signupEmail.value, signupPass.value, signupUser.value)"
-        [disabled]="loadingSignup || !signupEmail.valid || !signupPass.valid || !signupUser.valid">
-        {{ loadingSignup ? 'Loading' : 'Sign up' }}
-      </button>
-    </mat-card-actions>
-  </mat-card>
+  <button mat-button class="" (click)="switch()">{{ newAccount ? "I already have an account" : "I don't have an account"}}</button>
 
   <!-- <mat-card class="auth-card">
     <mat-card-content class="auth-form">

@@ -13,6 +13,7 @@ import { UsernameExistsValidator } from './usernameExists.validator';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
+  newAccount: boolean = false
   loading: boolean = false
   loadingLogin: boolean = false
   loadingSignup: boolean = false
@@ -91,6 +92,10 @@ export class AuthComponent implements OnInit {
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+
+  switch(){
+    this.newAccount = !this.newAccount;
   }
 
 }

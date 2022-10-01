@@ -1,5 +1,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { GuestService } from 'src/app/services/guest.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,6 +8,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+
+  get guestMode(): boolean {
+    return this.guest.guestMode;
+  }
+  set guestMode(value: boolean) {
+    this.guest.guestMode = value;
+  }
 
   @Input() inLogin: boolean;
 
@@ -16,7 +24,7 @@ export class NavbarComponent implements OnInit {
     this.isMobile()
   }
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private guest: GuestService) { }
 
   ngOnInit(): void {
     this.isMobile()

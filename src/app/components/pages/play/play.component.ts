@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GamesettingsService } from 'src/app/services/gamesettings.service';
+import { GuestService } from 'src/app/services/guest.service';
 import { Profile, SupabaseService } from 'src/app/services/supabase.service';
 
 @Component({
@@ -37,16 +38,25 @@ export class PlayComponent implements OnInit {
     this.gameSettings.countryCode = value;
   }
 
+  get guestMode(): boolean {
+    return this.guest.guestMode;
+  }
+  set guestMode(value: boolean) {
+    this.guest.guestMode = value;
+  }
+
   loading: boolean;
   profile: Profile | undefined
   username: string;
 
 
-  constructor(private router: Router, public gameSettings: GamesettingsService, private supabase: SupabaseService) { }
+  constructor(private router: Router, public gameSettings: GamesettingsService, private supabase: SupabaseService, private guest: GuestService) { }
 
   ngOnInit(): void {
 
-    this.getProfile()
+    if(!this.guestMode){
+      this.getProfile()
+    }
     // console.log(this.gameMode)
     // console.log(this.zoneMode)
     // console.log(this.populationMode)

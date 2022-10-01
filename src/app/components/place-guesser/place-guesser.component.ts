@@ -1,19 +1,36 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
-import { catchError, concatMap, filter, map, mergeMap, Observable, of, switchMap } from 'rxjs';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  NgZone,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  catchError,
+  concatMap,
+  filter,
+  map,
+  mergeMap,
+  Observable,
+  of,
+  switchMap,
+} from 'rxjs';
 
 import { ImageCarouselComponent } from '../image-carousel/image-carousel.component';
 import { MapSelectorComponent } from '../map-selector/map-selector.component';
 
 import { BackendService } from 'src/app/services/backend.service';
 
-import { bounds } from '../../../assets/countryBoundingBoxes'
-import { LocalstorageService } from 'src/app/services/localstorage.service';
-
+import { bounds } from '../../../assets/countryBoundingBoxes';
 
 @Component({
   selector: 'app-place-guesser',
   templateUrl: './place-guesser.component.html',
-  styleUrls: ['./place-guesser.component.scss']
+  styleUrls: ['./place-guesser.component.scss'],
 })
 
 //implements the main component for the guessing game
@@ -58,16 +75,15 @@ export class PlaceGuesserComponent implements OnInit {
   bounds: any;
 
   //storing geoids of places this round, so that if we get the same random place again we fetch a new one
-  roundGeoids: number[] = []
-  roundPlaceNames: string[] = []
+  roundGeoids: number[] = [];
+  roundPlaceNames: string[] = [];
 
   //stats panel
-  stats: any = {}
+  stats: any = {};
   statsOpen: boolean = false;
-  barChartData: any[] = []
 
   //all paths of guesses and solution from the played game
-  paths: any = []
+  paths: any = [];
 
   //confirmation of returning home during game
   askResetOpen: boolean = false;
@@ -81,128 +97,158 @@ export class PlaceGuesserComponent implements OnInit {
   @Output() resetGameEvent = new EventEmitter();
 
   //tracking if we are on a mobile device
-  mobile: boolean = false
-  @HostListener("window:resize", []) onWindowResize() {
-    this.isMobile()
+  mobile: boolean = false;
+  @HostListener('window:resize', []) onWindowResize() {
+    this.isMobile();
   }
 
-  constructor(private backendService: BackendService, private localstorageService: LocalstorageService, private ngZone: NgZone) {
-  }
+  constructor(private backendService: BackendService, private ngZone: NgZone) {}
 
   ngOnInit(): void {
-    this.isMobile()
+    this.isMobile();
 
     //forcing fullscreen mode when on mobile
     if (this.mobile) {
       document.documentElement.requestFullscreen();
     }
 
-    if (this.solutionLogging) { console.log("Username: ", this.username) }
+    if (this.solutionLogging) {
+      console.log('Username: ', this.username);
+    }
 
-    this.getStats()
-
+    if (this.username != undefined && this.username != '') {
+      this.getStats();
+    }
 
     //set map bounds when in country mode
     if (this.gameMode == 'country') {
       this.bounds = [
-        new google.maps.LatLng(bounds[this.countryCode][1][1], bounds[this.countryCode][1][0]),
-        new google.maps.LatLng(bounds[this.countryCode][1][3], bounds[this.countryCode][1][2]),
+        new google.maps.LatLng(
+          bounds[this.countryCode][1][1],
+          bounds[this.countryCode][1][0]
+        ),
+        new google.maps.LatLng(
+          bounds[this.countryCode][1][3],
+          bounds[this.countryCode][1][2]
+        ),
       ];
     }
-
-
   }
 
   ngAfterViewInit(): void {
-    this.getNewPlace()
+    this.getNewPlace();
   }
 
   //gets a new random place and then it's photos from google maps
   getNewPlace() {
-    this.backendService.getRandomPlace(this.gameMode, parseInt(this.populationMode), this.zoneMode, this.countryCode).pipe(
-      filter(data => {
-        //if the place was already seen this round we make the call again to find another place
-        if (this.roundPlaceNames.includes(data["formatted_address"])) {
-          if (this.solutionLogging) { console.log('place already seen this round ... getting new one') }
-
-          this.getNewPlace()
-          return false
-        }
-
-        if (Object.keys(data).length == 0) {
-          if (this.solutionLogging) { console.log('no data for this place ... getting new one') }
-
-          this.getNewPlace()
-          return false
-        }
-        
-        return true
-      })
-    ).subscribe({
-      next: data => {
-        this.solution = data
-
-        this.solutionCoords = new google.maps.LatLng(this.solution["geometry"]["location"]["lat"], this.solution["geometry"]["location"]["lng"])
-
-        this.roundGeoids.push(this.solution["geonameid"])
-        this.roundPlaceNames.push(this.solution["formatted_address"])
-
-
-        if (this.solutionLogging) { console.log("SOLUTION: ", this.solution) }
-
-        if (this.solution["photos"] == undefined) {
-          if (this.solutionLogging) { console.log("PLACE WITH NO PHOTOS, GETTING NEW PLACE") }
-          this.getNewPlace()
-          return
-        }
-
-        this.images = []
-        for (let i = 0; i < this.solution["photos"].length; i++) {
-          this.backendService.getPhotoUrl(this.solution["photos"][i]["photo_reference"]).subscribe({
-            next: imageUrl => {
-              this.images[i] = imageUrl
-
-              if (i == this.solution["photos"].length - 1) {
-                this.ngZone.run(() => {
-                  this.imageLoaded = true
-                });
-              }
-            },
-            error: error => {
-              console.log(error)
+    this.backendService
+      .getRandomPlace(
+        this.gameMode,
+        parseInt(this.populationMode),
+        this.zoneMode,
+        this.countryCode
+      )
+      .pipe(
+        filter((data) => {
+          //if the place was already seen this round we make the call again to find another place
+          if (this.roundPlaceNames.includes(data['formatted_address'])) {
+            if (this.solutionLogging) {
+              console.log('place already seen this round ... getting new one');
             }
-          })
-        }
 
-      },
-      error: error => {
-        console.log(error)
-      }
-    })
+            this.getNewPlace();
+            return false;
+          }
+
+          if (Object.keys(data).length == 0) {
+            if (this.solutionLogging) {
+              console.log('no data for this place ... getting new one');
+            }
+
+            this.getNewPlace();
+            return false;
+          }
+
+          return true;
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.solution = data;
+
+          this.solutionCoords = new google.maps.LatLng(
+            this.solution['geometry']['location']['lat'],
+            this.solution['geometry']['location']['lng']
+          );
+
+          this.roundGeoids.push(this.solution['geonameid']);
+          this.roundPlaceNames.push(this.solution['formatted_address']);
+
+          if (this.solutionLogging) {
+            console.log('SOLUTION: ', this.solution);
+          }
+
+          if (this.solution['photos'] == undefined) {
+            if (this.solutionLogging) {
+              console.log('PLACE WITH NO PHOTOS, GETTING NEW PLACE');
+            }
+            this.getNewPlace();
+            return;
+          }
+
+          this.images = [];
+          for (let i = 0; i < this.solution['photos'].length; i++) {
+            this.backendService
+              .getPhotoUrl(this.solution['photos'][i]['photo_reference'])
+              .subscribe({
+                next: (imageUrl) => {
+                  this.images[i] = imageUrl;
+
+                  if (i == this.solution['photos'].length - 1) {
+                    this.ngZone.run(() => {
+                      this.imageLoaded = true;
+                    });
+                  }
+                },
+                error: (error) => {
+                  console.log(error);
+                },
+              });
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
   }
 
   //checking guess against solution
   checkGuess(coordinates: google.maps.LatLng) {
-    this.guessCoords = coordinates
+    this.guessCoords = coordinates;
 
-    this.distance = this.getDistanceFromLatLonInKm(this.solutionCoords.lat(), this.solutionCoords.lng(), coordinates.lat(), coordinates.lng())
+    this.distance = this.getDistanceFromLatLonInKm(
+      this.solutionCoords.lat(),
+      this.solutionCoords.lng(),
+      coordinates.lat(),
+      coordinates.lng()
+    );
 
-    this.score = this.generateScore(this.distance)
-    this.totalScore += this.score
+    this.score = this.generateScore(this.distance);
+    this.totalScore += this.score;
 
-    this.roundOverview()
+    this.roundOverview();
   }
 
   //behaviour for advancing to next round
   nextRound() {
-    this.round += 1
+    this.round += 1;
     if (this.round > 5) {
-      this.gameOver()
+      this.gameOver();
     } else {
-      this.roundEnded = false
-      this.imageLoaded = false
-      this.getNewPlace()
-      this.map.resetMarker()
+      this.roundEnded = false;
+      this.imageLoaded = false;
+      this.getNewPlace();
+      this.map.resetMarker();
     }
   }
 
@@ -212,16 +258,19 @@ export class PlaceGuesserComponent implements OnInit {
 
   //behaviour when the game is ended
   gameOver() {
-    this.gameEnded = true
+    this.gameEnded = true;
 
-    this.multiplyScore(this.totalScore)
-
-    this.saveHistory()
+    this.multiplyScore(this.totalScore);
 
     //saving score to leaderboard
-    if (this.totalScore > 0 && this.username != null && this.username != undefined && this.username != "")
-      this.backendService.saveScoreToLeaderboard(
-        {
+    if (
+      this.totalScore > 0 &&
+      this.username != null &&
+      this.username != undefined &&
+      this.username != ''
+    )
+      this.backendService
+        .saveScoreToLeaderboard({
           username: this.username,
           score: this.totalScoreMulti,
           multi: this.multi,
@@ -230,85 +279,100 @@ export class PlaceGuesserComponent implements OnInit {
           gamemode: this.gameMode,
           countrycode: this.countryCode,
           population: this.populationMode,
-          paths: this.paths
-        }
-      ).subscribe({ error: e => { console.log(e) } })
+          paths: this.paths,
+        })
+        .subscribe({
+          error: (e) => {
+            console.log(e);
+          },
+        });
 
-    this.getGameRank()
-    this.getStats()
+    this.getGameRank();
+
+    if (this.username != undefined && this.username != '') {
+      this.saveHistory();
+      this.getStats();
+    }
   }
 
   //getting complete paths from child at end of game
   completePaths(paths: any) {
-    this.paths = paths
+    this.paths = paths;
   }
 
-  //saves history to localstorage and DB
+  //saves history to DB
   saveHistory() {
-    let history = this.localstorageService.getHistory()
+    history['played'] = history['played'] + 1;
 
-    history["played"] = history["played"] + 1
-
-    if (history["highscore"] < this.totalScoreMulti) {
-      history["highscore"] = this.totalScoreMulti
+    if (history['highscore'] < this.totalScoreMulti) {
+      history['highscore'] = this.totalScoreMulti;
     }
 
-    history["distribution"].push(this.totalScoreMulti)
+    history['distribution'].push(this.totalScoreMulti);
 
-    this.localstorageService.setHistory(JSON.stringify(history))
-
-    this.backendService.saveHistoryToDb(this.username, history).subscribe({ error: e => { console.log(e) } })
-
+    this.backendService.saveHistoryToDb(this.username, history).subscribe({
+      error: (e) => {
+        console.log(e);
+      },
+    });
   }
 
   resetGame() {
-    this.resetGameEvent.emit()
+    this.resetGameEvent.emit();
   }
 
   playAgain() {
-    this.gameEnded = false
-    this.imageLoaded = false
-    this.getNewPlace()
-    this.roundGeoids = []
-    this.roundPlaceNames = []
-    this.map.ngOnInit()
-    this.round = 1
-    this.totalScore = 0
+    this.gameEnded = false;
+    this.imageLoaded = false;
+    this.getNewPlace();
+    this.roundGeoids = [];
+    this.roundPlaceNames = [];
+    this.map.ngOnInit();
+    this.round = 1;
+    this.totalScore = 0;
   }
 
   //logic to generate the score based on distance to solution
   //based on the zone different parameters are used
   //uses a quadratic function over distance. If within 50km you get full score
   generateScore(distance) {
-
     let zoneMaxDistance = {
-      "worldwide": 2500,
-      "europe": 1500,
-      "africa": 2500,
-      "americas": 2000,
-      "asia/oceania": 2000
-    }
+      worldwide: 2500,
+      europe: 1500,
+      africa: 2500,
+      americas: 2000,
+      'asia/oceania': 2000,
+    };
 
-    let maxDistance = zoneMaxDistance[this.zoneMode]
-    let maxPointsCutoff = 50
+    let maxDistance = zoneMaxDistance[this.zoneMode];
+    let maxPointsCutoff = 50;
 
     //calculate maxDistance based on country bounds
     if (this.gameMode == 'country') {
-      const diagonal = this.getDistanceFromLatLonInKm(bounds[this.countryCode][1][0], bounds[this.countryCode][1][1], bounds[this.countryCode][1][2], bounds[this.countryCode][1][3])
+      const diagonal = this.getDistanceFromLatLonInKm(
+        bounds[this.countryCode][1][0],
+        bounds[this.countryCode][1][1],
+        bounds[this.countryCode][1][2],
+        bounds[this.countryCode][1][3]
+      );
 
-      maxDistance = diagonal / 4
-      maxPointsCutoff = diagonal / 500
+      maxDistance = diagonal / 4;
+      maxPointsCutoff = diagonal / 500;
     }
 
     if (distance > maxDistance) {
-      return 0
+      return 0;
     } else if (distance <= maxPointsCutoff) {
-      return 1000
+      return 1000;
     } else {
       //console.log(Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance-maxPointsCutoff))) ** 2))
-      return Math.floor(1000 * (1 - ((distance - maxPointsCutoff) / (maxDistance - maxPointsCutoff))) ** 2)
+      return Math.floor(
+        1000 *
+          (1 -
+            (distance - maxPointsCutoff) / (maxDistance - maxPointsCutoff)) **
+            2
+      );
     }
-
   }
 
   // Zone
@@ -328,55 +392,57 @@ export class PlaceGuesserComponent implements OnInit {
   //returns the score mutiplier based on zoneMode and population
   getGameMulti(gamemode: string, zone: string, population: string) {
     let zoneMultis = {
-      "worldwide": 4,
-      "europe": 0,
-      "africa": 0,
-      "americas": 1,
-      "asia/oceania": 2.5
-    }
+      worldwide: 4,
+      europe: 0,
+      africa: 0,
+      americas: 1,
+      'asia/oceania': 2.5,
+    };
     let popMultis = {
-      "500": 5,
-      "10000": 3,
-      "50000": 2,
-      "100000": 1,
-      "500000": 0
-    }
+      '500': 5,
+      '10000': 3,
+      '50000': 2,
+      '100000': 1,
+      '500000': 0,
+    };
 
-    if (gamemode == "country") {
-      return 1
+    if (gamemode == 'country') {
+      return 1;
     } else {
-      return 1 + zoneMultis[zone] + popMultis[population]
+      return 1 + zoneMultis[zone] + popMultis[population];
     }
-
   }
 
   multiplyScore(score: number) {
-
-    let multi = this.getGameMulti(this.gameMode, this.zoneMode, this.populationMode)
+    let multi = this.getGameMulti(
+      this.gameMode,
+      this.zoneMode,
+      this.populationMode
+    );
 
     if (this.solutionLogging) {
-      console.log("Sore: ", score, " Multi: ", multi, " = ", score * multi)
+      console.log('Sore: ', score, ' Multi: ', multi, ' = ', score * multi);
     }
 
-    this.totalScoreMulti = score * multi
-    this.multi = multi
+    this.totalScoreMulti = score * multi;
+    this.multi = multi;
   }
 
-
   getProgress(distance) {
-    return (1 - (distance / 20037.5))
+    return 1 - distance / 20037.5;
   }
 
   //calculates distance from two pairs of coordinates
   getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
-    var dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
+    var dLat = this.deg2rad(lat2 - lat1); // deg2rad below
     var dLon = this.deg2rad(lon2 - lon1);
     var a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2)
-      ;
+      Math.cos(this.deg2rad(lat1)) *
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c; // Distance in km
 
@@ -384,7 +450,7 @@ export class PlaceGuesserComponent implements OnInit {
   }
 
   deg2rad(deg) {
-    return deg * (Math.PI / 180)
+    return deg * (Math.PI / 180);
   }
 
   isMobile() {
@@ -395,39 +461,43 @@ export class PlaceGuesserComponent implements OnInit {
     }
   }
 
-  //gets stats from localstorage 
+  //gets stats from db
   getStats() {
-    this.stats = this.localstorageService.getHistory()
-
-    this.barChartData = this.stats["distribution"]
-    this.getRank()
-
+    this.backendService.getHistory(this.username).subscribe({
+      next: (data) => {
+        this.stats = data[0];
+        this.getRank();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 
   //gets you current highscore ranking in the global leaderboard from the db
   getRank() {
-    this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
-      next: rank => {
-        this.rank = rank[0] + 1
-      },
-      error: error => {
-        console.log(error)
-      }
-    })
-
+    this.backendService
+      .getRankFromLeaderboard(parseInt(this.stats['highscore']))
+      .subscribe({
+        next: (rank) => {
+          this.rank = rank[0] + 1;
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
   }
 
   //gets rank on leaderboard of current game
   getGameRank() {
     this.backendService.getRankFromLeaderboard(this.totalScoreMulti).subscribe({
-      next: rank => {
-        this.gameRank = rank[0] + 1
+      next: (rank) => {
+        this.gameRank = rank[0] + 1;
       },
-      error: error => {
-        console.log(error)
-      }
-    })
-
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 
   openStats() {
@@ -441,18 +511,17 @@ export class PlaceGuesserComponent implements OnInit {
   openAskReset() {
     //do not ask when game is not ongoing
     if (!this.gameEnded) {
-      this.askResetOpen = true
+      this.askResetOpen = true;
     } else {
-      this.resetGame()
+      this.resetGame();
     }
   }
 
   closeAskReset() {
-    this.askResetOpen = false
+    this.askResetOpen = false;
   }
 
   closeAll() {
-    this.askResetOpen = false
+    this.askResetOpen = false;
   }
-
 }
