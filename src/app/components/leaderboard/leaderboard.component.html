@@ -11,6 +11,8 @@
 
     <div class="table-container">
 
+        <mat-paginator [length]="resultsLength" [pageSize]="mobile ? 5 : 10"></mat-paginator>
+        
         <table mat-table [dataSource]="dataSource" class="table" matSort matSortActive="score" matSortDisableClear
             matSortDirection="desc">
 
@@ -79,7 +81,6 @@
         </table>
     </div>
 
-    <mat-paginator [length]="resultsLength" [pageSize]="mobile ? 5 : 10"></mat-paginator>
 </div>
 
 <!-- <mat-card *ngIf="mapOpen" class="map-container middle">

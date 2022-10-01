@@ -38,6 +38,8 @@ import { ImageBackgroundComponent } from './components/image-background/image-ba
 import { StatsComponent } from './components/pages/stats/stats.component';
 import { MultiplayerComponent } from './components/pages/multiplayer/multiplayer.component';
 import { NavbarMobileComponent } from './components/navbar-mobile/navbar-mobile.component';
+import { ProfileStatsComponent } from './components/profile-stats/profile-stats.component';
+import { ProfileEditComponent } from './components/pages/profile-edit/profile-edit.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,9 @@ import { NavbarMobileComponent } from './components/navbar-mobile/navbar-mobile.
     ImageBackgroundComponent,
     StatsComponent,
     MultiplayerComponent,
-    NavbarMobileComponent
+    NavbarMobileComponent,
+    ProfileStatsComponent,
+    ProfileEditComponent
   ],
   imports: [
     BrowserModule,

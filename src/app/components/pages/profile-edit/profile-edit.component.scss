@@ -1,0 +1,59 @@
+.container {
+    padding-top: 100px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    
+    padding-bottom: 20px;
+}
+
+.title {
+    text-align: center;
+    font-size: 2.5em;
+    line-height: normal;
+    margin: 0px 0px 40px 0px;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    -moz-user-select: none;
+    user-select: none;
+    /* Standard syntax */
+}
+
+.profile-card {
+    width: 400px;
+
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    // align-items: center;
+    gap: 5px;
+}
+
+
+@media only screen and (max-width: 1000px) {
+    .container {
+        padding-top: 70px;
+    }
+
+    .profile-card {
+        width: 90%;
+    }
+
+    .title {
+        font-size: 2em;
+
+        margin-bottom: 10px;
+
+    }
+
+}

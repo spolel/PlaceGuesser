@@ -11,12 +11,14 @@ import { HomeComponent } from './components/pages/home/home.component';
 import { StatsComponent } from './components/pages/stats/stats.component';
 import { AuthGuard } from './auth.guard';
 import { MultiplayerComponent } from './components/pages/multiplayer/multiplayer.component';
+import { ProfileEditComponent } from './components/pages/profile-edit/profile-edit.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   // { path: 'homeold', component: HomeOldComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'edit', component: ProfileEditComponent, canActivate: [AuthGuard] },
   { path: 'classic', component: ClassicComponent, canActivate: [AuthGuard] },
   { path: 'country', component: CountryComponent, canActivate: [AuthGuard]  },
   { path: 'play', component: PlayComponent, canActivate: [AuthGuard]  },

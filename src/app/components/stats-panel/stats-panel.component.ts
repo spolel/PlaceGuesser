@@ -9,8 +9,6 @@ import { Component, Input, OnInit } from '@angular/core';
 export class StatsPanelComponent implements OnInit {
 
   @Input() stats: any = {}
-  @Input() barChartData: any[] = []
-  @Input() rank: number;
   @Input() username: string;
 
   mapOpen: boolean = false;

@@ -121,7 +121,6 @@ export class HomeOldComponent implements OnInit {
     this.countrypopulationControl.setValue(this.populationMode)
 
     this.getUserdata()
-    this.syncStatsFromDb()
     this.getStats()
   }
 
@@ -218,13 +217,13 @@ export class HomeOldComponent implements OnInit {
   getStats() {
     this.stats = this.localstorageService.getHistory()
 
-    this.barChartData = this.stats["distribution"]
+    this.barChartData = this.stats.distribution
     this.getRank()
   }
 
   //gets you current highscore ranking in the global leaderboard from the db
   getRank() {
-    this.backendService.getRankFromLeaderboard(parseInt(this.stats["highscore"])).subscribe({
+    this.backendService.getRankFromLeaderboard(parseInt(this.stats.highscore)).subscribe({
       next: rank => {
         this.rank = rank[0] + 1
       },

@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
 export class BackendService {
 
   //backendUrl: any = "https://data.mongodb-api.com/app/data-mwwux/endpoint"
-  //backendUrl: any = "http://localhost:8080"
-  backendUrl: any = "https://placeguesser-api-mrfsd73xma-ew.a.run.app"
+  backendUrl: any = "http://localhost:8080"
+  //backendUrl: any = "https://placeguesser-api-mrfsd73xma-ew.a.run.app"
 
   constructor(private httpClient: HttpClient) { }
 
@@ -54,6 +54,10 @@ export class BackendService {
 
   getHistory(username: string): Observable<any> {
     return this.httpClient.get( this.backendUrl + '/get_history?username=' + username, { responseType: "json" });
+  }
+
+  getStats(username: string): Observable<any> {
+    return this.httpClient.get( this.backendUrl + '/get_stats?username=' + username, { responseType: "json" });
   }
 
   getLeaderboard(): Observable<any> {

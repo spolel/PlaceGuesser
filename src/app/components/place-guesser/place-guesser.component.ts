@@ -67,7 +67,6 @@ export class PlaceGuesserComponent implements OnInit {
   totalScore: number = 0;
   totalScoreMulti: number = 0;
   multi: number = 0;
-  rank: number;
   gameRank: number;
   gameEnded: boolean = false;
   roundEnded: boolean = false;
@@ -264,7 +263,6 @@ export class PlaceGuesserComponent implements OnInit {
 
     //saving score to leaderboard
     if (
-      this.totalScore > 0 &&
       this.username != null &&
       this.username != undefined &&
       this.username != ''
@@ -290,7 +288,6 @@ export class PlaceGuesserComponent implements OnInit {
     this.getGameRank();
 
     if (this.username != undefined && this.username != '') {
-      this.saveHistory();
       this.getStats();
     }
   }
@@ -298,23 +295,6 @@ export class PlaceGuesserComponent implements OnInit {
   //getting complete paths from child at end of game
   completePaths(paths: any) {
     this.paths = paths;
-  }
-
-  //saves history to DB
-  saveHistory() {
-    history['played'] = history['played'] + 1;
-
-    if (history['highscore'] < this.totalScoreMulti) {
-      history['highscore'] = this.totalScoreMulti;
-    }
-
-    history['distribution'].push(this.totalScoreMulti);
-
-    this.backendService.saveHistoryToDb(this.username, history).subscribe({
-      error: (e) => {
-        console.log(e);
-      },
-    });
   }
 
   resetGame() {
@@ -463,29 +443,14 @@ export class PlaceGuesserComponent implements OnInit {
 
   //gets stats from db
   getStats() {
-    this.backendService.getHistory(this.username).subscribe({
-      next: (data) => {
-        this.stats = data[0];
-        this.getRank();
+    this.backendService.getStats(this.username).subscribe({
+      next: (stats) => {
+        this.stats = stats;
       },
       error: (error) => {
         console.log(error);
       },
     });
-  }
-
-  //gets you current highscore ranking in the global leaderboard from the db
-  getRank() {
-    this.backendService
-      .getRankFromLeaderboard(parseInt(this.stats['highscore']))
-      .subscribe({
-        next: (rank) => {
-          this.rank = rank[0] + 1;
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      });
   }
 
   //gets rank on leaderboard of current game

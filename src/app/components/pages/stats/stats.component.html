@@ -1,10 +1,11 @@
 <app-navbar></app-navbar>
 <div class="container">
-    <div class="title unselectable"> STATS </div>
-    <div class="spinner-container" *ngIf="loading">
-        <mat-spinner></mat-spinner>
-    </div>
-    <app-stats-panel *ngIf="!loading" [stats]="stats" [barChartData]="stats['distribution']" [rank]="rank"
-        [username]="username">
-    </app-stats-panel>
+  <div class="title unselectable">LEADERBOARD</div>
+  <div class="leaderboard-container">
+    <app-leaderboard
+      class="leaderboard"
+      (selectedPathsEvent)="openMap($event)"
+    ></app-leaderboard>
+    <app-map *ngIf="mapOpen" class="map" [paths]="selectedPaths"></app-map>
+  </div>
 </div>

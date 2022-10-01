@@ -1,0 +1,47 @@
+<app-navbar></app-navbar>
+<div class="container">
+  <div class="title unselectable">EDIT YOUR PROFILE</div>
+  <mat-card class="profile-card">
+    <!-- <mat-card-title class="profile title">Edit your profile</mat-card-title> -->
+    <mat-card-content class="profile-form">
+      <app-avatar
+        [avatarUrl]="profile?.avatar_url"
+        (upload)="updateProfile(username.value, country.value, $event)"
+      >
+      </app-avatar>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input type="text" [value]="session?.user?.email" matInput disabled />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Username</mat-label>
+        <input
+          #username
+          type="text"
+          [value]="profile?.username ?? ''"
+          matInput
+          disabled
+        />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Country</mat-label>
+        <input #country type="text" [value]="profile?.country ?? ''" matInput />
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button
+        mat-raised-button
+        class="button"
+        color="primary"
+        (click)="updateProfile(username.value, country.value)"
+        [disabled]="loading"
+      >
+        {{ loading ? "Loading ..." : "Update" }}
+      </button>
+      <button mat-raised-button class="button" color="warn" (click)="signOut()">
+        Sign Out
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

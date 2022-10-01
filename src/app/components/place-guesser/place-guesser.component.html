@@ -40,7 +40,7 @@
     <mat-card *ngIf="statsOpen" class="stats-container">
         <mat-card-title class="stats-title">STATS</mat-card-title>
         <mat-card-content>
-            <app-stats-panel [stats]="stats" [barChartData]="stats['distribution']" [rank]="rank" [username]="username"></app-stats-panel>
+            <app-stats-panel [stats]="stats" [username]="username"></app-stats-panel>
         </mat-card-content>
         <mat-card-actions>
             <button class="button-closehelp" color="basic" mat-raised-button (click)="closeStats()">

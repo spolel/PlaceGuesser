@@ -145,7 +145,7 @@
         <mat-card *ngIf="statsOpen" class="stats-container">
             <mat-card-title *ngIf="!mobile" class="stats-title">STATS</mat-card-title>
             <mat-card-content>
-                <app-stats-panel [stats]="stats" [barChartData]="barChartData" [rank]="rank" [username]="username">
+                <app-stats-panel [stats]="stats" [username]="username">
                 </app-stats-panel>
             </mat-card-content>
             <mat-card-actions>

@@ -1,51 +1,73 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 
+  padding-top: 100px;
 
-    padding-top: 100px;
-
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .spinner-container {
-    width: 100%;
-    padding-top: 200px;
+  width: 100%;
+  padding-top: 200px;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .title {
-    text-align: center;
-    font-size: 2.5em;
-    line-height: normal;
-    margin-bottom: 25px;
-
+  text-align: center;
+  font-size: 2.5em;
+  line-height: normal;
+  margin-bottom: 25px;
 }
 
 .unselectable {
-    -webkit-user-select: none;
-    /* Safari */
-    -ms-user-select: none;
-    /* IE 10 and IE 11 */
-    -moz-user-select: none;
-    user-select: none;
-    /* Standard syntax */
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE 10 and IE 11 */
+  -moz-user-select: none;
+  user-select: none;
+  /* Standard syntax */
 }
 
+.leaderboard-container {
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+  height: 100%;
+}
+
+.leaderboard {
+  flex-grow: 2;
+}
+
+.map {
+  flex-grow: 1;
+  min-width: 40%;
+  min-height: 200px;
+}
 
 @media only screen and (max-width: 1000px) {
-    .container {
-        padding-top: 70px;
-    }
+  .container {
+    padding-top: 70px;
+  }
 
-    .title {
-        margin-bottom: 10px;
-    }
+  .title {
+    margin-bottom: 10px;
+  }
 
+  .leaderboard-container {
+    flex-direction: column;
+  }
+
+  .map{
+    height: 300px;
+  }
 }

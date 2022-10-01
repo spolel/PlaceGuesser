@@ -6,18 +6,18 @@
                 <div class="stats-content">
                     <div class="stat">
                         <div>Played</div>
-                        <div class="stat-number">{{stats["played"]}}</div>
+                        <div class="stat-number">{{stats.played}}</div>
                     </div>
                     <div class="stat">
                         <div>Highscore</div>
-                        <div class="stat-number">{{stats["highscore"]}}</div>
+                        <div class="stat-number">{{stats.highscore}}</div>
                     </div>
                     <div class="stat">
                         <div>Rank</div>
-                        <div class="stat-number">#{{rank}}</div>
+                        <div class="stat-number">#{{stats.rank}}</div>
                     </div>
                 </div>
-                <app-barchart [inputData]="barChartData" class="histo"></app-barchart>
+                <app-barchart [inputData]="stats.distribution" class="histo"></app-barchart>
             </div>
         </mat-tab>
         <mat-tab label="Leaderboard">

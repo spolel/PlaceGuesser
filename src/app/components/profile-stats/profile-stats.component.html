@@ -1,0 +1,31 @@
+<div class="spinner-container" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!loading" class="container">
+  <div class="title unselectable">{{ username }}</div>
+  <div class="image-container">
+    <img
+      *ngIf="_avatarUrl"
+      [src]="_avatarUrl"
+      class="avatar image"
+    />
+  </div>
+  <div class="stats-content">
+    <div class="stat">
+      <div>Played</div>
+      <div class="stat-number">{{ stats.played }}</div>
+    </div>
+    <div class="stat">
+      <div>Highscore</div>
+      <div class="stat-number">{{ stats.highscore }}</div>
+    </div>
+    <div class="stat">
+      <div>Rank</div>
+      <div class="stat-number">#{{ stats.rank }}</div>
+    </div>
+  </div>
+  <app-barchart
+    [inputData]="stats.distribution"
+    class="histo"
+  ></app-barchart>
+</div>

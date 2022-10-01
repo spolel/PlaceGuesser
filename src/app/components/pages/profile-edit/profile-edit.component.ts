@@ -1,26 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Profile, SupabaseService } from 'src/app/services/supabase.service';
-import { Session } from '@supabase/supabase-js';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BackendService } from 'src/app/services/backend.service';
+import { Profile, SupabaseService } from 'src/app/services/supabase.service';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
+  selector: 'app-profile-edit',
+  templateUrl: './profile-edit.component.html',
+  styleUrls: ['./profile-edit.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileEditComponent implements OnInit {
   loading = false;
   profile: Profile | undefined;
 
   session = this.supabase.session;
+  
+  constructor(    private readonly supabase: SupabaseService,
+    private router: Router,) { }
 
-  constructor(
-    private readonly supabase: SupabaseService,
-    private router: Router
-  ) {}
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.supabase.authChanges((_, session) => (this.session = session));
 
     this.getProfile();
@@ -59,13 +55,10 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  async editProfile() {
-    this.router.navigate(['edit']);
-  }
-
   async signOut() {
     await this.supabase.signOut();
 
     this.router.navigate(['login']);
   }
 }
+
