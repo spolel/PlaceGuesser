@@ -1,16 +1,30 @@
-<form class="country-form" >
-    <mat-form-field floatLabel='never'class="form-field" appearance="fill">
-      <input matInput
-            aria-label="Country"
-            [matAutocomplete]="auto"
-            [formControl]="countryCtrl">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let country of filteredCountries | async" [value]="country.name">
-          <div class="option">
-            <span [class]="'flag fi fi-'+country.code.toLowerCase()" [ngStyle]="{'margin-right': '10 px'}" ></span>
-            <span >{{ country.name }}</span>
-          </div>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+<form class="country-form">
+  <mat-form-field floatLabel="never" class="form-field" appearance="fill">
+    <input
+      matInput
+      aria-label="Country"
+      [matAutocomplete]="auto"
+      [formControl]="countryCtrl"
+    />
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let country of filteredCountries | async"
+        [value]="country.name"
+      >
+        <div class="option">
+          <span
+            [class]="'flag fi fi-' + country.code.toLowerCase()"
+            [ngStyle]="{ 'margin-right': '10 px' }"
+          ></span>
+          <span>{{ country.name }}</span>
+        </div>
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="this.countryCtrl.hasError('required')"
+      >A country is required</mat-error
+    >
+    <mat-error *ngIf="this.countryCtrl.hasError('valid') && !this.countryCtrl.hasError('required')"
+      >Not a valid country</mat-error
+    >
+  </mat-form-field>
 </form>

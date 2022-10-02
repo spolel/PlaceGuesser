@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import {countries} from 'src/assets/countries'
+
+const countriesNames: string[] = countries.map(a => a.name);
 
 export interface Country {
   code: string;
@@ -20,7 +22,8 @@ export interface Country {
 export class CountryAutocompleteComponent implements OnInit {
   countries: Country[] = countries;
 
-  countryCtrl = new FormControl('');
+
+  countryCtrl = new FormControl('', [Validators.required, this.validCountry]);
   filteredCountries: Observable<Country[]>;
 
   constructor() { 
@@ -32,6 +35,11 @@ export class CountryAutocompleteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  validCountry(control: FormControl) {
+    const isValid = countriesNames.includes(control.value)
+    return isValid ? null : { 'valid': true };
   }
 
   private _filterCountries(value: string): Country[] {

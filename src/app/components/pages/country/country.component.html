@@ -18,7 +18,7 @@
         <mat-button-toggle value="500000">> 500'000</mat-button-toggle>
     </mat-button-toggle-group>
 
-    <button class="play" color="primary" mat-raised-button (click)="startGame()">
+    <button class="play" color="primary" mat-raised-button [disabled]="!autocomplete.countryCtrl.valid" (click)="startGame()">
         PLAY
     </button>
 </div>
