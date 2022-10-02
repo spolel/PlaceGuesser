@@ -42,6 +42,8 @@ import { ProfileStatsComponent } from './components/profile-stats/profile-stats.
 import { ProfileEditComponent } from './components/pages/profile-edit/profile-edit.component';
 import { TablePagedComponent } from './components/table-paged/table-paged.component';
 import { LeaderboardPagedComponent } from './components/leaderboard-paged/leaderboard-paged.component';
+import { GamesViewerComponent } from './components/games-viewer/games-viewer.component';
+import { UserGamesPagedComponent } from './components/user-games-paged/user-games-paged.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +77,9 @@ import { LeaderboardPagedComponent } from './components/leaderboard-paged/leader
     ProfileStatsComponent,
     ProfileEditComponent,
     TablePagedComponent,
-    LeaderboardPagedComponent
+    LeaderboardPagedComponent,
+    GamesViewerComponent,
+    UserGamesPagedComponent
   ],
   imports: [
     BrowserModule,

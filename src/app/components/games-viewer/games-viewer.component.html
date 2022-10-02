@@ -1,0 +1,20 @@
+<div class="leaderboard-container">
+  <!-- <app-leaderboard
+      class="leaderboard"
+      (selectedPathsEvent)="openMap($event)"
+    ></app-leaderboard> -->
+  <app-leaderboard-paged
+    *ngIf="!username"
+    class="leaderboard"
+    (selectedPathsEvent)="openMap($event)"
+  ></app-leaderboard-paged>
+  <app-user-games-paged
+    *ngIf="username"
+    class="leaderboard"
+    [username]="username"
+    (selectedPathsEvent)="openMap($event)"
+  ></app-user-games-paged>
+  <div *ngIf="mapOpen" class="map-container">
+    <app-map class="map" [paths]="selectedPaths"></app-map>
+  </div>
+</div>

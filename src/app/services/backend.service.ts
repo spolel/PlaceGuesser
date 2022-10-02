@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
 export class BackendService {
 
   //backendUrl: any = "https://data.mongodb-api.com/app/data-mwwux/endpoint"
-  //backendUrl: any = "http://localhost:8080"
-  backendUrl: any = "https://placeguesser-api-mrfsd73xma-ew.a.run.app"
+  backendUrl: any = "http://localhost:8080"
+  //backendUrl: any = "https://placeguesser-api-mrfsd73xma-ew.a.run.app"
 
   constructor(private httpClient: HttpClient) { }
 
@@ -64,12 +64,20 @@ export class BackendService {
     return this.httpClient.get( this.backendUrl + '/get_leaderboard', { responseType: "json" });
   }
 
-  getLeaderboardPaged(offset: number, size: number): Observable<any> {
-    return this.httpClient.get( this.backendUrl + '/get_leaderboard_paged?offset=' + offset + '&size=' + size, { responseType: "json" });
+  getLeaderboardPaged(index: number, size: number): Observable<any> {
+    return this.httpClient.get( this.backendUrl + '/get_leaderboard_paged?index=' + index + '&size=' + size, { responseType: "json" });
   }
 
   getLeaderboardLength(): Observable<any> {
     return this.httpClient.get( this.backendUrl + '/get_leaderboard_length', { responseType: "json" });
+  }
+  
+  getUserGamesPaged(index: number, size: number, username: string): Observable<any> {
+    return this.httpClient.get( this.backendUrl + '/get_user_games_paged?index=' + index + '&size=' + size + '&username=' + username , { responseType: "json" });
+  }
+
+  getUserGamesLength(username: string): Observable<any> {
+    return this.httpClient.get( this.backendUrl + '/get_user_games_length?username='+username, { responseType: "json" });
   }
 
   usernameExists(username: string): Observable<any> {

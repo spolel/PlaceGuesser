@@ -6,6 +6,13 @@
     [avatarUrl]="profile?.avatar_url"
     [username]="guestMode ? guestUsername : profile?.username"
   ></app-profile-stats>
+  <div class="games-container">
+    <div class="games-title unselectable"> MY GAMES</div>
+    <app-games-viewer
+      class="games-table"
+      [username]="guestMode ? guestUsername : profile?.username"
+    ></app-games-viewer>
+  </div>
   <div *ngIf="!loading && !guestMode" class="buttons-container">
     <button
       mat-raised-button
@@ -20,7 +27,12 @@
     </button>
   </div>
   <div *ngIf="guestMode" class="buttons-container">
-    <button mat-raised-button class="button" color="warn" (click)="signOutGuest()">
+    <button
+      mat-raised-button
+      class="button"
+      color="warn"
+      (click)="signOutGuest()"
+    >
       Sign out from Guest
     </button>
   </div>

@@ -1,0 +1,29 @@
+
+  .leaderboard-container {
+    display: flex;
+    flex-direction: row;
+  
+    width: 100%;
+    height: 100%;
+  }
+  
+  .leaderboard {
+    flex-grow: 2;
+  }
+  
+  .map-container {
+    flex-grow: 1;
+    min-width: 40%;
+    min-height: 200px;
+  
+  }
+  
+  @media only screen and (max-width: 1000px) {
+    .leaderboard-container {
+      flex-direction: column;
+    }
+  
+    .map-container{
+      height: 300px;
+    }
+  }
