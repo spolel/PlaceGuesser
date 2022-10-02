@@ -8,6 +8,8 @@
       class="leaderboard"
       (selectedPathsEvent)="openMap($event)"
     ></app-leaderboard>
-    <app-map *ngIf="mapOpen" class="map" [paths]="selectedPaths"></app-map>
+    <div *ngIf="mapOpen" class="map-container">
+      <app-map  class="map" [paths]="selectedPaths"></app-map>
+    </div>
   </div>
 </div>

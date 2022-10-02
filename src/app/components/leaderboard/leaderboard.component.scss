@@ -1,6 +1,8 @@
 /* Structure */
 .container {
     position: relative;
+
+    border-radius: 30px;
 }
 
 .table-container {
@@ -8,12 +10,16 @@
     min-height: 550px;
     overflow: auto;
     
+    
+    border-radius: 25px;
 }
 
 table {
     width: 100%;
 
     background-color: rgba(0, 0, 0, 0.35);
+
+
 }
 
 mat-paginator{
@@ -53,6 +59,9 @@ mat-paginator{
     display: flex;
     align-items: center;
     justify-content: center;
+
+    
+
 }
 
 /* Column Widths */
