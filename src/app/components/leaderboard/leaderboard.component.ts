@@ -1,36 +1,20 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  HostListener,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { BackendService } from 'src/app/services/backend.service';
 
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
-  styleUrls: ['./leaderboard.component.scss'],
+  styleUrls: ['./leaderboard.component.scss']
 })
 
 //Implementing a leaderboard with Angular Material components
 export class LeaderboardComponent implements OnInit {
-  displayedColumns: string[] = [
-    'rank',
-    'username',
-    'score',
-    'multi',
-    'basescore',
-  ];
+  displayedColumns: string[] = ['rank', 'username', 'score', 'multi', 'basescore'];
   data: any[];
   dataSource;
-
-  paginatorSize: number;
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -44,36 +28,34 @@ export class LeaderboardComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatTable) table: MatTable<any>;
 
   //tracking if we are on a mobile device
   mobile: boolean;
-  @HostListener('window:resize', []) onWindowResize() {
-    this.isMobile();
-    this.refresh();
+  @HostListener("window:resize", []) onWindowResize() {
+    this.isMobile()
   }
 
   @Output() selectedPathsEvent = new EventEmitter();
 
-  constructor(private backendService: BackendService) {}
+  constructor(private backendService: BackendService) { }
 
   ngOnInit(): void {
-    this.isMobile();
+    this.isMobile()
   }
 
   ngAfterViewInit() {
     this.backendService.getLeaderboard().subscribe({
-      next: (data) => {
-        this.data = data;
+      next: data => {
+        this.data = data
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.isLoadingResults = false;
+        this.isLoadingResults = false
       },
-      error: (error) => {
-        console.log(error);
-      },
-    });
+      error: error => {
+        console.log(error)
+      }
+    })
   }
 
   applyFilter(event: Event) {
@@ -86,8 +68,8 @@ export class LeaderboardComponent implements OnInit {
   }
 
   openMap(row, paths) {
-    this.selectedRow = row;
-    this.selectedPathsEvent.emit(paths);
+    this.selectedRow = row
+    this.selectedPathsEvent.emit(paths)
   }
 
   isMobile() {
@@ -96,20 +78,5 @@ export class LeaderboardComponent implements OnInit {
     } else {
       this.mobile = true;
     }
-  }
-
-  refresh(){
-    if(this.mobile){
-      this.paginator.pageSize = 5;
-      // this.table.renderRows();
-      // this.paginator.nextPage();
-      // this.paginator.previousPage();
-    }else{
-      this.paginator.pageSize = 10;
-      // this.table.renderRows();
-      // this.paginator.nextPage();
-      // this.paginator.previousPage();
-    }
-
   }
 }
