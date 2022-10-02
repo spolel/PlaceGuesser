@@ -3,6 +3,8 @@ import { Profile, SupabaseService } from 'src/app/services/supabase.service';
 import { Session } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { BackendService } from 'src/app/services/backend.service';
+import { GuestService } from 'src/app/services/guest.service';
+import { LocalstorageService } from 'src/app/services/localstorage.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,15 +17,36 @@ export class ProfileComponent implements OnInit {
 
   session = this.supabase.session;
 
+  get guestMode(): boolean {
+    return this.guest.guestMode;
+  }
+  set guestMode(value: boolean) {
+    this.guest.guestMode = value;
+  }
+
+  get guestUsername(): string {
+    return this.local.getGuest().username;
+  }
+
   constructor(
     private readonly supabase: SupabaseService,
-    private router: Router
+    private router: Router,
+    private guest: GuestService,
+    private local: LocalstorageService
   ) {}
 
   ngOnInit() {
     this.supabase.authChanges((_, session) => (this.session = session));
 
-    this.getProfile();
+    if(this.guestMode && !this.local.getGuest()){
+      this.guestMode = false
+      this.router.navigate(['login']);
+    }
+
+    if(!this.guestMode){
+      this.getProfile();
+    }
+    
   }
 
   async getProfile() {

@@ -91,4 +91,10 @@ export class SupabaseService {
   uploadAvatar(filePath: string, file: File) {
     return this.supabase.storage.from('avatars').upload(filePath, file)
   }
+
+  newGuest(username: string) {
+    return this.supabase.from('guests').upsert({
+      username: username
+    })
+  }
 }

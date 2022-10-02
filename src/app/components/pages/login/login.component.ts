@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GuestService } from 'src/app/services/guest.service';
+import { LocalstorageService } from 'src/app/services/localstorage.service';
 import { SupabaseService } from 'src/app/services/supabase.service';
 
 @Component({
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private readonly supabase: SupabaseService,
     private router: Router,
-    private guest: GuestService
+    private guest: GuestService,
+    private local: LocalstorageService
   ) {}
 
   ngOnInit() {
@@ -38,9 +40,16 @@ export class LoginComponent implements OnInit {
     if (this.session) {
       this.router.navigate(['']);
     }
+
+    //reroute if guest in localstorage
+    if (this.local.getGuest()) {
+      this.guestMode = true;
+      this.router.navigate(['']);
+    }
   }
 
   enterAsGuest() {
+    this.guest.authNewGuest();
     this.guestMode = true;
     this.router.navigate(['']);
   }

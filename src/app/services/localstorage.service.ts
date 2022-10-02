@@ -30,4 +30,12 @@ export class LocalstorageService {
   setUsername(username: string) {
     localStorage.setItem("userdata", JSON.stringify({ username: username }))
   }
+
+  setGuest(guest: any) {
+    localStorage.setItem("guest", JSON.stringify(guest))
+  }
+
+  getGuest() {
+    return JSON.parse(localStorage.getItem('guest'))
+  }
 }

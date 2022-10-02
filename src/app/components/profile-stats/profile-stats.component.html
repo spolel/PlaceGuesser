@@ -9,6 +9,11 @@
       [src]="_avatarUrl"
       class="avatar image"
     />
+    <img
+    *ngIf="!_avatarUrl"
+    src="../../../assets/avatar-placeholder.png"
+    class="avatar image"
+    />
   </div>
   <div class="stats-content">
     <div class="stat">

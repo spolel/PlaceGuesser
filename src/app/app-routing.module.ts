@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'country', component: CountryComponent, canActivate: [AuthGuard]  },
   { path: 'play', component: PlayComponent, canActivate: [AuthGuard]  },
   { path: 'help', component: HelpComponent, canActivate: [AuthGuard]  },
-  { path: 'stats', component: StatsComponent, canActivate: [AuthGuard]  },
+  { path: 'leaderboard', component: StatsComponent, canActivate: [AuthGuard]  },
   { path: 'multiplayer', component: MultiplayerComponent, canActivate: [AuthGuard]  }
 ];
 

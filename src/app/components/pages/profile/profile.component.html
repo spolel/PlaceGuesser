@@ -4,9 +4,9 @@
     *ngIf="!loading"
     class="stats"
     [avatarUrl]="profile?.avatar_url"
-    [username]="profile?.username"
+    [username]="guestMode ? guestUsername : profile?.username"
   ></app-profile-stats>
-  <div class="buttons-container">
+  <div *ngIf="!loading && !guestMode" class="buttons-container">
     <button
       mat-raised-button
       class="button"
