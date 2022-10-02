@@ -40,6 +40,8 @@ import { MultiplayerComponent } from './components/pages/multiplayer/multiplayer
 import { NavbarMobileComponent } from './components/navbar-mobile/navbar-mobile.component';
 import { ProfileStatsComponent } from './components/profile-stats/profile-stats.component';
 import { ProfileEditComponent } from './components/pages/profile-edit/profile-edit.component';
+import { TablePagedComponent } from './components/table-paged/table-paged.component';
+import { LeaderboardPagedComponent } from './components/leaderboard-paged/leaderboard-paged.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,9 @@ import { ProfileEditComponent } from './components/pages/profile-edit/profile-ed
     MultiplayerComponent,
     NavbarMobileComponent,
     ProfileStatsComponent,
-    ProfileEditComponent
+    ProfileEditComponent,
+    TablePagedComponent,
+    LeaderboardPagedComponent
   ],
   imports: [
     BrowserModule,

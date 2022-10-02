@@ -1,0 +1,40 @@
+.container {
+    position: relative;
+    min-height: 550px;
+    overflow: auto;
+
+    border-radius: 25px;
+    
+}
+
+mat-table {
+    width: 100%;
+
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+mat-paginator{
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.mat-row .mat-cell {
+
+    cursor: pointer;
+}
+
+.active {
+    background-color: #BE1955 !important;
+}
+
+.mat-row:hover {
+    background: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 1000px) {
+    .container {
+        min-height: 100px;
+    }
+
+}
+

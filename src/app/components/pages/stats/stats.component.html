@@ -1,15 +1,17 @@
 <app-navbar></app-navbar>
 <div class="container">
-  <div class="title unselectable">
-    LEADERBOARD
-  </div>
+  <div class="title unselectable">LEADERBOARD</div>
   <div class="leaderboard-container">
-    <app-leaderboard
+    <!-- <app-leaderboard
       class="leaderboard"
       (selectedPathsEvent)="openMap($event)"
-    ></app-leaderboard>
+    ></app-leaderboard> -->
+    <app-leaderboard-paged
+      class="leaderboard"
+      (selectedPathsEvent)="openMap($event)"
+    ></app-leaderboard-paged>
     <div *ngIf="mapOpen" class="map-container">
-      <app-map  class="map" [paths]="selectedPaths"></app-map>
+      <app-map class="map" [paths]="selectedPaths"></app-map>
     </div>
   </div>
 </div>

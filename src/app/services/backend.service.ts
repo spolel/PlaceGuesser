@@ -64,6 +64,14 @@ export class BackendService {
     return this.httpClient.get( this.backendUrl + '/get_leaderboard', { responseType: "json" });
   }
 
+  getLeaderboardPaged(offset: number, size: number): Observable<any> {
+    return this.httpClient.get( this.backendUrl + '/get_leaderboard_paged?offset=' + offset + '&size=' + size, { responseType: "json" });
+  }
+
+  getLeaderboardLength(): Observable<any> {
+    return this.httpClient.get( this.backendUrl + '/get_leaderboard_length', { responseType: "json" });
+  }
+
   usernameExists(username: string): Observable<any> {
     return this.httpClient.get( this.backendUrl + '/username_exists?username=' + username, { responseType: "json" });
   }
