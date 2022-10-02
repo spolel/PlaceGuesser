@@ -38,15 +38,14 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.supabase.authChanges((_, session) => (this.session = session));
 
-    if(this.guestMode && !this.local.getGuest()){
-      this.guestMode = false
+    if (this.guestMode && !this.local.getGuest()) {
+      this.guestMode = false;
       this.router.navigate(['login']);
     }
 
-    if(!this.guestMode){
+    if (!this.guestMode) {
       this.getProfile();
     }
-    
   }
 
   async getProfile() {
@@ -89,6 +88,12 @@ export class ProfileComponent implements OnInit {
   async signOut() {
     await this.supabase.signOut();
 
+    this.router.navigate(['login']);
+  }
+
+  signOutGuest() {
+    this.guestMode = false;
+    this.local.removeGuest();
     this.router.navigate(['login']);
   }
 }

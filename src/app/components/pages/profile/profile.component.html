@@ -19,4 +19,9 @@
       Sign Out
     </button>
   </div>
+  <div *ngIf="guestMode" class="buttons-container">
+    <button mat-raised-button class="button" color="warn" (click)="signOutGuest()">
+      Sign out from Guest
+    </button>
+  </div>
 </div>

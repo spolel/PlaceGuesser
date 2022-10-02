@@ -35,6 +35,10 @@ export class LocalstorageService {
     localStorage.setItem("guest", JSON.stringify(guest))
   }
 
+  removeGuest() {
+    localStorage.removeItem("guest")
+  }
+
   getGuest() {
     return JSON.parse(localStorage.getItem('guest'))
   }
